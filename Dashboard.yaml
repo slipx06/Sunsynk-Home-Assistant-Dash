@@ -212,6 +212,13 @@ cards:
             "SOC" + "⚠️" + "(" +ys[ys.length - 1]+"%)"
         line:
           color: red
+          width: 1
+          shape: spline
+        fill: none
+        filters:
+          - sliding_window_moving_average:
+              window_size: 1
+              extended: true
         yaxis: y2
     hours_to_show: 24
     refresh_interval: 60
@@ -230,7 +237,7 @@ cards:
       yaxis2:
         range:
           - 20
-          - 100
+          - 105
         fixedrange: true
       height: 405
       yaxis:
