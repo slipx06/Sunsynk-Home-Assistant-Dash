@@ -101,7 +101,7 @@ sensor:
     - lambda: |-
            x = x / 1;
            float MAX_VALUE = 32767;
-           if (x > MAX_VALUE) return (0 - 65535) /10;
+           if (x > MAX_VALUE) return (x - 65535) /10;
            else return (x) /10;
 
  - platform: modbus_controller  # 81 Grid Export Total (Sell)
