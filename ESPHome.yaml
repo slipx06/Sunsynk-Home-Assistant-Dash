@@ -116,10 +116,8 @@ sensor:
    state_class: total_increasing
    filters:
     - lambda: |-
-           x = x / 1;
-           float MAX_VALUE = 32767;
-           if (x > MAX_VALUE) return (x - 65535) /10;
-           else return (x) /10;
+           if (x > 32767) return (x - 65535) / 10;
+           else return x /10;
 
  - platform: modbus_controller  # 78 Grid Import Total (Buy)
    modbus_controller_id: sunsynk
@@ -186,12 +184,11 @@ sensor:
    accuracy_decimals: 0
    device_class: power
    state_class: measurement
-   filters:
+   value_type: S_WORD
+   filters: #GOOD
     - lambda: |-
-            float MIN_VALUE = -8000.0;
-            float MAX_VALUE = 8000.0;
-            if (MIN_VALUE <= x && x <= MAX_VALUE) return x;
-            else return {};
+           if (x > 32767) return (x - 65535) /1;
+           else return (x) /1;
 
  - platform: modbus_controller # 178 Load Power
    modbus_controller_id: sunsynk
@@ -205,9 +202,7 @@ sensor:
    state_class: measurement
    filters: #GOOD
     - lambda: |-
-           x = x /1;
-           float MAX_VALUE = 32767;
-           if (x > MAX_VALUE) return (0 - 65535) /1;
+           if (x > 32767) return (x - 65535) /1;
            else return (x) /1;
    
  - platform: modbus_controller   # 186 PV1 Power
@@ -258,9 +253,7 @@ sensor:
    device_class: battery
    filters: #GOOD
     - lambda: |-
-           x = x /1;
-           float MAX_VALUE = 32767;
-           if (x > MAX_VALUE) return (0 - 65535) /1;
+           if (x > 32767) return (x - 65535) /1;
            else return (x) /1;
            
  - platform: modbus_controller  # 216 Battery Charging Efficiency
@@ -274,9 +267,7 @@ sensor:
    device_class: battery
    filters: #GOOD
     - lambda: |-
-           x = x /1;
-           float MAX_VALUE = 32767;
-           if (x > MAX_VALUE) return (0 - 65535) /10;
+           if (x > 32767) return (x - 65535) /10;
            else return (x) /10;
 
  - platform: modbus_controller          # 059 Overall State
@@ -310,9 +301,7 @@ sensor:
    accuracy_decimals: 2
    filters: #GOOD
     - lambda: |-
-           x = x /1;
-           float MAX_VALUE = 32767;
-           if (x > MAX_VALUE) return (0 - 65535) /100;
+           if (x > 32767) return (x - 65535) /100;
            else return (x) /100;
    #device_class: none
    state_class: measurement
@@ -329,9 +318,7 @@ sensor:
    state_class: total_increasing
    filters: # GOOD
     - lambda: |-
-           x = x / 1;
-           float MAX_VALUE = 32767;
-           if (x > MAX_VALUE) return (0 - 65535) / 10;
+           if (x > 32767) return (x - 65535) / 10;
            else return x /10;
 
  - platform: modbus_controller          # 070 Battery Charge Day
@@ -347,8 +334,7 @@ sensor:
    filters: #GOOD
     - lambda: |-
            x = x / 10;
-           float MAX_VALUE = 32767;
-           if (x > MAX_VALUE) return (0 - 65535) /1;
+           if (x > 32767) return (x - 65535) /1;
            else return (x) /1;
 
  - platform: modbus_controller          # 071 Battery Discharge Day
@@ -364,8 +350,7 @@ sensor:
    filters: #GOOD
     - lambda: |-
            x = x / 10;
-           float MAX_VALUE = 32767;
-           if (x > MAX_VALUE) return (0 - 65535) /1;
+           if (x > 32767) return (x - 65535) /1;
            else return (x) /1;
 
  - platform: modbus_controller          # 154 Grid Inverter Voltage
@@ -406,8 +391,10 @@ sensor:
    accuracy_decimals: 0
    device_class: power
    state_class: measurement
-   filters:
-    - multiply: 0.1
+   filters: #GOOD
+     - lambda: |-
+           if (x > 32767) return (x - 65535) /1;
+           else return (x) /1;
 
  - platform: modbus_controller          # 167 Grid Inverter Load
    modbus_controller_id: sunsynk
@@ -435,9 +422,7 @@ sensor:
    device_class: power
    filters: #GOOD
     - lambda: |-
-           x = x /1;
-           float MAX_VALUE = 32767;
-           if (x > MAX_VALUE) return (0 - x + 65535) /-1;
+           if (x > 32767) return (0 - x + 65535) /-1;
            else return (0 - x) /-1;
 
  - platform: modbus_controller          # 190 Battery Output Power
@@ -451,10 +436,8 @@ sensor:
    device_class: power
    filters: #GOOD
     - lambda: |-
-           x = x /1;
-           float MAX_VALUE = 32767;
-           if (x > MAX_VALUE) return (0 - x + 65535) /-1;
-           else return (0 - x) /-1;
+           if (x > 32767) return (x - 65535) /1;
+           else return (x) /1;
 
  - platform: modbus_controller          # 191 Battery Output Current
    modbus_controller_id: sunsynk
@@ -619,6 +602,10 @@ sensor:
    register_type: holding
    skip_updates: ${settings_skipped_updates}
    address: 251   
+   filters: #GOOD
+    - lambda: |-
+           if (x > 32767) return (x - 65535) /1;
+           else return (x) /1;
    icon: "mdi:clock"
 
 
@@ -629,6 +616,10 @@ sensor:
    register_type: holding
    skip_updates: ${settings_skipped_updates}
    address: 252
+   filters: #GOOD
+    - lambda: |-
+           if (x > 32767) return (x - 65535) /1;
+           else return (x) /1;
    icon: "mdi:clock"
 
  - platform: modbus_controller          # 253 Settings Timezone4
@@ -638,6 +629,10 @@ sensor:
    register_type: holding
    skip_updates: ${settings_skipped_updates}
    address: 253
+   filters: #GOOD
+    - lambda: |-
+           if (x > 32767) return (x - 65535) /1;
+           else return (x) /1;
    icon: "mdi:clock"
 
  - platform: modbus_controller          # 254 Settings Timezone5
@@ -656,6 +651,10 @@ sensor:
    register_type: holding
    skip_updates: ${settings_skipped_updates}
    address: 255
+   filters: #GOOD
+    - lambda: |-
+           if (x > 32767) return (x - 65535) /1;
+           else return (x) /1;
    icon: "mdi:clock"
 
 
