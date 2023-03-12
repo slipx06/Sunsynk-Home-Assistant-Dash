@@ -170,12 +170,11 @@ sensor:
    accuracy_decimals: 0
    device_class: power
    state_class: measurement
-   filters:
+   value_type: S_WORD
+   filters: #GOOD
     - lambda: |-
-            float MIN_VALUE = -8000.0;
-            float MAX_VALUE = 8000.0;
-            if (MIN_VALUE <= x && x <= MAX_VALUE) return x;
-            else return {};
+           if (x > 32767) return (x - 65535) /1;
+           else return (x) /1;
 
  - platform: modbus_controller # 172 Grid External Power
    modbus_controller_id: sunsynk
