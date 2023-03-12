@@ -200,6 +200,7 @@ sensor:
    accuracy_decimals: 0
    device_class: power
    state_class: measurement
+   value_type: S_WORD
    filters: #GOOD
     - lambda: |-
            if (x > 32767) return (x - 65535) /1;
@@ -378,6 +379,7 @@ sensor:
    accuracy_decimals: 1
    device_class: current
    state_class: measurement
+   value_type: S_WORD
    filters:
     - multiply: 0.01
 
@@ -404,6 +406,7 @@ sensor:
    address: 167
    unit_of_measurement: "W"
    accuracy_decimals: 0
+   value_type: S_WORD
    filters: #GOOD
      - lambda: |-
            if (x > 32767) return (x - 65535) /1;
@@ -420,6 +423,7 @@ sensor:
    unit_of_measurement: "W"
    accuracy_decimals: 0
    device_class: power
+   value_type: S_WORD
    filters: #GOOD
     - lambda: |-
            if (x > 32767) return (0 - x + 65535) /-1;
@@ -434,6 +438,7 @@ sensor:
    unit_of_measurement: "W"
    accuracy_decimals: 0
    device_class: power
+   value_type: S_WORD
    filters: #GOOD
     - lambda: |-
            if (x > 32767) return (x - 65535) /1;
@@ -449,6 +454,7 @@ sensor:
    accuracy_decimals: 1
    device_class: current
    state_class: measurement
+   value_type: S_WORD
    filters: #GOOD
      - lambda: |-
            if (x > 32767) return (x - 65535) / 100;
