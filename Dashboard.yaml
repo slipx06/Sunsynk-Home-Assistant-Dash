@@ -1127,6 +1127,7 @@ cards:
         marker:
           color: rgb(84, 144, 194)
       - entity: sensor.daily_load_power_kwh
+        show_value: true
         statistic: state
         name: |
           $fn ({ ys,meta }) =>
