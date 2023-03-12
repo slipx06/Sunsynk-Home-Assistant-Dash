@@ -83,8 +83,7 @@ sensor:
    filters:
     - lambda: |-
            x = x / -1;
-           float MAX_VALUE = 32767;
-           if (x > MAX_VALUE) return (0 - x + 65535) /10;
+           if (x > 32767) return (0 - x + 65535) /10;
            else return (0 - x) /10;
 
  - platform: modbus_controller  #74 Battery Discharge Total
@@ -99,9 +98,7 @@ sensor:
    state_class: total_increasing
    filters:
     - lambda: |-
-           x = x / 1;
-           float MAX_VALUE = 32767;
-           if (x > MAX_VALUE) return (x - 65535) /10;
+           if (x > 32767) return (x - 65535) /10;
            else return (x) /10;
 
  - platform: modbus_controller  # 81 Grid Export Total (Sell)
