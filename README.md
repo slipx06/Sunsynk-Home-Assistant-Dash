@@ -1,13 +1,19 @@
 # Sunsynk Home Assistant Dashboard
 Home Assistant Dashboard to display Sunsynk info.
 
-Requires the following cards:
+Requires the following: 
+
+Cards:
 
  - Flexible Horseshoe Card (https://github.com/AmoebeLabs/flex-horseshoe-card)
  - Sunsynk Power Flow Card (https://github.com/slipx06/Sunsynk-Home-Assistant-Power-Flow-Card)
  - Layout Card (https://github.com/thomasloven/lovelace-layout-card)
  - Plotly Graph Card (https://github.com/dbuezas/lovelace-plotly-graph-card)
  - ApexCharts Card (https://github.com/RomRider/apexcharts-card)
+
+Integrations:
+
+ - Load Shedding (https://github.com/wernerhp/ha.integration.load_shedding)
 
 ![image](https://user-images.githubusercontent.com/7227275/226107876-fc11f764-e642-4e2f-8e64-344979c201a8.png)
 ![image](https://user-images.githubusercontent.com/7227275/223529017-0702437a-d12e-475a-8695-b617d8da4d97.png)
