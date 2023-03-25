@@ -1007,7 +1007,7 @@ cards:
         decimals: 2
         unit: Hz
         name: Grid
-      - entity: sensor.grid_power
+      - entity: sensor.grid_external_power
         decimals: 0
         unit: W
         name: Grid
