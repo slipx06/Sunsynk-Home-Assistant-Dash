@@ -154,6 +154,14 @@ sensor:
    state_class: total_increasing
    filters:
      - multiply: 0.1
+ 
+ ##169 and 172 alternative filter 
+ #   filters: #GOOD
+ #   - lambda: |-
+ #           float MIN_VALUE = -8000.0;
+ #           float MAX_VALUE = 8000.0;
+ #           if (MIN_VALUE <= x && x <= MAX_VALUE) return x;
+ #           else return {};
 
  - platform: modbus_controller # 169 Grid Power
    modbus_controller_id: sunsynk
