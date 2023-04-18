@@ -35,11 +35,17 @@ Added remaining battery time. You will need to add the following template sensor
 
 ```
 - platform: template
-  sensors:
+  sensors:      
     soc_battery_time_left:
       friendly_name: "Battery Depletion Seconds"
       unit_of_measurement: Seconds
-      value_template: "{{ ((((states('sensor.battery_soc') | float - 20) /100) * 15960) / (states('sensor.battery_output_power') | float) * 60 * 60 ) | timestamp_custom('%s', 0)}}"
+      value_template: >
+        {% set state = states('sensor.battery_output_power') | int %}
+        {% if state == 0 -%}
+         {{ ((((states('sensor.battery_soc') | float - 20) /100) * 10640) / (1) * 60 * 60 ) | timestamp_custom('%s', 0) }}
+        {%- else -%}
+         {{ ((((states('sensor.battery_soc') | float - 20) /100) * 10640) / (states('sensor.battery_output_power') | float) * 60 * 60 ) | timestamp_custom('%s', 0) }}
+        {%- endif %}
     soc_battery_time_left_friendly:
       friendly_name: "Battery Depletion Time"
       value_template: >
