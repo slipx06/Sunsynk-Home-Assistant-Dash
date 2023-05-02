@@ -15,7 +15,7 @@ Integrations:
 
  - Load Shedding (https://github.com/wernerhp/ha.integration.load_shedding)
 
-![image](https://user-images.githubusercontent.com/7227275/233788884-37947ba9-e5e9-4411-9438-57a714414658.png)
+![image](https://user-images.githubusercontent.com/7227275/235785537-78d97429-da96-45af-b761-ba20e2528a0a.png)
 ![image](https://user-images.githubusercontent.com/7227275/223529017-0702437a-d12e-475a-8695-b617d8da4d97.png)
 ![image](https://user-images.githubusercontent.com/7227275/223529206-a97324df-0985-49e2-b63c-47e610e4ca52.png)
 ![image](https://user-images.githubusercontent.com/7227275/223529352-679c13b3-08e3-45b9-a3d3-041002e7d9b0.png)
@@ -60,7 +60,7 @@ Added remaining battery time. You will need to add the following template sensor
          {%- set days = '{} day, '.format(days) if days > 0 else '' %}
          {{ 'Less than 1 minute' if time < 60 else days + hours + minutes }}
         {%- else -%}
-         {{ 'Running on solar power' }}
+         {{ 'Battery Charging' }}
         {%- endif %}
 ```  
 
