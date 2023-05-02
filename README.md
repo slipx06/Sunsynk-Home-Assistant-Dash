@@ -1,5 +1,5 @@
 # Sunsynk Home Assistant Dashboard
-Home Assistant Dashboard to display Sunsynk info.
+Home Assistant Dashboard to display Sunsynk Inverter data and Energy Usage
 
 Requires the following: 
 
@@ -14,6 +14,8 @@ Cards:
 Integrations:
 
  - Load Shedding (https://github.com/wernerhp/ha.integration.load_shedding)
+
+## Screenshots
 
 ![image](https://user-images.githubusercontent.com/7227275/235785537-78d97429-da96-45af-b761-ba20e2528a0a.png)
 ![image](https://user-images.githubusercontent.com/7227275/223529017-0702437a-d12e-475a-8695-b617d8da4d97.png)
@@ -30,7 +32,7 @@ Create a new view on your current Dashboard and set the view type to Panel (1 ca
 You can then edit the Dashboard (using the code editor) and paste the contents of the Dashboard.
 You'll need to adjust all the sensor names to match yours and install the necessary custom components. 
 
-## UPDATE
+## Additional Info
 Added remaining battery time. You will need to add the following template sensor
 
 ```
