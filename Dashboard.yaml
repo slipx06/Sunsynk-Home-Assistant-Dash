@@ -5,34 +5,66 @@ cards:
     view_layout:
       grid-area: flow
     cardstyle: lite
-    show_daily: 'yes'
-    battery_energy: 15960
-    battery_shutdown_soc: 20
+    large_font: 'yes'
     show_solar: 'yes'
+    panel_mode: 'no'
+    inverter:
+      modern: 'yes'
+      colour: '#959595'
+    battery:
+      energy: 15960
+      shutdown_soc: 20
+      invert_power: 'no'
+      colour: pink
+      show_daily: 'yes'
+    solar:
+      colour: orange
+      show_daily: 'yes'
+      mppts: two
+    load:
+      colour: '#5fb6ad'
+      show_daily: 'yes'
+      show_aux: 'yes'
+      invert_aux: 'no'
+    grid:
+      colour: '#5490c2'
+      show_daily_buy: 'yes'
+      show_daily_sell: 'no'
+      no_grid_colour: '#a40013'
+      show_nonessential: 'no'
     entities:
       use_timer_248: switch.toggle_system_timer
       priority_load_243: switch.toggle_priority_load
       batchargeday_70: sensor.battery_charge_day
       batdischargeday_71: sensor.battery_discharge_day
       loadday_84: sensor.daily_load_power_kwh
-      gridday_76: sensor.grid_import_day_buy
+      grid_buy_day_76: sensor.grid_import_day_buy
+      grid_sell_day_77: none
       solarday_108: sensor.daily_pv_power_kwh
       inverter_grid_voltage_154: sensor.grid_inverter_voltage
       inverter_load_freq_192: sensor.load_frequency
       inverter_out_164: sensor.inverter_output_current
       inverter_out_175: sensor.inverter_output_power
-      inverter_load_grid_169: sensor.grid_inverter_load
-      pv2_power_187: sensor.pv2_power
+      inverter_load_grid_169: sensor.grid_power
       pv1_power_186: sensor.pv1_power
+      pv2_power_187: sensor.pv2_power
+      pv3_power_188: none
+      pv4_power_189: none
       battery_voltage_183: sensor.battery_voltage
       battery_soc_184: sensor.battery_soc
       battery_out_190: sensor.battery_output_power
-      ess_power: sensor.sunsynk_essential_load
+      battery_current_191: sensor.battery_output_current
+      essential_power: sensor.load_power
+      nonessential_power: none
       grid_external_power_172: sensor.grid_external_power
       pv1_v_109: sensor.dc1_voltage
       pv1_i_110: sensor.dc1_current
       pv2_v_111: sensor.dc2_voltage
       pv2_i_112: sensor.dc2_current
+      pv3_v_113: none
+      pv3_i_114: none
+      pv4_v_115: none
+      pv4_i_116: none
       grid_status_194: binary_sensor.grid_connected_status
       inverter_status_59: sensor.overall_state
       aux_power_166: sensor.aux_output_power
