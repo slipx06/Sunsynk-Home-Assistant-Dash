@@ -14,6 +14,7 @@ Cards:
 Integrations:
 
  - Load Shedding (https://github.com/wernerhp/ha.integration.load_shedding)
+ - Solcast (https://github.com/oziee/ha-solcast-solar)
 
 ## Screenshots
 
