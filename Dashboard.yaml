@@ -30,7 +30,7 @@ cards:
       colour: '#5490c2'
       show_daily_buy: 'yes'
       show_daily_sell: 'no'
-      no_grid_colour: '#a40013'
+      no_grid_colour: red
       show_nonessential: 'no'
     entities:
       use_timer_248: switch.toggle_system_timer
@@ -68,6 +68,7 @@ cards:
       grid_status_194: binary_sensor.grid_connected_status
       inverter_status_59: sensor.overall_state
       aux_power_166: sensor.aux_output_power
+      remaining_solar: sensor.solcast_forecast_remaining_today
   - type: custom:plotly-graph
     view_layout:
       grid-area: graph
@@ -220,20 +221,180 @@ cards:
       displayModeBar: false
       scrollZoom: false
     time_offset: 12h
-  - type: energy-usage-graph
-    view_layout:
-      grid-area: usage
-    title: Energy Usage
-  - type: energy-distribution
-    title: Energy Distribution
-    show_header_toggle: false
-    view_layout:
-      grid-area: energy
-  - type: energy-solar-graph
-    title: Solar Energy
-    show_header_toggle: false
+  - type: custom:apexcharts-card
     view_layout:
       grid-area: solar
+    header:
+      show: true
+      standard_format: true
+      show_states: true
+      colorize_states: true
+    apex_config:
+      chart:
+        height: 360px
+      tooltip:
+        enabled: true
+        shared: true
+        followCursor: true
+    graph_span: 4d
+    now:
+      show: false
+      color: grey
+      label: Now
+    span:
+      start: day
+      offset: '-1day'
+    all_series_config:
+      type: area
+      opacity: 0.3
+      stroke_width: 1
+    series:
+      - entity: sensor.battery_soc
+        name: Battery
+        float_precision: 0
+        type: line
+        color: '#f06292'
+        opacity: 0.6
+        yaxis_id: capacity
+        extend_to: now
+        show:
+          legend_value: true
+          in_header: false
+        group_by:
+          func: last
+          duration: 5m
+      - entity: sensor.load_power
+        name: House Power
+        float_precision: 3
+        type: line
+        color: MediumAquaMarine
+        opacity: 0.8
+        yaxis_id: kWh
+        unit: kW
+        transform: return x/1000;
+        extend_to: now
+        show:
+          legend_value: true
+          in_header: false
+        group_by:
+          func: avg
+          duration: 5m
+      - entity: sensor.ss_total_solar
+        name: Solar Power
+        float_precision: 3
+        color: '#ff9800'
+        yaxis_id: kWh
+        unit: kW
+        transform: return x/1000;
+        extend_to: now
+        show:
+          legend_value: true
+          in_header: false
+        group_by:
+          func: avg
+          duration: 5m
+      - entity: sensor.solcast_forecast_today
+        name: Solar Forecast (D1)
+        extend_to: false
+        color: grey
+        opacity: 0.3
+        stroke_width: 0
+        yaxis_id: kWh
+        show:
+          legend_value: false
+          in_header: false
+        data_generator: |
+          return entity.attributes.forecast.map((entry) => {
+                return [new Date(entry.period_start), entry.pv_estimate];
+              });
+      - entity: sensor.solcast_forecast_tomorrow
+        name: Solar Forecast (D2)
+        float_precision: 3
+        extend_to: false
+        color: grey
+        opacity: 0.3
+        stroke_width: 0
+        yaxis_id: kWh
+        show:
+          legend_value: false
+          in_header: false
+        data_generator: |
+          return entity.attributes.forecast.map((entry) => {
+                return [new Date(entry.period_start), entry.pv_estimate];
+              });
+      - entity: sensor.solcast_forecast_d3
+        name: Solar Forecast (D3)
+        float_precision: 3
+        extend_to: false
+        color: grey
+        opacity: 0.3
+        stroke_width: 0
+        yaxis_id: kWh
+        show:
+          legend_value: false
+          in_header: false
+        data_generator: |
+          return entity.attributes.forecast.map((entry) => {
+                return [new Date(entry.period_start), entry.pv_estimate];
+              });
+      - entity: sensor.solcast_forecast_today
+        yaxis_id: header_only
+        name: Solar Forecast (D1)
+        color: grey
+        show:
+          legend_value: true
+          in_header: true
+          in_chart: false
+      - entity: sensor.solcast_forecast_remaining_today_every_minute
+        yaxis_id: header_only
+        name: Forecast (D1 Remaining)
+        color: grey
+        show:
+          legend_value: true
+          in_header: true
+          in_chart: false
+      - entity: sensor.solcast_forecast_tomorrow
+        yaxis_id: header_only
+        name: Forecast (D2)
+        color: grey
+        show:
+          legend_value: true
+          in_header: true
+          in_chart: false
+      - entity: sensor.solcast_forecast_d3
+        yaxis_id: header_only
+        name: Solar Forecast (D3)
+        color: grey
+        show:
+          legend_value: true
+          in_header: true
+          in_chart: false
+      - entity: sensor.solcast_api_last_polled
+        yaxis_id: header_only
+        name: Forecast (Last Update)
+        color: grey
+        unit: ' min.'
+        transform: return ((Date.now()) - (new Date(x).getTime())) / 60 / 60 / 24
+        show:
+          legend_value: true
+          in_header: true
+          in_chart: false
+    yaxis:
+      - id: capacity
+        show: true
+        opposite: true
+        decimals: 0
+        max: 100
+        min: 0
+        apex_config:
+          tickAmount: 5
+      - id: kWh
+        show: true
+        min: 0
+        apex_config:
+          tickAmount: 5
+      - id: header_only
+        show: false
   - type: custom:plotly-graph
     view_layout:
       grid-area: total
@@ -1178,7 +1339,7 @@ layout:
     "sg sg sg sg sg sg sg sg sg sg"
     "m m m m m m m m m m"
     "bat bat bat bat bat geyser geyser geyser geyser geyser "
-    "energy energy usage usage usage usage  solar solar  solar solar "
+    "solar solar solar solar solar solar  solar solar  solar solar "
   justify-items: stretch
   mediaquery:
     '(max-width: 800px)':
