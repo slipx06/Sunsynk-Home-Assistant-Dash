@@ -1,4 +1,4 @@
-   switch:
+switch:
   - platform: modbus_controller
     use_write_multiple: true
     modbus_controller_id: ${modbus_controller_id}
@@ -90,7 +90,7 @@
     entity_category: config
     icon: "mdi:toggle-switch"
  
-binary_sensor:
+ binary_sensor:
    - platform: modbus_controller
      modbus_controller_id: ${modbus_controller_id}
      name: sun12k-AC INV relay # bit 0
