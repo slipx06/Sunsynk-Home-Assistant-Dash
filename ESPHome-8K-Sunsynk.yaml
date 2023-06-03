@@ -628,6 +628,17 @@ sensor:
             if (x > 32767) return (x - 65535) /10;
             else return (x) /10;
 
+  - platform: modbus_controller            # 217 Battery Capacity Shutdown
+    modbus_controller_id: sunsynk
+    name: "Battery Capacity Shutdown"
+    id: sunsynk_battery_capacity_shutdown
+    register_type: holding
+    address: 217
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    device_class: battery
+
+
 ################################################ READ SETTINGS ################################################
   - platform: modbus_controller          # 250 Settings Timezone1
     modbus_controller_id: sunsynk
@@ -993,7 +1004,8 @@ text_sensor:
         default: return std::string("unknown");
       }
   - platform: template
-    name: "Program1_test"
+    name: "Sunsynk Time Slot 1"
+    id: sunsynk_time_slot_1
     lambda: |-
         int minutes, hours;
         if (id(sunsynk_esphome_setting_timezone1).state) {
@@ -1007,7 +1019,8 @@ text_sensor:
         snprintf(formatted_time, sizeof(formatted_time), "%02d:%02d", hours, minutes);
         return esphome::optional<std::string>(formatted_time);
   - platform: template
-    name: "Program2_test"
+    name: "Sunsynk Time Slot 2"
+    id: sunsynk_time_slot_2
     lambda: |-
         int minutes, hours;
         if (id(sunsynk_esphome_setting_timezone2).state) {
@@ -1020,3 +1033,168 @@ text_sensor:
         char formatted_time[6];
         snprintf(formatted_time, sizeof(formatted_time), "%02d:%02d", hours, minutes);
         return esphome::optional<std::string>(formatted_time);
+  - platform: template
+    name: "Sunsynk Time Slot 3"
+    id: sunsynk_time_slot_3
+    lambda: |-
+        int minutes, hours;
+        if (id(sunsynk_esphome_setting_timezone3).state) {
+        minutes = static_cast<int>(id(sunsynk_esphome_setting_timezone3).state) % 100;
+        hours = static_cast<int>(id(sunsynk_esphome_setting_timezone3).state) / 100;
+        } else {
+          minutes = 0;
+          hours = 0;
+        }
+        char formatted_time[6];
+        snprintf(formatted_time, sizeof(formatted_time), "%02d:%02d", hours, minutes);
+        return esphome::optional<std::string>(formatted_time);
+  - platform: template
+    name: "Sunsynk Time Slot 4"
+    id: sunsynk_time_slot_4
+    lambda: |-
+        int minutes, hours;
+        if (id(sunsynk_esphome_setting_timezone4).state) {
+        minutes = static_cast<int>(id(sunsynk_esphome_setting_timezone4).state) % 100;
+        hours = static_cast<int>(id(sunsynk_esphome_setting_timezone4).state) / 100;
+        } else {
+          minutes = 0;
+          hours = 0;
+        }
+        char formatted_time[6];
+        snprintf(formatted_time, sizeof(formatted_time), "%02d:%02d", hours, minutes);
+        return esphome::optional<std::string>(formatted_time);
+  - platform: template
+    name: "Sunsynk Time Slot 5"
+    id: sunsynk_time_slot_5
+    lambda: |-
+        int minutes, hours;
+        if (id(sunsynk_esphome_setting_timezone5).state) {
+        minutes = static_cast<int>(id(sunsynk_esphome_setting_timezone5).state) % 100;
+        hours = static_cast<int>(id(sunsynk_esphome_setting_timezone5).state) / 100;
+        } else {
+          minutes = 0;
+          hours = 0;
+        }
+        char formatted_time[6];
+        snprintf(formatted_time, sizeof(formatted_time), "%02d:%02d", hours, minutes);
+        return esphome::optional<std::string>(formatted_time);
+  - platform: template
+    name: "Sunsynk Time Slot 6"
+    id: sunsynk_time_slot_6
+    lambda: |-
+        int minutes, hours;
+        if (id(sunsynk_esphome_setting_timezone6).state) {
+        minutes = static_cast<int>(id(sunsynk_esphome_setting_timezone6).state) % 100;
+        hours = static_cast<int>(id(sunsynk_esphome_setting_timezone6).state) / 100;
+        } else {
+          minutes = 0;
+          hours = 0;
+        }
+        char formatted_time[6];
+        snprintf(formatted_time, sizeof(formatted_time), "%02d:%02d", hours, minutes);
+        return esphome::optional<std::string>(formatted_time);
+
+  - platform: template
+    name: "Sunsynk Battery Capacity"
+    lambda: |-
+      if (!id(grid_connected_status).state) {
+        float value = id(sunsynk_battery_capacity_shutdown).state;
+        char buffer[10];
+        dtostrf(value, 6, 0, buffer);
+        return std::string(buffer);
+      } else {
+               
+        // Get the current date and time
+        time_t now = id(homeassistant_time).now().timestamp;
+        tm* currentTime = localtime(&now);
+
+        std::string timeSlot1 = id(sunsynk_time_slot_1).state;
+        std::string timeSlot2 = id(sunsynk_time_slot_2).state;
+        std::string timeSlot3 = id(sunsynk_time_slot_3).state;
+        std::string timeSlot4 = id(sunsynk_time_slot_4).state;
+        std::string timeSlot5 = id(sunsynk_time_slot_5).state;
+        std::string timeSlot6 = id(sunsynk_time_slot_6).state;
+
+        int hour, minute;
+
+        // Convert timeSlot1 to sellTime1Epoch
+        sscanf(timeSlot1.c_str(), "%d:%d", &hour, &minute);
+        currentTime->tm_hour = hour;
+        currentTime->tm_min = minute;
+        currentTime->tm_sec = 0;
+        time_t sellTime1Epoch = mktime(currentTime);
+        // ESP_LOGD("DEBUG", "sellTime1Epoch: %ld, now: %ld", sellTime1Epoch, now);
+
+        // Convert timeSlot2 to sellTime2Epoch
+        sscanf(timeSlot2.c_str(), "%d:%d", &hour, &minute);
+        currentTime->tm_hour = hour;
+        currentTime->tm_min = minute;
+        currentTime->tm_sec = 0;
+        time_t sellTime2Epoch = mktime(currentTime);
+        // ESP_LOGD("DEBUG", "sellTime2Epoch: %ld, now: %ld", sellTime2Epoch, now);
+
+        // Convert timeSlot3 to sellTime3Epoch
+        sscanf(timeSlot3.c_str(), "%d:%d", &hour, &minute);
+        currentTime->tm_hour = hour;
+        currentTime->tm_min = minute;
+        currentTime->tm_sec = 0;
+        time_t sellTime3Epoch = mktime(currentTime);
+
+        // Convert timeSlot4 to sellTime4Epoch
+        sscanf(timeSlot4.c_str(), "%d:%d", &hour, &minute);
+        currentTime->tm_hour = hour;
+        currentTime->tm_min = minute;
+        currentTime->tm_sec = 0;
+        time_t sellTime4Epoch = mktime(currentTime);
+
+        // Convert timeSlot5 to sellTime5Epoch
+        sscanf(timeSlot5.c_str(), "%d:%d", &hour, &minute);
+        currentTime->tm_hour = hour;
+        currentTime->tm_min = minute;
+        currentTime->tm_sec = 0;
+        time_t sellTime5Epoch = mktime(currentTime);
+
+        // Convert timeSlot6 to sellTime6Epoch
+        sscanf(timeSlot6.c_str(), "%d:%d", &hour, &minute);
+        currentTime->tm_hour = hour;
+        currentTime->tm_min = minute;
+        currentTime->tm_sec = 0;
+        time_t sellTime6Epoch = mktime(currentTime);
+
+        if (now >= sellTime1Epoch && now < sellTime2Epoch)  {
+          float value = static_cast<float>(id(sunsynk_esphome_set_soc_timezone1).state);
+          char buffer[10];
+          dtostrf(value, 6, 0, buffer);
+          return std::string(buffer);
+        } else if (now >= sellTime2Epoch && now < sellTime3Epoch) {
+          float value = static_cast<float>(id(sunsynk_esphome_set_soc_timezone2).state);
+          char buffer[10];
+          dtostrf(value, 6, 0, buffer);
+          return std::string(buffer);
+        } else if (now >= sellTime3Epoch && now < sellTime4Epoch) {
+          float value = static_cast<float>(id(sunsynk_esphome_set_soc_timezone3).state);
+          char buffer[10];
+          dtostrf(value, 6, 0, buffer);
+          return std::string(buffer);
+        } else if (now >= sellTime4Epoch && now < sellTime5Epoch) {
+          float value = static_cast<float>(id(sunsynk_esphome_set_soc_timezone4).state);
+          char buffer[10];
+          dtostrf(value, 6, 0, buffer);
+          return std::string(buffer);
+        } else if (now >= sellTime5Epoch && now < sellTime6Epoch) {
+          float value = static_cast<float>(id(sunsynk_esphome_set_soc_timezone5).state);
+          char buffer[10];
+          dtostrf(value, 6, 0, buffer);
+          return std::string(buffer);
+        } else if (now >= sellTime6Epoch && now < sellTime1Epoch) {
+          float value = static_cast<float>(id(sunsynk_esphome_set_soc_timezone6).state);
+          char buffer[10];
+          dtostrf(value, 6, 0, buffer);
+          return std::string(buffer);
+        } else {
+          float value = id(sunsynk_battery_capacity_shutdown).state;
+          char buffer[10];
+          dtostrf(value, 6, 0, buffer);
+          return std::string(buffer);
+          }
+      }
