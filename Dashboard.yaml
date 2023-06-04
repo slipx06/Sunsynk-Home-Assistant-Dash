@@ -11,27 +11,29 @@ cards:
     inverter:
       modern: 'yes'
       colour: '#959595'
+    solar:
+      mppts: two
+      show_daily: 'yes'
+      colour: '#F4C430'
+      animation_speed: 9
+      max_power: 6600
     battery:
       energy: 15960
       shutdown_soc: 20
-      invert_power: 'no'
+      show_daily: 'yes'
       colour: pink
-      show_daily: 'yes'
-    solar:
-      colour: orange
-      show_daily: 'yes'
-      mppts: two
+      animation_speed: 6
+      max_power: 4100
     load:
-      colour: '#5fb6ad'
+      show_aux: 'no'
       show_daily: 'yes'
-      show_aux: 'yes'
-      invert_aux: 'no'
+      animation_speed: 8
+      max_power: 8000
     grid:
-      colour: '#5490c2'
       show_daily_buy: 'yes'
-      show_daily_sell: 'no'
       no_grid_colour: red
-      show_nonessential: 'no'
+      animation_speed: 8
+      max_power: 8000
     entities:
       use_timer_248: switch.toggle_system_timer
       priority_load_243: switch.toggle_priority_load
@@ -69,6 +71,9 @@ cards:
       inverter_status_59: sensor.overall_state
       aux_power_166: sensor.aux_output_power
       remaining_solar: sensor.solcast_forecast_remaining_today
+      battery_temp: sensor.ss_battery_temperature
+      inverter_ac_temp: sensor.ss_dc_radiator_temperature
+      inverter_dc_temp: sensor.ss_dc_transformer_temperature
   - type: custom:plotly-graph
     view_layout:
       grid-area: graph
@@ -231,15 +236,14 @@ cards:
       colorize_states: true
     apex_config:
       chart:
-        height: 360px
+        height: 350px
       tooltip:
         enabled: true
         shared: true
         followCursor: true
     graph_span: 4d
     now:
-      show: false
-      color: grey
+      show: true
       label: Now
     span:
       start: day
@@ -262,22 +266,6 @@ cards:
           in_header: false
         group_by:
           func: last
-          duration: 5m
-      - entity: sensor.load_power
-        name: House Power
-        float_precision: 3
-        type: line
-        color: MediumAquaMarine
-        opacity: 0.8
-        yaxis_id: kWh
-        unit: kW
-        transform: return x/1000;
-        extend_to: now
-        show:
-          legend_value: true
-          in_header: false
-        group_by:
-          func: avg
           duration: 5m
       - entity: sensor.ss_total_solar
         name: Solar Power
@@ -1018,23 +1006,23 @@ cards:
       </table> {% endif %}
 
 
-      {% set soc1 = states('sensor.soc_battery_time_left_friendly') %}
+      {% set bat_power = states('sensor.battery_output_power') | int %}
 
-      {% set load1 = states('sensor.load_power') %}
-
-      {% set socsec1 = states('sensor.soc_battery_time_left') | int %}
-
-      {% set state = states('sensor.battery_output_power') | int %}
-
-      {% if state <= 0 -%}
-        <ha-alert alert-type="success">{{ soc1 }}</ha-alert>
-      {% else %}
-        {% if socsec1 > 21601 %}
-        <ha-alert alert-type="success"> Battery runtime is {{ soc1 }} at current ({{state}} W) battery load</ha-alert>
-        {% elif 10800 < socsec1 <= 21600 %}
-        <ha-alert alert-type="warning">Battery runtime is {{ soc1 }} at current ({{state}} W) battery load</ha-alert>     
-        {% elif socsec1 <= 10800 %}
-        <ha-alert alert-type="error"> Battery runtime is {{ soc1 }} at current ({{state}} W) battery load</ha-alert>
+      {% if states('sensor.battery_status') == "negative" -%}
+        {% if states('sensor.battery_charging_time_left') | float <= 10800 %}
+        <ha-alert alert-type="success"> Charge to {{ states('sensor.markdown_battery_charge_time_left') | float | round(0)}}% : {{ states('sensor.battery_charging_time_left_friendly') }} @ {{  states('sensor.markdown_charge_time') }} </ha-alert>
+        {% elif 10800 < (states('sensor.battery_charging_time_left') | float) <= 21600 %}
+        <ha-alert alert-type="warning">Charge to {{ states('sensor.markdown_battery_charge_time_left') | float | round(0)}}% : {{ states('sensor.battery_charging_time_left_friendly') }} @ {{  states('sensor.markdown_charge_time') }} </ha-alert>     
+        {% elif states('sensor.battery_charging_time_left') | float > 21601 %}
+        <ha-alert alert-type="error">Charge to {{ states('sensor.markdown_battery_charge_time_left') | float | round(0)}}% : {{ states('sensor.battery_charging_time_left_friendly') }} @ {{  states('sensor.markdown_charge_time') }} </ha-alert>
+        {% endif %} 
+      {% elif states('sensor.battery_status') == "positive" %}
+        {% if states('sensor.soc_battery_time_left') | float > 21601 %}
+        <ha-alert alert-type="success"> Discharge to {{ states('sensor.battery_cap') | float | round(0)}}% @ {{  states('sensor.markdown_discharge_time') }} : Battery runtime is {{ states('sensor.soc_battery_time_left_friendly') }} at current ({{bat_power}} W) battery load</ha-alert>
+        {% elif 10800 < (states('sensor.soc_battery_time_left') | float) <= 21600 %}
+        <ha-alert alert-type="warning">Discharge to {{ states('sensor.battery_cap') | float | round(0)}}% @ {{  states('sensor.markdown_discharge_time') }} : Battery runtime is {{ states('sensor.soc_battery_time_left_friendly') }} at current ({{bat_power}} W) battery load</ha-alert>     
+        {% elif states('sensor.soc_battery_time_left') | float <= 10800 %}
+        <ha-alert alert-type="error">Discharge to {{ states('sensor.battery_cap') | float | round(0)}}% @ {{  states('sensor.markdown_discharge_time') }} : Battery runtime is {{ states('sensor.soc_battery_time_left_friendly') }} at current ({{bat_power}} W) battery load</ha-alert>
         {% endif %}
       {% endif %}
     view_layout:
@@ -1079,7 +1067,7 @@ cards:
         line:
           color: rgb(95, 182, 173)
           width: 2
-    hours_to_show: 30d
+    hours_to_show: 31d
     title: null
     refresh_interval: 600
     defaults:
@@ -1329,6 +1317,10 @@ cards:
           --ha-card-background: var(--card-background-color);
           color: var(--primary-color); 
         }
+  - type: energy-distribution
+    view_layout:
+      grid-area: energy
+    link_dashboard: true
 layout:
   grid-template-columns: 10% 10% 10% 10% 10% 10% 10% 10% 10% 10%
   grid-template-rows: auto
@@ -1339,7 +1331,7 @@ layout:
     "sg sg sg sg sg sg sg sg sg sg"
     "m m m m m m m m m m"
     "bat bat bat bat bat geyser geyser geyser geyser geyser "
-    "solar solar solar solar solar solar  solar solar  solar solar "
+    "energy energy energy solar solar solar  solar solar  solar solar "
   justify-items: stretch
   mediaquery:
     '(max-width: 800px)':
@@ -1360,7 +1352,6 @@ layout:
         "geyser"
         "stats"
         "energy"
-        "usage"
         "solar"
         "weather"
     '(max-width: 1300px)':
@@ -1374,5 +1365,4 @@ layout:
         "m m m"
         "ls bat bat"
         "weather geyser geyser"
-        "energy usage usage"
-        "solar solar solar"
+        "energy solar solar"
