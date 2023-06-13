@@ -17,9 +17,11 @@ cards:
       colour: '#F4C430'
       animation_speed: 9
       max_power: 6600
+      pv1_name: West
+      pv2_name: North
     battery:
       energy: 15960
-      shutdown_soc: 20
+      shutdown_soc: 15
       show_daily: 'yes'
       colour: pink
       animation_speed: 6
@@ -29,6 +31,8 @@ cards:
       show_daily: 'yes'
       animation_speed: 8
       max_power: 8000
+      additional_loads: one
+      load1_name: Geyser
     grid:
       show_daily_buy: 'yes'
       no_grid_colour: red
@@ -57,6 +61,7 @@ cards:
       battery_out_190: sensor.battery_output_power
       battery_current_191: sensor.battery_output_current
       essential_power: sensor.load_power
+      essential_load1: sensor.tuya_geyser_current_consumption
       nonessential_power: none
       grid_external_power_172: sensor.grid_external_power
       pv1_v_109: sensor.dc1_voltage
@@ -74,6 +79,24 @@ cards:
       battery_temp: sensor.ss_battery_temperature
       inverter_ac_temp: sensor.ss_dc_radiator_temperature
       inverter_dc_temp: sensor.ss_dc_transformer_temperature
+      prog1_time: sensor.sunsynk_time_slot_1
+      prog1_capacity: number.set_soc_timezone1
+      prog1_charge: switch.toggle_grid_charge_timezone1
+      prog2_time: sensor.sunsynk_time_slot_2
+      prog2_capacity: number.set_soc_timezone2
+      prog2_charge: switch.toggle_grid_charge_timezone2
+      prog3_time: sensor.sunsynk_time_slot_3
+      prog3_capacity: number.set_soc_timezone3
+      prog3_charge: switch.toggle_grid_charge_timezone3
+      prog4_time: sensor.sunsynk_time_slot_4
+      prog4_capacity: number.set_soc_timezone4
+      prog4_charge: switch.toggle_grid_charge_timezone4
+      prog5_time: sensor.sunsynk_time_slot_5
+      prog5_capacity: number.set_soc_timezone5
+      prog5_charge: switch.toggle_grid_charge_timezone5
+      prog6_time: sensor.sunsynk_time_slot_6
+      prog6_capacity: number.set_soc_timezone6
+      prog6_charge: switch.toggle_grid_charge_timezone6
   - type: custom:plotly-graph
     view_layout:
       grid-area: graph
@@ -685,6 +708,10 @@ cards:
         decimals: 2
         unit: kWh
         name: Daily
+      - entity: sensor.solcast_forecast_remaining_today
+        decimals: 2
+        unit: kWh
+        name: Left Today
     show:
       horseshoe_style: autominmax
     layout:
@@ -759,6 +786,13 @@ cards:
           styles:
             - text-anchor: start;
             - font-size: 1.2em;
+        - id: 8
+          entity_index: 8
+          xpos: 75
+          ypos: 7
+          styles:
+            - text-anchor: start;
+            - font-size: 1.2em;
       icons:
         - id: 0
           entity_index: 1
@@ -800,6 +834,13 @@ cards:
           styles:
             - text-anchor: start;
             - font-size: 0.5em;
+        - id: 4
+          entity_index: 8
+          xpos: 80
+          ypos: 12
+          styles:
+            - font-size: 0.5em;
+            - text-anchor: start;
     horseshoe_scale:
       min: 0
       max: 7000
@@ -946,7 +987,7 @@ cards:
           color: var(--primary-color);
         }
   - type: markdown
-    content: >
+    content: >-
       {% set stage_sensor = "sensor.load_shedding_stage_eskom" %} {% set
       area_sensor = "sensor.load_shedding_area_jhbcitypower2_10_northridingah"
       %} {% set area_schedule = state_attr(area_sensor, "forecast") %} {% if
@@ -1006,23 +1047,23 @@ cards:
       </table> {% endif %}
 
 
-      {% set bat_power = states('sensor.battery_output_power') | int %}
+      {% set soc1 = states('sensor.soc_battery_time_left_friendly') %}
 
-      {% if states('sensor.battery_status') == "negative" -%}
-        {% if states('sensor.battery_charging_time_left') | float <= 10800 %}
-        <ha-alert alert-type="success"> Charge to {{ states('sensor.markdown_battery_charge_time_left') | float | round(0)}}% : {{ states('sensor.battery_charging_time_left_friendly') }} @ {{  states('sensor.markdown_charge_time') }} </ha-alert>
-        {% elif 10800 < (states('sensor.battery_charging_time_left') | float) <= 21600 %}
-        <ha-alert alert-type="warning">Charge to {{ states('sensor.markdown_battery_charge_time_left') | float | round(0)}}% : {{ states('sensor.battery_charging_time_left_friendly') }} @ {{  states('sensor.markdown_charge_time') }} </ha-alert>     
-        {% elif states('sensor.battery_charging_time_left') | float > 21601 %}
-        <ha-alert alert-type="error">Charge to {{ states('sensor.markdown_battery_charge_time_left') | float | round(0)}}% : {{ states('sensor.battery_charging_time_left_friendly') }} @ {{  states('sensor.markdown_charge_time') }} </ha-alert>
-        {% endif %} 
-      {% elif states('sensor.battery_status') == "positive" %}
-        {% if states('sensor.soc_battery_time_left') | float > 21601 %}
-        <ha-alert alert-type="success"> Discharge to {{ states('sensor.battery_cap') | float | round(0)}}% @ {{  states('sensor.markdown_discharge_time') }} : Battery runtime is {{ states('sensor.soc_battery_time_left_friendly') }} at current ({{bat_power}} W) battery load</ha-alert>
-        {% elif 10800 < (states('sensor.soc_battery_time_left') | float) <= 21600 %}
-        <ha-alert alert-type="warning">Discharge to {{ states('sensor.battery_cap') | float | round(0)}}% @ {{  states('sensor.markdown_discharge_time') }} : Battery runtime is {{ states('sensor.soc_battery_time_left_friendly') }} at current ({{bat_power}} W) battery load</ha-alert>     
-        {% elif states('sensor.soc_battery_time_left') | float <= 10800 %}
-        <ha-alert alert-type="error">Discharge to {{ states('sensor.battery_cap') | float | round(0)}}% @ {{  states('sensor.markdown_discharge_time') }} : Battery runtime is {{ states('sensor.soc_battery_time_left_friendly') }} at current ({{bat_power}} W) battery load</ha-alert>
+      {% set load1 = states('sensor.load_power') %}
+
+      {% set socsec1 = states('sensor.soc_battery_time_left') | int %}
+
+      {% set state = states('sensor.battery_output_power') | int %}
+
+      {% if state <= 0 -%}
+        <ha-alert alert-type="success">{{ soc1 }} to {{states('sensor.markdown_battery_charge_time_left')}}%. ETA@{{states('sensor.markdown_charge_time')}}</ha-alert>
+      {% else %}
+        {% if socsec1 > 21601 %}
+        <ha-alert alert-type="success"> Battery runtime to {{states('sensor.battery_cap')}}% is {{ soc1 }} at current ({{state}} W) battery load. ETA@{{states('sensor.markdown_discharge_time')}}</ha-alert>
+        {% elif 10800 < socsec1 <= 21600 %}
+        <ha-alert alert-type="warning">Battery runtime to {{states('sensor.battery_cap')}}% is {{ soc1 }} at current ({{state}} W) battery load. ETA@{{states('sensor.markdown_discharge_time')}}</ha-alert>     
+        {% elif socsec1 <= 10800 %}
+        <ha-alert alert-type="error"> Battery runtime to {{states('sensor.battery_cap')}}% is {{ soc1 }} at current ({{state}} W) battery load. ETA@{{states('sensor.markdown_discharge_time')}}</ha-alert>
         {% endif %}
       {% endif %}
     view_layout:
