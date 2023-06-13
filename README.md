@@ -150,9 +150,6 @@ Added remaining battery time. You will need to add the following template sensor
         {% set add = states('sensor.battery_charging_time_left') | int %}
         {% set future_time = now + add %}
           {{ future_time | timestamp_custom('%H:%M') }}
-    battery_status:
-      value_template: "{{ 'positive' if states('sensor.battery_output_power')|float > 0 else 'negative' }}"
-      friendly_name: "Battery Status"
 ```  
 
 15960 is battery size in Wh. You will need to adjust for your system
