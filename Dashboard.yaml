@@ -1056,7 +1056,7 @@ cards:
       {% set state = states('sensor.battery_output_power') | int %}
 
       {% if state <= 0 -%}
-        <ha-alert alert-type="success">{{ soc1 }} to {{states('sensor.markdown_battery_charge_time_left')}}%. ETA@{{states('sensor.markdown_charge_time')}}</ha-alert>
+        <ha-alert alert-type="success">{{ soc1 }} to {{states('sensor.markdown_battery_charge_time_left')}}%</ha-alert>
       {% else %}
         {% if socsec1 > 21601 %}
         <ha-alert alert-type="success"> Battery runtime to {{states('sensor.battery_cap')}}% is {{ soc1 }} at current ({{state}} W) battery load. ETA@{{states('sensor.markdown_discharge_time')}}</ha-alert>
