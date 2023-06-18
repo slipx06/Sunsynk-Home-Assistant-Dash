@@ -16,19 +16,19 @@ logger:
 # Enable Home Assistant API
 api:
   encryption:
-    key: "######"
+    key: "#"
 
 ota:
-  password: "####"
+  password: "#"
 
 wifi:
-  ssid: "####"
-  password: "#####"
+  ssid: "#"
+  password: "#"
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: "Sunsynk Fallback Hotspot"
-    password: "#####"
+    password: "#"
 
   fast_connect: true
   power_save_mode: none
@@ -388,8 +388,25 @@ sensor:
             if (x > 32767) return (x - 65535) /1;
             else return (x) /1;
 
+  - platform: modbus_controller             # 167 Grid Power
+    modbus_controller_id: sunsynk
+    name: "Grid Power 167"
+    id: grid_power_167
+    register_type: holding
+    address: 167
+    unit_of_measurement: "W"
+    accuracy_decimals: 0
+    device_class: power
+    state_class: measurement
+    value_type: S_WORD
+    #filters: #GOOD
+    #  - lambda: |-
+    #          float MIN_VALUE = -10000.0;
+    #          float MAX_VALUE = 10000.0;
+    #          if (MIN_VALUE <= x && x <= MAX_VALUE) return x;
+    #          else return {};
 
-  - platform: modbus_controller             # 169 (167+168) Grid Power
+  - platform: modbus_controller             # 169 Grid Power
     modbus_controller_id: sunsynk
     name: "Grid Power"
     id: grid_power
@@ -399,13 +416,13 @@ sensor:
     accuracy_decimals: 0
     device_class: power
     state_class: measurement
-    #value_type: S_WORD
-    filters: #GOOD
-      - lambda: |-
-              float MIN_VALUE = -10000.0;
-              float MAX_VALUE = 10000.0;
-              if (MIN_VALUE <= x && x <= MAX_VALUE) return x;
-              else return {};
+    value_type: S_WORD
+    #filters: #GOOD
+    #  - lambda: |-
+    #          float MIN_VALUE = -10000.0;
+    #          float MAX_VALUE = 10000.0;
+    #          if (MIN_VALUE <= x && x <= MAX_VALUE) return x;
+    #          else return {};
 
   - platform: modbus_controller            # 172 Grid External Power
     modbus_controller_id: sunsynk
@@ -417,13 +434,13 @@ sensor:
     accuracy_decimals: 0
     device_class: power
     state_class: measurement
-    #value_type: S_WORD
-    filters: #GOOD
-      - lambda: |-
-              float MIN_VALUE = -10000.0;
-              float MAX_VALUE = 10000.0;
-              if (MIN_VALUE <= x && x <= MAX_VALUE) return x;
-              else return {};
+    value_type: S_WORD
+    #filters: #GOOD
+    #  - lambda: |-
+    #          float MIN_VALUE = -10000.0;
+    #          float MAX_VALUE = 10000.0;
+    #          if (MIN_VALUE <= x && x <= MAX_VALUE) return x;
+    #          else return {};
 
 
   - platform: modbus_controller            # 175 Inverter Output Power
@@ -638,6 +655,35 @@ sensor:
     accuracy_decimals: 0
     device_class: battery
 
+  - platform: template                   # Essential Power based on register 175 + 167 -166
+    name: "SS Essential Power"
+    unit_of_measurement: "W"
+    accuracy_decimals: 0
+    device_class: power
+    state_class: measurement
+    lambda: |-
+      return (id(sunsynk_esphome_inverter_output_power).state + id(grid_power_167).state - id(sunsynk_esphome_aux_output_power).state);
+    update_interval: 5s
+
+  - platform: template                   # Essential Power based on register 175 + 169 -166
+    name: "SS Essential Power 1"
+    unit_of_measurement: "W"
+    accuracy_decimals: 0
+    device_class: power
+    state_class: measurement
+    lambda: |-
+      return (id(sunsynk_esphome_inverter_output_power).state + id(grid_power).state - id(sunsynk_esphome_aux_output_power).state);
+    update_interval: 5s
+
+  - platform: template                   # Nonessential Power 175 - 167
+    name: "SS Nonessential Power"
+    unit_of_measurement: "W"
+    accuracy_decimals: 0
+    device_class: power
+    state_class: measurement
+    lambda: |-
+      return (id(grid_external_power).state - id(grid_power_167).state);
+    update_interval: 5s
 
 ################################################ READ SETTINGS ################################################
   - platform: modbus_controller          # 250 Settings Timezone1
@@ -821,6 +867,17 @@ sensor:
 ################################################ WRITE SETTINGS ################################################
 
 switch:
+  - platform: modbus_controller          # 247 Toggle Solar Sell
+    use_write_multiple: true
+    modbus_controller_id: sunsynk
+    name: "Toggle Solar sell"
+    id: sunsynk_esphome_toggle_solar_sell
+    register_type: holding
+    address: 247
+    bitmask: 1
+    entity_category: config
+    icon: "mdi:toggle-switch"
+
   - platform: modbus_controller          # 248 Toggle System Timer
     use_write_multiple: true
     modbus_controller_id: sunsynk
@@ -1094,107 +1151,175 @@ text_sensor:
         snprintf(formatted_time, sizeof(formatted_time), "%02d:%02d", hours, minutes);
         return esphome::optional<std::string>(formatted_time);
 
-  - platform: template
-    name: "Sunsynk Battery Capacity"
-    lambda: |-
-      if (!id(grid_connected_status).state) {
-        float value = id(sunsynk_battery_capacity_shutdown).state;
-        char buffer[10];
-        dtostrf(value, 6, 0, buffer);
-        return std::string(buffer);
-      } else {
+  # - platform: template
+  #   name: "Sunsynk Battery Capacity"
+  #   id: sunsynk_battery_capacity
+  #   lambda: |-
+  #     if (!id(grid_connected_status).state) {
+  #       float value = id(sunsynk_battery_capacity_shutdown).state;
+  #       char buffer[10];
+  #       dtostrf(value, 6, 0, buffer);
+  #       return std::string(buffer);
+  #     } else {
                
-        // Get the current date and time
-        time_t now = id(homeassistant_time).now().timestamp;
-        tm* currentTime = localtime(&now);
+  #       // Get the current date and time
+  #       time_t now = id(homeassistant_time).now().timestamp;
+  #       tm* currentTime = localtime(&now);
 
-        std::string timeSlot1 = id(sunsynk_time_slot_1).state;
-        std::string timeSlot2 = id(sunsynk_time_slot_2).state;
-        std::string timeSlot3 = id(sunsynk_time_slot_3).state;
-        std::string timeSlot4 = id(sunsynk_time_slot_4).state;
-        std::string timeSlot5 = id(sunsynk_time_slot_5).state;
-        std::string timeSlot6 = id(sunsynk_time_slot_6).state;
+  #       std::string timeSlot1 = id(sunsynk_time_slot_1).state;
+  #       std::string timeSlot2 = id(sunsynk_time_slot_2).state;
+  #       std::string timeSlot3 = id(sunsynk_time_slot_3).state;
+  #       std::string timeSlot4 = id(sunsynk_time_slot_4).state;
+  #       std::string timeSlot5 = id(sunsynk_time_slot_5).state;
+  #       std::string timeSlot6 = id(sunsynk_time_slot_6).state;
 
-        int hour, minute;
+  #       int hour, minute;
 
-        // Convert timeSlot1 to sellTime1Epoch
-        sscanf(timeSlot1.c_str(), "%d:%d", &hour, &minute);
-        currentTime->tm_hour = hour;
-        currentTime->tm_min = minute;
-        currentTime->tm_sec = 0;
-        time_t sellTime1Epoch = mktime(currentTime);
-        // ESP_LOGD("DEBUG", "sellTime1Epoch: %ld, now: %ld", sellTime1Epoch, now);
+  #       // Convert timeSlot1 to sellTime1Epoch
+  #       sscanf(timeSlot1.c_str(), "%d:%d", &hour, &minute);
+  #       currentTime->tm_hour = hour;
+  #       currentTime->tm_min = minute;
+  #       currentTime->tm_sec = 0;
+  #       time_t sellTime1Epoch = mktime(currentTime);
+  #       // ESP_LOGD("DEBUG", "sellTime1Epoch: %ld, now: %ld", sellTime1Epoch, now);
 
-        // Convert timeSlot2 to sellTime2Epoch
-        sscanf(timeSlot2.c_str(), "%d:%d", &hour, &minute);
-        currentTime->tm_hour = hour;
-        currentTime->tm_min = minute;
-        currentTime->tm_sec = 0;
-        time_t sellTime2Epoch = mktime(currentTime);
-        // ESP_LOGD("DEBUG", "sellTime2Epoch: %ld, now: %ld", sellTime2Epoch, now);
+  #       // Convert timeSlot2 to sellTime2Epoch
+  #       sscanf(timeSlot2.c_str(), "%d:%d", &hour, &minute);
+  #       currentTime->tm_hour = hour;
+  #       currentTime->tm_min = minute;
+  #       currentTime->tm_sec = 0;
+  #       time_t sellTime2Epoch = mktime(currentTime);
 
-        // Convert timeSlot3 to sellTime3Epoch
-        sscanf(timeSlot3.c_str(), "%d:%d", &hour, &minute);
-        currentTime->tm_hour = hour;
-        currentTime->tm_min = minute;
-        currentTime->tm_sec = 0;
-        time_t sellTime3Epoch = mktime(currentTime);
+  #       // Convert timeSlot3 to sellTime3Epoch
+  #       sscanf(timeSlot3.c_str(), "%d:%d", &hour, &minute);
+  #       currentTime->tm_hour = hour;
+  #       currentTime->tm_min = minute;
+  #       currentTime->tm_sec = 0;
+  #       time_t sellTime3Epoch = mktime(currentTime);
 
-        // Convert timeSlot4 to sellTime4Epoch
-        sscanf(timeSlot4.c_str(), "%d:%d", &hour, &minute);
-        currentTime->tm_hour = hour;
-        currentTime->tm_min = minute;
-        currentTime->tm_sec = 0;
-        time_t sellTime4Epoch = mktime(currentTime);
+  #       // Convert timeSlot4 to sellTime4Epoch
+  #       sscanf(timeSlot4.c_str(), "%d:%d", &hour, &minute);
+  #       currentTime->tm_hour = hour;
+  #       currentTime->tm_min = minute;
+  #       currentTime->tm_sec = 0;
+  #       time_t sellTime4Epoch = mktime(currentTime);
 
-        // Convert timeSlot5 to sellTime5Epoch
-        sscanf(timeSlot5.c_str(), "%d:%d", &hour, &minute);
-        currentTime->tm_hour = hour;
-        currentTime->tm_min = minute;
-        currentTime->tm_sec = 0;
-        time_t sellTime5Epoch = mktime(currentTime);
+  #       // Convert timeSlot5 to sellTime5Epoch
+  #       sscanf(timeSlot5.c_str(), "%d:%d", &hour, &minute);
+  #       currentTime->tm_hour = hour;
+  #       currentTime->tm_min = minute;
+  #       currentTime->tm_sec = 0;
+  #       time_t sellTime5Epoch = mktime(currentTime);
 
-        // Convert timeSlot6 to sellTime6Epoch
-        sscanf(timeSlot6.c_str(), "%d:%d", &hour, &minute);
-        currentTime->tm_hour = hour;
-        currentTime->tm_min = minute;
-        currentTime->tm_sec = 0;
-        time_t sellTime6Epoch = mktime(currentTime);
+  #       // Convert timeSlot6 to sellTime6Epoch
+  #       sscanf(timeSlot6.c_str(), "%d:%d", &hour, &minute);
+  #       currentTime->tm_hour = hour;
+  #       currentTime->tm_min = minute;
+  #       currentTime->tm_sec = 0;
+  #       time_t sellTime6Epoch = mktime(currentTime);
 
-        if (now >= sellTime1Epoch && now < sellTime2Epoch)  {
-          float value = static_cast<float>(id(sunsynk_esphome_set_soc_timezone1).state);
-          char buffer[10];
-          dtostrf(value, 6, 0, buffer);
-          return std::string(buffer);
-        } else if (now >= sellTime2Epoch && now < sellTime3Epoch) {
-          float value = static_cast<float>(id(sunsynk_esphome_set_soc_timezone2).state);
-          char buffer[10];
-          dtostrf(value, 6, 0, buffer);
-          return std::string(buffer);
-        } else if (now >= sellTime3Epoch && now < sellTime4Epoch) {
-          float value = static_cast<float>(id(sunsynk_esphome_set_soc_timezone3).state);
-          char buffer[10];
-          dtostrf(value, 6, 0, buffer);
-          return std::string(buffer);
-        } else if (now >= sellTime4Epoch && now < sellTime5Epoch) {
-          float value = static_cast<float>(id(sunsynk_esphome_set_soc_timezone4).state);
-          char buffer[10];
-          dtostrf(value, 6, 0, buffer);
-          return std::string(buffer);
-        } else if (now >= sellTime5Epoch && now < sellTime6Epoch) {
-          float value = static_cast<float>(id(sunsynk_esphome_set_soc_timezone5).state);
-          char buffer[10];
-          dtostrf(value, 6, 0, buffer);
-          return std::string(buffer);
-        } else if (now >= sellTime6Epoch && now < sellTime1Epoch) {
-          float value = static_cast<float>(id(sunsynk_esphome_set_soc_timezone6).state);
-          char buffer[10];
-          dtostrf(value, 6, 0, buffer);
-          return std::string(buffer);
-        } else {
-          float value = id(sunsynk_battery_capacity_shutdown).state;
-          char buffer[10];
-          dtostrf(value, 6, 0, buffer);
-          return std::string(buffer);
-          }
-      }
+  #       if (now >= sellTime1Epoch && now < sellTime2Epoch)  {
+  #         float value = static_cast<float>(id(sunsynk_esphome_set_soc_timezone1).state);
+  #         char buffer[10];
+  #         dtostrf(value, 6, 0, buffer);
+  #         return std::string(buffer);
+  #       } else if (now >= sellTime2Epoch && now < sellTime3Epoch) {
+  #         float value = static_cast<float>(id(sunsynk_esphome_set_soc_timezone2).state);
+  #         char buffer[10];
+  #         dtostrf(value, 6, 0, buffer);
+  #         return std::string(buffer);
+  #       } else if (now >= sellTime3Epoch && now < sellTime4Epoch) {
+  #         float value = static_cast<float>(id(sunsynk_esphome_set_soc_timezone3).state);
+  #         char buffer[10];
+  #         dtostrf(value, 6, 0, buffer);
+  #         return std::string(buffer);
+  #       } else if (now >= sellTime4Epoch && now < sellTime5Epoch) {
+  #         float value = static_cast<float>(id(sunsynk_esphome_set_soc_timezone4).state);
+  #         char buffer[10];
+  #         dtostrf(value, 6, 0, buffer);
+  #         return std::string(buffer);
+  #       } else if (now >= sellTime5Epoch && now < sellTime6Epoch) {
+  #         float value = static_cast<float>(id(sunsynk_esphome_set_soc_timezone5).state);
+  #         char buffer[10];
+  #         dtostrf(value, 6, 0, buffer);
+  #         return std::string(buffer);
+  #       } else if (now >= sellTime6Epoch && now < sellTime1Epoch) {
+  #         float value = static_cast<float>(id(sunsynk_esphome_set_soc_timezone6).state);
+  #         char buffer[10];
+  #         dtostrf(value, 6, 0, buffer);
+  #         return std::string(buffer);
+  #       } else {
+  #         float value = id(sunsynk_battery_capacity_shutdown).state;
+  #         char buffer[10];
+  #         dtostrf(value, 6, 0, buffer);
+  #         return std::string(buffer);
+  #         }
+  #     }
+
+  # - platform: template
+  #   name: "Sunsynk Battery Duration"
+  #   lambda: |-
+  #     int totalSeconds = 0;
+  #     float battery_power = id(sunsynk_esphome_battery_output_power).state;
+  #     float battery_capacity = atof(id(sunsynk_battery_capacity)->state.c_str());
+  #     float battery_energy = 15960;
+  #     float stateObj12_state = id(battery_soc)->state;
+  #     float shutdown_soc = id(sunsynk_battery_capacity_shutdown)->state;
+  #     bool stateObj20_state = id(grid_connected_status).state;
+
+  #     if (stateObj20_state == false) {
+  #       battery_capacity = shutdown_soc;
+  #     } else if (battery_power > 0) {
+  #       if (stateObj12_state <= battery_capacity) {
+  #         battery_capacity = shutdown_soc;
+  #       } else {
+  #         battery_capacity = battery_capacity;
+  #       }
+  #     } else if (battery_power < 0) {
+  #       if (stateObj20_state == false || stateObj12_state >= battery_capacity) {
+  #         battery_capacity = 100;
+  #       } else if (stateObj12_state < battery_capacity) {
+  #         battery_capacity = battery_capacity;
+  #       }
+  #     }
+
+  #     ESP_LOGD("sunsynk", "battery_power: %f", battery_power);
+  #     ESP_LOGD("sunsynk", "battery_capacity: %f", battery_capacity);
+  #     ESP_LOGD("sunsynk", "battery_energy: %f", battery_energy);
+  #     ESP_LOGD("sunsynk", "stateObj12_state: %f", stateObj12_state);
+  #     ESP_LOGD("sunsynk", "shutdown_soc: %f", shutdown_soc);
+  #     ESP_LOGD("sunsynk", "stateObj20_state: %d", stateObj20_state);
+
+  #     if (battery_power == 0) {
+  #       totalSeconds = (((stateObj12_state - shutdown_soc) / 100) * battery_energy) / (1 * 60 * 60);
+  #     } else if (battery_power > 0) {
+  #       totalSeconds = ((((stateObj12_state - battery_capacity) / 100) * battery_energy) / battery_power) * 60 * 60;
+  #     } else if (battery_power < 0) {
+  #       totalSeconds = ((((battery_capacity - stateObj12_state) / 100) * battery_energy) / -battery_power) * 60 * 60;
+  #     }
+
+  #     ESP_LOGD("sunsynk", "totalSeconds: %d", totalSeconds);
+
+  #     uint32_t durationMilliseconds = totalSeconds * 1000;
+  #     uint32_t currentTime = millis();
+  #     uint32_t resultTime = currentTime + durationMilliseconds;
+  #     uint32_t resultHours = (resultTime / (60 * 60 * 1000)) % 24;
+  #     uint32_t resultMinutes = (resultTime / (60 * 1000)) % 60;
+  #     char formattedResultTime[6];
+  #     snprintf(formattedResultTime, sizeof(formattedResultTime), "%02d:%02d", resultHours, resultMinutes);
+
+  #     int days = totalSeconds / (60 * 60 * 24);
+  #     int hours = (totalSeconds % (60 * 60 * 24)) / (60 * 60);
+  #     int minutes = (totalSeconds % (60 * 60)) / 60;
+  #     char duration[20] = "";
+  #     if (days > 0) {
+  #       snprintf(duration, sizeof(duration), "%d days, ", days);
+  #     }
+  #     if (hours > 0 || days > 0) {
+  #       snprintf(duration + strlen(duration), sizeof(duration) - strlen(duration), "%d hrs, ", hours);
+  #     }
+  #     snprintf(duration + strlen(duration), sizeof(duration) - strlen(duration), "%d min", minutes);
+
+  #     return std::string(duration);
+
+        
