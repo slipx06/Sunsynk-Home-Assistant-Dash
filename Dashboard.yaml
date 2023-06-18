@@ -11,6 +11,7 @@ cards:
     inverter:
       modern: 'yes'
       colour: '#959595'
+      autarky: power
     solar:
       mppts: two
       show_daily: 'yes'
@@ -60,9 +61,9 @@ cards:
       battery_soc_184: sensor.battery_soc
       battery_out_190: sensor.battery_output_power
       battery_current_191: sensor.battery_output_current
-      essential_power: sensor.load_power
+      essential_power: sensor.ss_essential_power
       essential_load1: sensor.tuya_geyser_current_consumption
-      nonessential_power: none
+      nonessential_power: sensor.ss_nonessential_power
       grid_external_power_172: sensor.grid_external_power
       pv1_v_109: sensor.dc1_voltage
       pv1_i_110: sensor.dc1_current
@@ -108,7 +109,7 @@ cards:
         fill: tozeroy
         line:
           color: rgb(255, 155, 48)
-      - entity: sensor.load_power
+      - entity: sensor.ss_essential_power
         name: |
           $fn ({ ys,meta }) =>
             "Load" + "⚡" + "(" +ys[ys.length - 1]+"W)"
@@ -1222,7 +1223,7 @@ cards:
     view_layout:
       grid-area: g3
     entities:
-      - entity: sensor.load_power
+      - entity: sensor.ss_essential_power
         unit: W
         name: AC
       - entity: sensor.grid_inverter_voltage
