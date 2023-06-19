@@ -611,6 +611,16 @@ sensor:
       return (id(grid_external_power).state - id(grid_power_167).state);
     update_interval: 5s
 
+  - platform: template                   # Nonessential Power 175 - 169
+    name: "SS Nonessential Power 1"
+    unit_of_measurement: "W"
+    accuracy_decimals: 0
+    device_class: power
+    state_class: measurement
+    lambda: |-
+      return (id(grid_external_power).state - id(grid_power).state);
+    update_interval: 5s
+
 ################################################ READ SETTINGS ################################################
   - platform: modbus_controller          # 250 Settings Timezone1
     modbus_controller_id: sunsynk
