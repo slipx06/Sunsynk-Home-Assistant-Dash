@@ -97,11 +97,9 @@ sensor:
     accuracy_decimals: 1
     device_class: energy
     state_class: total_increasing
-    filters: #GOOD
-      - lambda: |-
-            x = x / 10;
-            if (x > 32767) return (x - 65535) /1;
-            else return (x) /1;
+    value_type: U_WORD
+    filters:
+      - multiply: 0.1
 
   - platform: modbus_controller            # 071 Battery Discharge Day
     modbus_controller_id: sunsynk
@@ -113,11 +111,9 @@ sensor:
     accuracy_decimals: 1
     device_class: energy
     state_class: total_increasing
-    filters: #GOOD
-      - lambda: |-
-            x = x / 10;
-            if (x > 32767) return (x - 65535) /1;
-            else return (x) /1;
+    value_type: U_WORD
+    filters:
+      - multiply: 0.1
 
   - platform: modbus_controller            # 072 Battery Charge Energy Total
     modbus_controller_id: sunsynk
@@ -132,7 +128,6 @@ sensor:
     value_type: U_DWORD_R
     filters:
      - multiply: 0.1
-
 
   - platform: modbus_controller            # 074 Battery Discharge Energy Total
     modbus_controller_id: sunsynk
@@ -158,11 +153,9 @@ sensor:
     accuracy_decimals: 1
     device_class: energy
     state_class: total_increasing
-    filters: # GOOD
-      - lambda: |-
-            if (x > 32767) return (x - 65535) / 10;
-            else return x /10;
-
+    value_type: U_WORD
+    filters:
+      - multiply: 0.1
 
   - platform: modbus_controller            # 078 Grid Import Energy Total (Buy)
     modbus_controller_id: sunsynk
@@ -174,6 +167,7 @@ sensor:
     accuracy_decimals: 2
     device_class: energy
     state_class: total_increasing
+    value_type: U_WORD
     filters:
       - multiply: 0.1
 
@@ -185,13 +179,10 @@ sensor:
     address: 79
     unit_of_measurement: "hz"
     accuracy_decimals: 2
-    filters: #GOOD
-      - lambda: |-
-            if (x > 32767) return (x - 65535) /100;
-            else return (x) /100;
-    #device_class: none
+    filters:
+      - multiply: 0.01
+    value_type: U_WORD
     state_class: measurement
-
 
   - platform: modbus_controller            # 081 Grid Export Energy Total (Sell)
     modbus_controller_id: sunsynk
@@ -203,10 +194,9 @@ sensor:
     accuracy_decimals: 2
     device_class: energy
     state_class: total_increasing
+    value_type: U_WORD
     filters:
-      - lambda: |-
-            if (x > 32767) return (x - 65535) / 10;
-            else return x /10;
+      - multiply: 0.1
 
   - platform: modbus_controller            # 084 Daily Load
     modbus_controller_id: sunsynk
@@ -220,6 +210,7 @@ sensor:
     state_class: total_increasing
     filters:
       - multiply: 0.1
+    value_type: U_WORD
 
   - platform: modbus_controller            # 085 Total Load
     modbus_controller_id: sunsynk
@@ -245,10 +236,10 @@ sensor:
     accuracy_decimals: 1
     device_class: temperature
     state_class: measurement
-    filters: # GOOD
-      - lambda: |-
-            if (x > 32767) return ((x - 65535)-1000) / 10;
-            else return ((x)-1000) / 10;
+    value_type: S_WORD
+    filters:
+      - offset: -1000
+      - multiply:  0.1
 
   - platform: modbus_controller            # 091 Radiator Temperature
     modbus_controller_id: sunsynk
@@ -260,11 +251,10 @@ sensor:
     accuracy_decimals: 1
     device_class: temperature
     state_class: measurement
-    filters: # GOOD
-      - lambda: |-
-            if (x > 32767) return ((x - 65535)-1000) / 10;
-            else return ((x)-1000) / 10;
-
+    value_type: S_WORD
+    filters:
+      - offset: -1000
+      - multiply:  0.1
 
   - platform: modbus_controller            # 096 PV Energy Total
     modbus_controller_id: sunsynk
@@ -278,6 +268,7 @@ sensor:
     state_class: total_increasing
     filters:
       - multiply: 0.1
+    value_type: U_DWORD_R  
 
 
   - platform: modbus_controller            # 108 Day PV Power
@@ -292,6 +283,7 @@ sensor:
     state_class: total_increasing
     filters:
       - multiply: 0.1
+    value_type: U_WORD
 
 
   - platform: modbus_controller            # 109 DC1 Voltage
@@ -305,6 +297,7 @@ sensor:
     state_class: measurement
     filters:
       - multiply: 0.1
+    value_type: U_WORD
 
   - platform: modbus_controller            # 111 DC2 Voltage
     modbus_controller_id: sunsynk
@@ -317,6 +310,7 @@ sensor:
       - multiply: 0.1
     device_class: voltage
     state_class: measurement
+    value_type: U_WORD
 
   - platform: modbus_controller            # 110 DC1 Output Current
     modbus_controller_id: sunsynk
@@ -330,6 +324,7 @@ sensor:
     state_class: measurement
     filters:
       - multiply: 0.1
+    value_type: U_WORD
 
   - platform: modbus_controller            # 112 DC2 Output Current
     modbus_controller_id: sunsynk
@@ -343,6 +338,7 @@ sensor:
     state_class: measurement
     filters:
       - multiply: 0.1
+    value_type: U_WORD
 
   - platform: modbus_controller            # 154 Grid Inverter Voltage
     modbus_controller_id: sunsynk
@@ -352,12 +348,11 @@ sensor:
     address: 154
     unit_of_measurement: "V"
     accuracy_decimals: 1
-    filters: #GOOD
-      - lambda: |-
-            if (x > 32767) return (x - 65535) /10;
-            else return (x) /10;
     device_class: voltage
     state_class: measurement
+    filters:
+      - multiply: 0.1
+    value_type: U_WORD 
 
   - platform: modbus_controller            # 164 Inverter Output Current
     modbus_controller_id: sunsynk
@@ -383,10 +378,7 @@ sensor:
     accuracy_decimals: 0
     device_class: power
     state_class: measurement
-    filters: #GOOD
-      - lambda: |-
-            if (x > 32767) return (x - 65535) /1;
-            else return (x) /1;
+    value_type: S_WORD
 
   - platform: modbus_controller             # 167 Grid Power
     modbus_controller_id: sunsynk
@@ -453,44 +445,6 @@ sensor:
     accuracy_decimals: 0
     device_class: power
     value_type: S_WORD
-    filters: #GOOD
-      - lambda: |-
-            if (x > 32767) return (0 - x + 65535) /-1;
-            else return (0 - x) /-1;
-
-
-  - platform: modbus_controller            # 176 Load Power
-    modbus_controller_id: sunsynk
-    name: "Load Power 176"
-    id: ss_load_power_176
-    register_type: holding
-    address: 176
-    unit_of_measurement: "W"
-    accuracy_decimals: 0
-    device_class: power
-    state_class: measurement
-    value_type: S_WORD
-    filters: #GOOD
-      - lambda: |-
-            if (x > 32767) return (x - 65536) /1;
-            else return (x) /1;
-
-  - platform: modbus_controller            # 177 Load Power
-    modbus_controller_id: sunsynk
-    name: "Load Power 177"
-    id: ss_load_power_177
-    register_type: holding
-    address: 177
-    unit_of_measurement: "W"
-    accuracy_decimals: 0
-    device_class: power
-    state_class: measurement
-    value_type: S_WORD
-    filters: #GOOD
-      - lambda: |-
-            if (x > 32767) return (x - 65536) /1;
-            else return (x) /1;
-
 
   - platform: modbus_controller            # 178 Load Power
     modbus_controller_id: sunsynk
@@ -503,10 +457,6 @@ sensor:
     device_class: power
     state_class: measurement
     value_type: S_WORD
-    filters: #GOOD
-      - lambda: |-
-            if (x > 32767) return (x - 65536) /1;
-            else return (x) /1;
 
   
   - platform: modbus_controller            # 182 Battery Temperature
@@ -519,10 +469,10 @@ sensor:
     accuracy_decimals: 1
     device_class: temperature
     state_class: measurement
-    filters: # GOOD
-      - lambda: |-
-            if (x > 32767) return ((x - 65535)-1000) / 10;
-            else return ((x)-1000) / 10;
+    value_type: U_WORD 
+    filters:
+      - offset: -1000
+      - multiply: 0.1
 
   - platform: modbus_controller            # 183 Battery Voltage
     modbus_controller_id: sunsynk
@@ -532,12 +482,11 @@ sensor:
     address: 183
     unit_of_measurement: "V"
     accuracy_decimals: 1
-    filters: #GOOD
-      - lambda: |-
-            if (x > 32767) return (x - 65535) / 100;
-            else return x / 100;
     device_class: voltage
     state_class: measurement
+    filters:
+      - multiply: 0.01
+    value_type: U_WORD
 
   - platform: modbus_controller            # 184 Battery SOC
     modbus_controller_id: sunsynk
@@ -548,10 +497,7 @@ sensor:
     unit_of_measurement: "%"
     accuracy_decimals: 0
     device_class: battery
-    filters: #GOOD
-      - lambda: |-
-            if (x > 32767) return (x - 65535) /1;
-            else return (x) /1;
+    value_type: U_WORD
 
   - platform: modbus_controller            # 186 PV1 Power
     modbus_controller_id: sunsynk
@@ -563,6 +509,7 @@ sensor:
     accuracy_decimals: 0
     device_class: power
     state_class: measurement
+    value_type: U_WORD
     
   - platform: modbus_controller            # 187 PV2 Power
     modbus_controller_id: sunsynk
@@ -574,6 +521,7 @@ sensor:
     accuracy_decimals: 0
     device_class: power
     state_class: measurement
+    value_type: U_WORD
 
   - platform: template                   # Sum of PV1 and PV2 to get total PV Power
     name: "SS Total Solar"
@@ -595,10 +543,6 @@ sensor:
     accuracy_decimals: 0
     device_class: power
     value_type: S_WORD
-    filters: #GOOD
-      - lambda: |-
-            if (x > 32767) return (x - 65536) /1;
-            else return (x) /1;
 
   - platform: modbus_controller            # 191 Battery Output Current
     modbus_controller_id: sunsynk
@@ -611,10 +555,8 @@ sensor:
     device_class: current
     state_class: measurement
     value_type: S_WORD
-    filters: #GOOD
-      - lambda: |-
-            if (x > 32767) return (x - 65536) / 100;
-            else return x / 100;
+    filters:
+      - multiply: 0.01
 
   - platform: modbus_controller            # 192 Load Frequency
     modbus_controller_id: sunsynk
@@ -624,26 +566,10 @@ sensor:
     address: 192
     unit_of_measurement: "hz"
     accuracy_decimals: 2
-    filters: #GOOD
-      - lambda: |-
-            if (x > 32767) return (x - 65535) /100;
-            else return (x) /100;
-    #device_class: none
+    filters:
+      - multiply: 0.01
+    value_type: U_WORD
     state_class: measurement
-
-  - platform: modbus_controller            # 216 Battery Charging Efficiency
-    modbus_controller_id: sunsynk
-    name: "Battery Charging Efficiency"
-    id: battery_charging_efficiency
-    register_type: holding
-    address: 216
-    unit_of_measurement: "%"
-    accuracy_decimals: 1
-    device_class: battery
-    filters: #GOOD
-      - lambda: |-
-            if (x > 32767) return (x - 65535) /10;
-            else return (x) /10;
 
   - platform: modbus_controller            # 217 Battery Capacity Shutdown
     modbus_controller_id: sunsynk
@@ -711,7 +637,6 @@ sensor:
             if (x > 32767) return (x - 65535) /1;
             else return (x) /1;
     icon: "mdi:clock"
-
 
   - platform: modbus_controller          # 252 Settings Timezone3
     modbus_controller_id: sunsynk
