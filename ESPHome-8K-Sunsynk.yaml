@@ -6,7 +6,7 @@ substitutions:
   settings_skipped_updates: "30"
 
 # Icon
-  main_icon: "power-socket-uk"
+  main_icon: "solar-power"
   
 # Basic Config
 esphome:
