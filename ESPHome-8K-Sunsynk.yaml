@@ -66,7 +66,7 @@ binary_sensor:
   - platform: modbus_controller            # 194 Grid Connected Status
     modbus_controller_id: sunsynk
     name: "Grid Connected Status"
-    id: grid_connected_status
+    id: sunsynk_esphome_grid_connected_status
     register_type: holding
     address: 194
 
@@ -119,7 +119,7 @@ sensor:
   - platform: modbus_controller            # 072 Battery Charge Energy Total
     modbus_controller_id: sunsynk
     name: "Total Battery Charge (kWh)"
-    id: total_battery_charge_kwh
+    id: sunsynk_esphome_total_battery_charge_kwh
     register_type: holding
     address: 72
     unit_of_measurement: "kWh"
@@ -133,7 +133,7 @@ sensor:
   - platform: modbus_controller            # 074 Battery Discharge Energy Total
     modbus_controller_id: sunsynk
     name: "Total Battery Discharge (kWh)"
-    id: total_battery_discharge_kwh
+    id: sunsynk_esphome_total_battery_discharge_kwh
     register_type: holding
     address: 74
     unit_of_measurement: "kWh"
@@ -161,7 +161,7 @@ sensor:
   - platform: modbus_controller            # 078 Grid Import Energy Total (Buy)
     modbus_controller_id: sunsynk
     name: "Total Grid Import (kWh)"
-    id: total_grid_import_kwh
+    id: sunsynk_esphome_total_grid_import_kwh
     register_type: holding
     address: 78
     unit_of_measurement: "kWh"
@@ -188,7 +188,7 @@ sensor:
   - platform: modbus_controller            # 081 Grid Export Energy Total (Sell)
     modbus_controller_id: sunsynk
     name: "Total Grid Export (kWh)"
-    id: total_grid_export_kwh
+    id: sunsynk_esphome_total_grid_export_kwh
     register_type: holding
     address: 81
     unit_of_measurement: "kWh"
@@ -202,7 +202,7 @@ sensor:
   - platform: modbus_controller            # 084 Daily Load
     modbus_controller_id: sunsynk
     name: "Daily Load Power (kWh)"
-    id: daily_load_power_kwh
+    id: sunsynk_esphome_daily_load_energy_kwh
     register_type: holding
     address: 84
     unit_of_measurement: "kWh"
@@ -216,7 +216,7 @@ sensor:
   - platform: modbus_controller            # 085 Total Load
     modbus_controller_id: sunsynk
     name: "Total Load Power (kWh)"
-    id: total_load_power_kwh
+    id: sunsynk_esphome_total_load_energy_kwh
     register_type: holding
     address: 85
     unit_of_measurement: "kWh"
@@ -230,7 +230,7 @@ sensor:
   - platform: modbus_controller            # 090 DC Transformer Temperature
     modbus_controller_id: sunsynk
     name: "SS DC Transformer Temperature"
-    id: sunsynk_esphome_dctransformer_temperature
+    id: sunsynk_esphome_dc_transformer_temperature
     register_type: holding
     address: 090
     unit_of_measurement: "°C"
@@ -260,7 +260,7 @@ sensor:
   - platform: modbus_controller            # 096 PV Energy Total
     modbus_controller_id: sunsynk
     name: "Total PV Power (kWh)"
-    id: total_pv_power_kwh
+    id: sunsynk_esphome_total_pv_energy_kwh
     register_type: holding
     address: 96
     unit_of_measurement: "kWh"
@@ -275,7 +275,7 @@ sensor:
   - platform: modbus_controller            # 108 Day PV Power
     modbus_controller_id: sunsynk
     name: "Daily PV Power (kWh)"
-    id: daily_pv_power_kwh
+    id: sunsynk_esphome_daily_pv_energy_kwh
     register_type: holding
     address: 108
     unit_of_measurement: "kWh"
@@ -384,7 +384,7 @@ sensor:
   - platform: modbus_controller             # 167 Grid Power
     modbus_controller_id: sunsynk
     name: "Grid Power 167"
-    id: grid_power_167
+    id: sunsynk_esphome_grid_power_167
     register_type: holding
     address: 167
     unit_of_measurement: "W"
@@ -402,7 +402,7 @@ sensor:
   - platform: modbus_controller             # 169 Grid Power
     modbus_controller_id: sunsynk
     name: "Grid Power"
-    id: grid_power
+    id: sunsynk_esphome_grid_power_169
     register_type: holding
     address: 169
     unit_of_measurement: "W"
@@ -420,7 +420,7 @@ sensor:
   - platform: modbus_controller            # 172 Grid External Power
     modbus_controller_id: sunsynk
     name: "Grid External Power"
-    id: grid_external_power
+    id: sunsynk_esphome_grid_external_power
     register_type: holding
     address: 172
     unit_of_measurement: "W"
@@ -450,7 +450,7 @@ sensor:
   - platform: modbus_controller            # 178 Load Power
     modbus_controller_id: sunsynk
     name: "Load Power"
-    id: load_power
+    id: sunsynk_esphome_load_power
     register_type: holding
     address: 178
     unit_of_measurement: "W"
@@ -492,7 +492,7 @@ sensor:
   - platform: modbus_controller            # 184 Battery SOC
     modbus_controller_id: sunsynk
     name: "Battery SOC"
-    id: battery_soc
+    id: sunsynk_esphome_battery_soc
     register_type: holding
     address: 184
     unit_of_measurement: "%"
@@ -503,7 +503,7 @@ sensor:
   - platform: modbus_controller            # 186 PV1 Power
     modbus_controller_id: sunsynk
     name: "PV1 Power"
-    id: pv1_power
+    id: sunsynk_esphome_pv1_power
     register_type: holding
     address: 186
     unit_of_measurement: "W"
@@ -515,7 +515,7 @@ sensor:
   - platform: modbus_controller            # 187 PV2 Power
     modbus_controller_id: sunsynk
     name: "PV2 Power"
-    id: pv2_power
+    id: sunsynk_esphome_pv2_power
     register_type: holding
     address: 187
     unit_of_measurement: "W"
@@ -531,7 +531,7 @@ sensor:
     device_class: power
     state_class: measurement
     lambda: |-
-      return (id(pv1_power).state + id(pv2_power).state);
+      return (id(sunsynk_esphome_pv1_power).state + id(sunsynk_esphome_pv2_power).state);
     update_interval: 5s
 
   - platform: modbus_controller            # 190 Battery Output Power
@@ -575,7 +575,7 @@ sensor:
   - platform: modbus_controller            # 217 Battery Capacity Shutdown
     modbus_controller_id: sunsynk
     name: "Battery Capacity Shutdown"
-    id: sunsynk_battery_capacity_shutdown
+    id: sunsynk_esphome_battery_capacity_shutdown
     register_type: holding
     address: 217
     unit_of_measurement: "%"
@@ -589,37 +589,37 @@ sensor:
     device_class: power
     state_class: measurement
     lambda: |-
-      return (id(sunsynk_esphome_inverter_output_power).state + id(grid_power_167).state - id(sunsynk_esphome_aux_output_power).state);
+      return (id(sunsynk_esphome_inverter_output_power).state + id(sunsynk_esphome_grid_power_167).state - id(sunsynk_esphome_aux_output_power).state);
     update_interval: 5s
 
-  - platform: template                   # Essential Power based on register 175 + 169 -166
+  - platform: template                   # Essential Power based on register 175 + 169 - 166
     name: "SS Essential Power 1"
     unit_of_measurement: "W"
     accuracy_decimals: 0
     device_class: power
     state_class: measurement
     lambda: |-
-      return (id(sunsynk_esphome_inverter_output_power).state + id(grid_power).state - id(sunsynk_esphome_aux_output_power).state);
+      return (id(sunsynk_esphome_inverter_output_power).state + id(sunsynk_esphome_grid_power_169).state - id(sunsynk_esphome_aux_output_power).state);
     update_interval: 5s
 
-  - platform: template                   # Nonessential Power 175 - 167
+  - platform: template                   # Nonessential Power 172 - 167
     name: "SS Nonessential Power"
     unit_of_measurement: "W"
     accuracy_decimals: 0
     device_class: power
     state_class: measurement
     lambda: |-
-      return (id(grid_external_power).state - id(grid_power_167).state);
+      return (id(sunsynk_esphome_grid_external_power).state - id(sunsynk_esphome_grid_power_167).state);
     update_interval: 5s
 
-  - platform: template                   # Nonessential Power 175 - 166
+  - platform: template                   # Nonessential Power 172 - 169
     name: "SS Nonessential Power 1"
     unit_of_measurement: "W"
     accuracy_decimals: 0
     device_class: power
     state_class: measurement
     lambda: |-
-      return (id(grid_external_power).state - id(grid_power).state);
+      return (id(sunsynk_esphome_grid_external_power).state - id(sunsynk_esphome_grid_power_169).state);
     update_interval: 5s
 
 ################################################ READ SETTINGS ################################################
@@ -981,7 +981,7 @@ text_sensor:
   - platform: modbus_controller            # 059 Overall State
     modbus_controller_id: sunsynk
     name: "Overall State"
-    id: sunsynk_overall_state
+    id: sunsynk_esphome_overall_state
     register_type: holding
     skip_updates: ${settings_skipped_updates}
     raw_encode: HEXBYTES
@@ -998,7 +998,7 @@ text_sensor:
       }
   - platform: template
     name: "Sunsynk Time Slot 1"
-    id: sunsynk_time_slot_1
+    id: sunsynk_esphome_time_slot_1
     lambda: |-
         int minutes, hours;
         if (id(sunsynk_esphome_setting_timezone1).state) {
@@ -1013,7 +1013,7 @@ text_sensor:
         return esphome::optional<std::string>(formatted_time);
   - platform: template
     name: "Sunsynk Time Slot 2"
-    id: sunsynk_time_slot_2
+    id: sunsynk_esphome_time_slot_2
     lambda: |-
         int minutes, hours;
         if (id(sunsynk_esphome_setting_timezone2).state) {
@@ -1028,7 +1028,7 @@ text_sensor:
         return esphome::optional<std::string>(formatted_time);
   - platform: template
     name: "Sunsynk Time Slot 3"
-    id: sunsynk_time_slot_3
+    id: sunsynk_esphome_time_slot_3
     lambda: |-
         int minutes, hours;
         if (id(sunsynk_esphome_setting_timezone3).state) {
@@ -1043,7 +1043,7 @@ text_sensor:
         return esphome::optional<std::string>(formatted_time);
   - platform: template
     name: "Sunsynk Time Slot 4"
-    id: sunsynk_time_slot_4
+    id: sunsynk_esphome_time_slot_4
     lambda: |-
         int minutes, hours;
         if (id(sunsynk_esphome_setting_timezone4).state) {
@@ -1058,7 +1058,7 @@ text_sensor:
         return esphome::optional<std::string>(formatted_time);
   - platform: template
     name: "Sunsynk Time Slot 5"
-    id: sunsynk_time_slot_5
+    id: sunsynk_esphome_time_slot_5
     lambda: |-
         int minutes, hours;
         if (id(sunsynk_esphome_setting_timezone5).state) {
@@ -1073,7 +1073,7 @@ text_sensor:
         return esphome::optional<std::string>(formatted_time);
   - platform: template
     name: "Sunsynk Time Slot 6"
-    id: sunsynk_time_slot_6
+    id: sunsynk_esphome_time_slot_6
     lambda: |-
         int minutes, hours;
         if (id(sunsynk_esphome_setting_timezone6).state) {
