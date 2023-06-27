@@ -1,9 +1,11 @@
 substitutions:
   settings_skipped_updates: "30"
   devicename: sunsynk
+  device_description: "Sunsynk RS485 Logger"
 
 esphome:
   name: $devicename
+  comment: '${device_description}'
   
 esp32:
   board: nodemcu-32s
@@ -20,7 +22,7 @@ api:
     key: !secret api_encryption_key
 
 ota:
-  password: !secret ota_password
+  password: !secret ota_password_sunsynk
 
 wifi:
   ssid: !secret wifi_ssid
