@@ -88,7 +88,7 @@ sensor:
     skip_updates: ${settings_skipped_updates}
     address: 14
 
-  - platform: modbus_controller            # 070 Battery Charge Day
+  - platform: modbus_controller            # 070 Daily Battery Charge
     modbus_controller_id: sunsynk
     name: "Battery Charge Day"
     id: sunsynk_esphome_battery_charge_day
@@ -102,7 +102,7 @@ sensor:
     filters:
       - multiply: 0.1
 
-  - platform: modbus_controller            # 071 Battery Discharge Day
+  - platform: modbus_controller            # 071 Daily Battery Discharge
     modbus_controller_id: sunsynk
     name: "Battery Discharge Day"
     id: sunsynk_esphome_battery_discharge_day
@@ -116,7 +116,7 @@ sensor:
     filters:
       - multiply: 0.1
 
-  - platform: modbus_controller            # 072 Battery Charge Energy Total
+  - platform: modbus_controller            # 072 Total Battery Charge
     modbus_controller_id: sunsynk
     name: "Total Battery Charge (kWh)"
     id: sunsynk_esphome_total_battery_charge_kwh
@@ -130,7 +130,7 @@ sensor:
     filters:
      - multiply: 0.1
 
-  - platform: modbus_controller            # 074 Battery Discharge Energy Total
+  - platform: modbus_controller            # 074 Total Battery Discharge
     modbus_controller_id: sunsynk
     name: "Total Battery Discharge (kWh)"
     id: sunsynk_esphome_total_battery_discharge_kwh
@@ -144,7 +144,7 @@ sensor:
     filters:
      - multiply: 0.1
 
-  - platform: modbus_controller            # 076 Grid Import Day (Buy)
+  - platform: modbus_controller            # 076 Daily Grid Import(Buy)
     modbus_controller_id: sunsynk
     name: "Grid Import Day (Buy)"
     id: sunsynk_esphome_grid_import_day
@@ -158,7 +158,7 @@ sensor:
     filters:
       - multiply: 0.1
 
-  - platform: modbus_controller            # 078 Grid Import Energy Total (Buy)
+  - platform: modbus_controller            # 078 Total Grid Import (Buy)
     modbus_controller_id: sunsynk
     name: "Total Grid Import (kWh)"
     id: sunsynk_esphome_total_grid_import_kwh
@@ -185,7 +185,7 @@ sensor:
     value_type: U_WORD
     state_class: measurement
 
-  - platform: modbus_controller            # 081 Grid Export Energy Total (Sell)
+  - platform: modbus_controller            # 081 Total Grid Export (Sell)
     modbus_controller_id: sunsynk
     name: "Total Grid Export (kWh)"
     id: sunsynk_esphome_total_grid_export_kwh
@@ -257,7 +257,7 @@ sensor:
       - offset: -1000
       - multiply:  0.1
 
-  - platform: modbus_controller            # 096 PV Energy Total
+  - platform: modbus_controller            # 096 Total PV
     modbus_controller_id: sunsynk
     name: "Total PV Power (kWh)"
     id: sunsynk_esphome_total_pv_energy_kwh
@@ -272,7 +272,7 @@ sensor:
     value_type: U_DWORD_R  
 
 
-  - platform: modbus_controller            # 108 Day PV Power
+  - platform: modbus_controller            # 108 Daily PV
     modbus_controller_id: sunsynk
     name: "Daily PV Power (kWh)"
     id: sunsynk_esphome_daily_pv_energy_kwh
@@ -582,7 +582,7 @@ sensor:
     accuracy_decimals: 0
     device_class: battery
 
-  - platform: template                   # Essential Power based on register 175 + 167 -166
+  - platform: template                   # Essential Power based on register 175 + 167 - 166
     name: "SS Essential Power"
     unit_of_measurement: "W"
     accuracy_decimals: 0
