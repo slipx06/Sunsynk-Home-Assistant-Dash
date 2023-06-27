@@ -1,9 +1,10 @@
-esphome:
-  name: sunsynk
-
 substitutions:
   settings_skipped_updates: "30"
+  devicename: sunsynk
 
+esphome:
+  name: $devicename
+  
 esp32:
   board: nodemcu-32s
   framework:
@@ -16,19 +17,19 @@ logger:
 # Enable Home Assistant API
 api:
   encryption:
-    key: "#"
+    key: !secret api_encryption_key
 
 ota:
-  password: "#"
+  password: !secret ota_password
 
 wifi:
-  ssid: "#"
-  password: "#"
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
-    ssid: "Sunsynk Fallback Hotspot"
-    password: "#"
+    ssid: '${devicename}'
+    password: !secret fallback_password
 
   fast_connect: true
   power_save_mode: none
@@ -611,7 +612,7 @@ sensor:
       return (id(grid_external_power).state - id(grid_power_167).state);
     update_interval: 5s
 
-  - platform: template                   # Nonessential Power 175 - 169
+  - platform: template                   # Nonessential Power 175 - 166
     name: "SS Nonessential Power 1"
     unit_of_measurement: "W"
     accuracy_decimals: 0
