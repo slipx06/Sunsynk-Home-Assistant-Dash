@@ -8,6 +8,7 @@ cards:
     large_font: 'yes'
     show_solar: 'yes'
     panel_mode: 'no'
+    card_height: 415px
     inverter:
       modern: 'yes'
       colour: '#959595'
@@ -34,9 +35,10 @@ cards:
       max_power: 8000
       additional_loads: one
       load1_name: Geyser
+      load1_icon: boiler
     grid:
       show_daily_buy: 'yes'
-      no_grid_colour: red
+      no_grid_colour: '#BE87E2'
       animation_speed: 8
       max_power: 8000
     entities:
@@ -61,9 +63,9 @@ cards:
       battery_soc_184: sensor.battery_soc
       battery_out_190: sensor.battery_output_power
       battery_current_191: sensor.battery_output_current
-      essential_power: sensor.ss_essential_power
+      essential_power: sensor.ss_essential_power_1
       essential_load1: sensor.tuya_geyser_current_consumption
-      nonessential_power: sensor.ss_nonessential_power
+      nonessential_power: sensor.ss_nonessential_power_1
       grid_external_power_172: sensor.grid_external_power
       pv1_v_109: sensor.dc1_voltage
       pv1_i_110: sensor.dc1_current
@@ -534,7 +536,7 @@ cards:
         - breakpoint: 10000
           options:
             chart:
-              height: 363px
+              height: 356px
     series:
       - entity: sensor.daily_load_power_kwh
         name: Consumption
@@ -571,7 +573,7 @@ cards:
         - breakpoint: 10000
           options:
             chart:
-              height: 354px
+              height: 356px
     series:
       - entity: sensor.daily_pv_power_kwh
         name: Solar
@@ -1223,7 +1225,7 @@ cards:
     view_layout:
       grid-area: g3
     entities:
-      - entity: sensor.ss_essential_power
+      - entity: sensor.ss_essential_power_1
         unit: W
         name: AC
       - entity: sensor.grid_inverter_voltage
