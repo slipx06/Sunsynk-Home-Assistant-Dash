@@ -532,7 +532,7 @@ cards:
         - breakpoint: 1300
           options:
             chart:
-              height: 265px
+              height: 360px
         - breakpoint: 10000
           options:
             chart:
@@ -569,7 +569,7 @@ cards:
         - breakpoint: 1300
           options:
             chart:
-              height: 320px
+              height: 360px
         - breakpoint: 10000
           options:
             chart:
