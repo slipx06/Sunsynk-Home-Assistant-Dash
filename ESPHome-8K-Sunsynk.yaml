@@ -445,10 +445,10 @@ sensor:
 
 ############################################### OUTPUTS ###############################################
 
-  - platform: modbus_controller            # 166 Aux Output Power
+  - platform: modbus_controller            # 166 Aux Power
     modbus_controller_id: sunsynk
     name: "${friendly_name} AUX Power"
-    id: sunsynk_esphome_aux_output_power
+    id: sunsynk_esphome_aux_power
     register_type: holding
     address: 166
     unit_of_measurement: "W"
@@ -464,7 +464,7 @@ sensor:
     device_class: power
     state_class: measurement
     lambda: |-
-      return (id(sunsynk_esphome_inverter_power).state + id(sunsynk_esphome_grid_power_167).state - id(sunsynk_esphome_aux_output_power).state);
+      return (id(sunsynk_esphome_inverter_power).state + id(sunsynk_esphome_grid_power_167).state - id(sunsynk_esphome_aux_power).state);
     update_interval: 5s
 
   - platform: template                   # Essential Power1 based on register 175 + 169 - 166
@@ -474,7 +474,7 @@ sensor:
     device_class: power
     state_class: measurement
     lambda: |-
-      return (id(sunsynk_esphome_inverter_power).state + id(sunsynk_esphome_grid_power_169).state - id(sunsynk_esphome_aux_output_power).state);
+      return (id(sunsynk_esphome_inverter_power).state + id(sunsynk_esphome_grid_power_169).state - id(sunsynk_esphome_aux_power).state);
     update_interval: 5s
 
   - platform: template                   # Nonessential Power 172 - 167
