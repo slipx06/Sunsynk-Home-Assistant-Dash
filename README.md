@@ -42,9 +42,9 @@ Added remaining battery time. You will need to add the following template sensor
     battery_cap:
       friendly_name: "Battery Capacity"
       value_template: >
-        {% set grid_online = states('binary_sensor.grid_connected_status') %}
+        {% set grid_online = states('binary_sensor.sunsynk_grid_connected_status') %}
         {% if grid_online  == 'off'%}
-          {{ states('sensor.battery_capacity_shutdown') | int }}
+          {{ states('sensor.sunsynk_battery_capacity_shutdown') | int }}
         {% else %}
           {% set now = strptime(as_timestamp(now()) | timestamp_custom('%H:%M'), '%H:%M') %}
           {% set sellTime1 = strptime(states('sensor.sunsynk_time_slot_1'), '%H:%M') %}
@@ -66,42 +66,42 @@ Added remaining battery time. You will need to add the following template sensor
           {% elif now >= sellTime6 or now < sellTime1 %}
             {{ states('number.set_soc_timezone6') | int }}
           {% else %}
-            {{ states('sensor.battery_capacity_shutdown') | int }}
+            {{ states('sensor.sunsynk_battery_capacity_shutdown') | int }}
           {% endif %}
         {% endif %}
     soc_battery_time_left:
       friendly_name: "Battery Depletion Seconds"
       unit_of_measurement: Seconds
       value_template: >
-        {% set state = states('sensor.battery_output_power') | int %}
+        {% set state = states('sensor.sunsynk_battery_power') | int %}
         {% set cap = states('sensor.battery_cap') | float %}
         {% if state == 0 -%}
-         {{ ((((states('sensor.battery_soc') | float - cap) /100) * 15960) / (1) * 60 * 60 ) | timestamp_custom('%s', 0) }}
+        {{ ((((states('sensor.sunsynk_battery_soc') | float - cap) /100) * 15960) / (1) * 60 * 60 ) | timestamp_custom('%s', 0) }}
         {%- else -%}
-         {{ ((((states('sensor.battery_soc') | float - cap) /100) * 15960) / (states('sensor.battery_output_power') | float) * 60 * 60 ) | timestamp_custom('%s', 0) }}
+        {{ ((((states('sensor.sunsynk_battery_soc') | float - cap) /100) * 15960) / (states('sensor.sunsynk_battery_power') | float) * 60 * 60 ) | timestamp_custom('%s', 0) }}
         {%- endif %}
     soc_battery_time_left_friendly:
       friendly_name: "Battery Depletion Time"
       value_template: >
-        {% set state = states('sensor.battery_output_power') | int %}
+        {% set state = states('sensor.sunsynk_battery_power') | int %}
         {% if state > 0 -%}
-         {%- set time = states('sensor.soc_battery_time_left') | int %}
-         {%- set minutes = ((time % 3600) // 60) %}
-         {%- set minutes = '{} minutes'.format(minutes) if minutes > 0 else '' %}
-         {%- set hours = ((time % 86400) // 3600) %}
-         {%- set hours = '{} hours, '.format(hours) if hours > 0 else '' %}
-         {%- set days = (time // 86400) %}
-         {%- set days = '{} day, '.format(days) if days > 0 else '' %}
-         {{ 'Less than 1 minute' if time < 60 else days + hours + minutes }}
+        {%- set time = states('sensor.soc_battery_time_left') | int %}
+        {%- set minutes = ((time % 3600) // 60) %}
+        {%- set minutes = '{} minutes'.format(minutes) if minutes > 0 else '' %}
+        {%- set hours = ((time % 86400) // 3600) %}
+        {%- set hours = '{} hours, '.format(hours) if hours > 0 else '' %}
+        {%- set days = (time // 86400) %}
+        {%- set days = '{} day, '.format(days) if days > 0 else '' %}
+        {{ 'Less than 1 minute' if time < 60 else days + hours + minutes }}
         {%- else -%}
-         {{ 'Charging' }}
+        {{ 'Charging' }}
         {%- endif %}
     battery_charging_time_left:
       friendly_name: "Battery Charging Time Left"
       unit_of_measurement: Seconds
       value_template: >
-        {% set power = states('sensor.battery_output_power') | float %}
-        {% set soc = states('sensor.battery_soc') | float %}
+        {% set power = states('sensor.sunsynk_battery_power') | float %}
+        {% set soc = states('sensor.sunsynk_battery_soc') | float %}
         {% set cap = states('sensor.battery_cap') | float %}
         {% if power < 0 %}
           {% if soc < cap %}
@@ -115,7 +115,7 @@ Added remaining battery time. You will need to add the following template sensor
     battery_charging_time_left_friendly:
       friendly_name: "Battery Charging Time"
       value_template: >
-        {% set state = states('sensor.battery_output_power') | int %}
+        {% set state = states('sensor.sunsynk_battery_power') | int %}
         {% if state < 0 -%}
           {%- set time = states('sensor.battery_charging_time_left') | int %}
           {%- set minutes = ((time % 3600) // 60) %}
@@ -131,7 +131,7 @@ Added remaining battery time. You will need to add the following template sensor
     markdown_battery_charge_time_left:
       friendly_name: "Markdown Battery Charging Time"
       value_template: >
-        {% if states('sensor.battery_soc') | float < states('sensor.battery_cap') | float %}
+        {% if states('sensor.sunsynk_battery_soc') | float < states('sensor.battery_cap') | float %}
           {{ states('sensor.battery_cap') | float | round(0) }}
         {% else %}
           100
