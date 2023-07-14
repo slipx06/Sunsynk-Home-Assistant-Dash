@@ -44,44 +44,40 @@ cards:
     entities:
       use_timer_248: switch.sunsynk_toggle_system_timer
       priority_load_243: switch.sunsynk_toggle_priority_load
-      batchargeday_70: sensor.sunsynk_day_battery_charge
-      batdischargeday_71: sensor.sunsynk_day_battery_discharge
-      loadday_84: sensor.sunsynk_day_load_energy
-      grid_buy_day_76: sensor.sunsynk_day_grid_import
-      grid_sell_day_77: none
-      solarday_108: sensor.sunsynk_day_pv_energy
-      inverter_grid_voltage_154: sensor.sunsynk_inverter_voltage
-      inverter_load_freq_192: sensor.sunsynk_load_frequency
-      inverter_out_164: sensor.sunsynk_inverter_current
-      inverter_out_175: sensor.sunsynk_inverter_power
-      inverter_load_grid_169: sensor.sunsynk_grid_power
+      day_battery_charge_70: sensor.sunsynk_day_battery_charge
+      day_battery_discharge_71: sensor.sunsynk_day_battery_discharge
+      day_load_energy_84: sensor.sunsynk_day_load_energy
+      day_grid_import_76: sensor.sunsynk_day_grid_import
+      day_grid_export_77: none
+      day_pv_energy_108: sensor.sunsynk_day_pv_energy
+      inverter_voltage_154: sensor.sunsynk_inverter_voltage
+      load_frequency_192: sensor.sunsynk_load_frequency
+      inverter_current_164: sensor.sunsynk_inverter_current
+      inverter_power_175: sensor.sunsynk_inverter_power
+      grid_power_169: sensor.sunsynk_grid_power
       pv1_power_186: sensor.sunsynk_pv1_power
       pv2_power_187: sensor.sunsynk_pv2_power
       pv3_power_188: none
       pv4_power_189: none
       battery_voltage_183: sensor.sunsynk_battery_voltage
       battery_soc_184: sensor.sunsynk_battery_soc
-      battery_out_190: sensor.sunsynk_battery_power
+      battery_power_190: sensor.sunsynk_battery_power
       battery_current_191: sensor.sunsynk_battery_current
       essential_power: sensor.sunsynk_essential_power_1
       essential_load1: sensor.tuya_geyser_current_consumption
       nonessential_power: sensor.sunsynk_nonessential_power_1
-      grid_external_power_172: sensor.sunsynk_grid_ct_power
-      pv1_v_109: sensor.sunsynk_pv1_voltage
-      pv1_i_110: sensor.sunsynk_pv1_current
-      pv2_v_111: sensor.sunsynk_pv2_voltage
-      pv2_i_112: sensor.sunsynk_pv2_current
-      pv3_v_113: none
-      pv3_i_114: none
-      pv4_v_115: none
-      pv4_i_116: none
-      grid_status_194: binary_sensor.sunsynk_grid_connected_status
+      grid_ct_power_172: sensor.sunsynk_grid_ct_power
+      pv1_voltage_109: sensor.sunsynk_pv1_voltage
+      pv1_current_110: sensor.sunsynk_pv1_current
+      pv2_voltage_111: sensor.sunsynk_pv2_voltage
+      pv2_current_112: sensor.sunsynk_pv2_current
+      grid_connected_status_194: binary_sensor.sunsynk_grid_connected_status
       inverter_status_59: sensor.sunsynk_overall_state
       aux_power_166: sensor.sunsynk_aux_power
       remaining_solar: sensor.solcast_forecast_remaining_today
-      battery_temp: sensor.sunsynk_battery_temperature
-      inverter_ac_temp: sensor.sunsynk_radiator_temperature
-      inverter_dc_temp: sensor.sunsynk_dc_transformer_temperature
+      battery_temp_182: sensor.sunsynk_battery_temperature
+      radiator_temp_91: sensor.sunsynk_radiator_temperature
+      dc_transformer_temp_90: sensor.sunsynk_dc_transformer_temperature
       prog1_time: sensor.sunsynk_time_slot_1
       prog1_capacity: sensor.sunsynk_system_mode_soc_time1
       prog1_charge: switch.sunsynk_system_mode_grid_charge_time1
