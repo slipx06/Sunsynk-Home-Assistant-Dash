@@ -73,18 +73,18 @@ binary_sensor:
     register_type: holding
     address: 194
 
-  - platform: modbus_controller           # 280 Gen Peak Shaving
+  - platform: modbus_controller           # 280 Gen Peak Shaving Status
     modbus_controller_id: sunsynk
-    name: "${friendly_name} Gen Peak Shaving"
-    id: sunsynk_esphome_gen_peak_shaving
+    name: "${friendly_name} Gen Peak Shaving Status"
+    id: sunsynk_esphome_gen_peak_shaving_status
     register_type: holding
     address: 280
     bitmask: 0x10
 
-  - platform: modbus_controller           # 280 Grid Peak Shaving
+  - platform: modbus_controller           # 280 Grid Peak Shaving Status
     modbus_controller_id: sunsynk
-    name: "${friendly_name} Grid Peak Shaving"
-    id: sunsynk_esphome_grid_peak_shaving
+    name: "${friendly_name} Grid Peak Shaving Status"
+    id: sunsynk_esphome_grid_peak_shaving_status
     register_type: holding
     address: 280
     bitmask: 0x100
@@ -789,7 +789,6 @@ switch:
     register_type: holding
     address: 247
     bitmask: 1
-    entity_category: config
     icon: "mdi:toggle-switch"
 
   - platform: modbus_controller          # 248 Toggle System Timer
@@ -800,7 +799,6 @@ switch:
     register_type: holding
     address: 248
     bitmask: 1
-    entity_category: config
     icon: "mdi:toggle-switch"
 
   - platform: modbus_controller          # 243 Priority Load
@@ -811,7 +809,6 @@ switch:
     register_type: holding
     address: 243
     bitmask: 1
-    entity_category: config
     icon: "mdi:toggle-switch"
 
   - platform: modbus_controller          # 274 System Mode Grid Charge Time 1
@@ -822,7 +819,6 @@ switch:
     register_type: holding
     address: 274
     bitmask: 1
-    entity_category: config
     icon: "mdi:toggle-switch"
 
   - platform: modbus_controller          # 275 System Mode Grid Charge Time 2
@@ -833,7 +829,6 @@ switch:
     register_type: holding
     address: 275
     bitmask: 1
-    entity_category: config
     icon: "mdi:toggle-switch"
 
   - platform: modbus_controller          # 276 System Mode Grid Charge Time 3
@@ -844,7 +839,6 @@ switch:
     register_type: holding
     address: 276
     bitmask: 1
-    entity_category: config
     icon: "mdi:toggle-switch"
 
   - platform: modbus_controller          # 277 System Mode Grid Charge Time 4
@@ -855,7 +849,6 @@ switch:
     register_type: holding
     address: 277
     bitmask: 1
-    entity_category: config
     icon: "mdi:toggle-switch"
 
   - platform: modbus_controller          # 278 System Mode Grid Charge Time 5
@@ -866,7 +859,6 @@ switch:
     register_type: holding
     address: 278
     bitmask: 1
-    entity_category: config
     icon: "mdi:toggle-switch"
 
   - platform: modbus_controller          # 279 System Mode Grid Charge Time 6
@@ -877,7 +869,6 @@ switch:
     register_type: holding
     address: 279
     bitmask: 1
-    entity_category: config
     icon: "mdi:toggle-switch"
 
 number:
@@ -1235,10 +1226,9 @@ select:
   - platform: modbus_controller                  #280 Select Grid Peak Shaving
     use_write_multiple: true
     modbus_controller_id: sunsynk
-    name: "${friendly_name} Select Grid Peak Shaving"
-    id: grid_peak_shaving
+    name: "${friendly_name} Grid Peak Shaving"
+    id: sunsynk_esphome_select_grid_peak_shaving
     address: 280
-    entity_category: config
     value_type: U_WORD
     optionsmap:
       "Disabled": 0
