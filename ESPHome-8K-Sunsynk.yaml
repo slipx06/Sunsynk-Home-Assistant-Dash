@@ -962,7 +962,7 @@ number:
     use_write_multiple: true
     modbus_controller_id: sunsynk
     id: sunsynk_esphome_set_power_time2
-    name: "${friendly_name} System Mode Power Time1"
+    name: "${friendly_name} System Mode Power Time2"
     unit_of_measurement: "W"
     address: 257
     min_value: 0
