@@ -1202,22 +1202,22 @@ text_sensor:
 ################################################ SELECT SENSORS ################################################
 
 select:
-  - platform: modbus_controller                   #243 Select Priority Load
+  - platform: modbus_controller                   #243 Select Energy Patern
     use_write_multiple: true
     modbus_controller_id: sunsynk
-    id: sunsynk_esphome_select_priority_load
-    name: "${friendly_name} Select Priority Load"
+    id: sunsynk_esphome_select_energy_pattern
+    name: "${friendly_name} Energy Pattern"
     address: 243
     value_type: U_WORD
     optionsmap:
       "Battery first": 0
       "Load first": 1   
          
-  - platform: modbus_controller                   #244 Load Limit
+  - platform: modbus_controller                   #244 Select Work Mode
     use_write_multiple: true
     modbus_controller_id: sunsynk
-    id: sunsynk_esphome_select_load_limit
-    name: "${friendly_name} Select Load Limit"
+    id: sunsynk_esphome_select_work_mode
+    name: "${friendly_name} Work Mode"
     address: 244
     value_type: U_WORD
     optionsmap:
