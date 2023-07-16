@@ -1066,6 +1066,19 @@ number:
     step: 500
     value_type: U_WORD
 
+  - platform: modbus_controller            # 245 Max Sell Power
+    use_write_multiple: true
+    modbus_controller_id: sunsynk
+    name: "${friendly_name} Max Sell power"
+    id: sunsynk_max_sell_power
+    address: 245
+    unit_of_measurement: "W"
+    min_value: 0
+    max_value: 8000
+    step: 500
+    value_type: U_WORD
+
+
 ################################################ TEMPLATE SENSORS ################################################
 
 text_sensor:
@@ -1184,3 +1197,30 @@ text_sensor:
         char formatted_time[6];
         snprintf(formatted_time, sizeof(formatted_time), "%02d:%02d", hours, minutes);
         return esphome::optional<std::string>(formatted_time);
+
+
+################################################ SELECT SENSORS ################################################
+
+select:
+  - platform: modbus_controller                   #243 Select Priority Load
+    use_write_multiple: true
+    modbus_controller_id: sunsynk
+    id: sunsynk_esphome_select_priority_load
+    name: "${friendly_name} Select Priority Load"
+    address: 243
+    value_type: U_WORD
+    optionsmap:
+      "Battery first": 0
+      "Load first": 1   
+         
+  - platform: modbus_controller                   #244 Load Limit
+    use_write_multiple: true
+    modbus_controller_id: sunsynk
+    id: sunsynk_esphome_select_load_limit
+    name: "${friendly_name} Select Load Limit"
+    address: 244
+    value_type: U_WORD
+    optionsmap:
+      "Selling First": 0
+      "Zero Export + Limit to Load Only": 1
+      "Limited to Home": 2    
