@@ -946,6 +946,78 @@ number:
     step: 5
     value_type: U_WORD  
 
+  - platform: modbus_controller         # 256 System Mode Power Time 1
+    use_write_multiple: true
+    modbus_controller_id: sunsynk
+    id: sunsynk_esphome_set_power_time1
+    name: "${friendly_name} System Mode Power Time1"
+    unit_of_measurement: "W"
+    address: 256
+    min_value: 0
+    max_value: 8000
+    step: 100
+    value_type: U_WORD  
+
+  - platform: modbus_controller         # 257 System Mode Power Time 2
+    use_write_multiple: true
+    modbus_controller_id: sunsynk
+    id: sunsynk_esphome_set_power_time2
+    name: "${friendly_name} System Mode Power Time1"
+    unit_of_measurement: "W"
+    address: 257
+    min_value: 0
+    max_value: 8000
+    step: 100
+    value_type: U_WORD  
+
+  - platform: modbus_controller         # 258 System Mode Power Time 3
+    use_write_multiple: true
+    modbus_controller_id: sunsynk
+    id: sunsynk_esphome_set_power_time3
+    name: "${friendly_name} System Mode Power Time3"
+    unit_of_measurement: "W"
+    address: 258
+    min_value: 0
+    max_value: 8000
+    step: 100
+    value_type: U_WORD  
+
+  - platform: modbus_controller         # 259 System Mode Power Time 4
+    use_write_multiple: true
+    modbus_controller_id: sunsynk
+    id: sunsynk_esphome_set_power_time4
+    name: "${friendly_name} System Mode Power Time4"
+    unit_of_measurement: "W"
+    address: 259
+    min_value: 0
+    max_value: 8000
+    step: 100
+    value_type: U_WORD  
+
+  - platform: modbus_controller         # 260 System Mode Power Time 5
+    use_write_multiple: true
+    modbus_controller_id: sunsynk
+    id: sunsynk_esphome_set_power_time5
+    name: "${friendly_name} System Mode Power Time5"
+    unit_of_measurement: "W"
+    address: 260
+    min_value: 0
+    max_value: 8000
+    step: 100
+    value_type: U_WORD  
+
+  - platform: modbus_controller         # 261 System Mode Power Time 6
+    use_write_multiple: true
+    modbus_controller_id: sunsynk
+    id: sunsynk_esphome_set_power_time6
+    name: "${friendly_name} System Mode Power Time6"
+    unit_of_measurement: "W"
+    address: 261
+    min_value: 0
+    max_value: 8000
+    step: 100
+    value_type: U_WORD  
+
   - platform: modbus_controller         # 230 Grid Charge Battery current
     use_write_multiple: true
     modbus_controller_id: sunsynk
