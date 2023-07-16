@@ -73,6 +73,22 @@ binary_sensor:
     register_type: holding
     address: 194
 
+  - platform: modbus_controller           # 280 Gen Peak Shaving
+    modbus_controller_id: sunsynk
+    name: "${friendly_name} Gen Peak Shaving"
+    id: sunsynk_esphome_gen_peak_shaving
+    register_type: holding
+    address: 280
+    bitmask: 0x10
+
+  - platform: modbus_controller           # 280 Grid Peak Shaving
+    modbus_controller_id: sunsynk
+    name: "${friendly_name} Grid Peak Shaving"
+    id: sunsynk_esphome_grid_peak_shaving
+    register_type: holding
+    address: 280
+    bitmask: 0x100
+
 #                                               SENSORS                                               #
 #######################################################################################################
 
@@ -755,109 +771,6 @@ sensor:
     address: 255
     icon: "mdi:clock"
 
-  - platform: modbus_controller          # 268 System Mode Battery SoC Time 1
-    modbus_controller_id: sunsynk
-    name: "${friendly_name} System Mode SoC Time1"
-    id: sunsynk_esphome_system_mode_soc_time1
-    register_type: holding
-    skip_updates: ${settings_skipped_updates}
-    address: 268
-    value_type: U_WORD
-
-  - platform: modbus_controller          # 269 System Mode Battery SoC Time 2
-    modbus_controller_id: sunsynk
-    name: "${friendly_name} System Mode SoC Time2"
-    id: sunsynk_esphome_system_mode_soc_time2
-    register_type: holding
-    skip_updates: ${settings_skipped_updates}
-    address: 269
-    value_type: U_WORD
-
-  - platform: modbus_controller          # 270 System Mode Battery SoC Time 3
-    modbus_controller_id: sunsynk
-    name: "${friendly_name} System Mode SoC Time3"
-    id: sunsynk_esphome_system_mode_soc_time3
-    register_type: holding
-    skip_updates: ${settings_skipped_updates}
-    address: 270
-    value_type: U_WORD
-
-  - platform: modbus_controller          # 271 System Mode Battery SoC Time 4
-    modbus_controller_id: sunsynk
-    name: "${friendly_name} System Mode SoC Time4"
-    id: sunsynk_esphome_system_mode_soc_time4
-    register_type: holding
-    skip_updates: ${settings_skipped_updates}
-    address: 271
-    value_type: U_WORD
-
-  - platform: modbus_controller          # 272 System Mode Battery SoC Time 5
-    modbus_controller_id: sunsynk
-    name: "${friendly_name} System Mode SoC Time5"
-    id: sunsynk_esphome_system_mode_soc_time5
-    register_type: holding
-    skip_updates: ${settings_skipped_updates}
-    address: 272
-    value_type: U_WORD
-
-  - platform: modbus_controller          # 273 System Mode Battery SoC Time 6
-    modbus_controller_id: sunsynk
-    name: "${friendly_name} System Mode SoC Time6"
-    id: sunsynk_esphome_system_mode_soc_time6
-    register_type: holding
-    skip_updates: ${settings_skipped_updates}
-    address: 273
-    value_type: U_WORD
-
-  - platform: modbus_controller          # 274 System Mode Grid Charge Time 1
-    modbus_controller_id: sunsynk
-    name: "${friendly_name} System Mode Grid Charge Time1"
-    id: sunsynk_esphome_system_mode_grid_charge_time1
-    register_type: holding
-    skip_updates: ${settings_skipped_updates}
-    address: 274
-
-  - platform: modbus_controller          # 275 System Mode Grid Charge Time 2
-    modbus_controller_id: sunsynk
-    name: "${friendly_name} System Mode Grid Charge Time2"
-    id: sunsynk_esphome_system_mode_grid_charge_time2
-    register_type: holding
-    skip_updates: ${settings_skipped_updates}
-    address: 275
-    
-  - platform: modbus_controller          # 276 System Mode Grid Charge Time 3
-    modbus_controller_id: sunsynk
-    name: "${friendly_name} System Mode Grid Charge Time3"
-    id: sunsynk_esphome_system_mode_grid_charge_time3
-    register_type: holding
-    skip_updates: ${settings_skipped_updates}
-    address: 276
-    
-  - platform: modbus_controller          # 277 System Mode Grid Charge Time 4
-    modbus_controller_id: sunsynk
-    name: "${friendly_name} System Mode Grid Charge Time4"
-    id: sunsynk_esphome_system_mode_grid_charge_time4
-    register_type: holding
-    skip_updates: ${settings_skipped_updates}
-    address: 277
-    
-  - platform: modbus_controller          # 278 System Mode Grid Charge Time 5
-    modbus_controller_id: sunsynk
-    name: "${friendly_name} System Mode Grid Charge Time5"
-    id: sunsynk_esphome_system_mode_grid_charge_time5
-    register_type: holding
-    skip_updates: ${settings_skipped_updates}
-    address: 278
-    
-  - platform: modbus_controller          # 279 System Mode Grid Charge Time 6
-    modbus_controller_id: sunsynk
-    name: "${friendly_name} System Mode Grid Charge Time6"
-    id: sunsynk_esphome_system_mode_grid_charge_time6
-    register_type: holding
-    skip_updates: ${settings_skipped_updates}
-    address: 279
-
-
 ################################################ WRITE SETTINGS ############################################
 
 switch:
@@ -1069,6 +982,18 @@ number:
     step: 5
     value_type: U_WORD  
 
+  - platform: modbus_controller            # 293 Grid Peak Shaving Power
+    use_write_multiple: true
+    modbus_controller_id: sunsynk
+    name: "${friendly_name} Grid Peak shaving power"
+    id: sunsynk_grid_peak_shaving_power
+    address: 293
+    unit_of_measurement: "W"
+    min_value: 0
+    max_value: 8000
+    step: 500
+    value_type: U_WORD
+
 ################################################ TEMPLATE SENSORS ################################################
 
 text_sensor:
@@ -1090,6 +1015,7 @@ text_sensor:
         case 4: return std::string("fault");
         default: return std::string("unknown");
       }
+
   - platform: template
     name: "${friendly_name} Time Slot 1"
     id: sunsynk_esphome_time_slot_1
