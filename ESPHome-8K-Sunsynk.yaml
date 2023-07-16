@@ -771,7 +771,7 @@ sensor:
     address: 255
     icon: "mdi:clock"
 
-  - platform: modbus_controller
+  - platform: modbus_controller        # 255 Grid Peak Shaving raw register value
     modbus_controller_id: sunsynk
     id: grid_peak_shaving_raw
     register_type: holding
