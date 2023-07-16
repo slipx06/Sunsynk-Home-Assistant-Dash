@@ -150,8 +150,388 @@ Added remaining battery time. You will need to add the following template sensor
         {% set add = states('sensor.battery_charging_time_left') | int %}
         {% set future_time = now + add %}
           {{ future_time | timestamp_custom('%H:%M') }}
-```  
-
+```
 15960 is battery size in Wh. You will need to adjust for your system
 
 20 is the minimum battery SOC before shutdown
+
+## Change Inverter Settings
+These following example cards can be used to set system timer settings
+
+### Example 1
+
+![image](https://github.com/slipx06/Sunsynk-Home-Assistant-Dash/assets/7227275/2c665082-1d12-4a26-ba19-def6ffdd7780)
+
+```
+type: vertical-stack
+cards:
+  - type: tile
+    entity: switch.sunsynk_toggle_system_timer
+    icon: mdi:timer-outline
+    vertical: true
+  - type: horizontal-stack
+    cards:
+      - type: entities
+        entities:
+          - entity: select.sunsynk_energy_pattern
+            name: Energy Pattern
+        state_color: true
+      - type: entities
+        entities:
+          - entity: select.sunsynk_work_mode
+            name: Work Mode
+        state_color: true
+  - type: entities
+    entities:
+      - entity: switch.sunsynk_system_mode_grid_charge_time1
+        type: custom:multiple-entity-row
+        name: Program 1
+        toggle: true
+        state_header: Charge
+        state_color: true
+        icon: mdi:timer
+        entities:
+          - entity: sensor.sunsynk_time_slot_1
+            name: From
+          - entity: sensor.sunsynk_time_slot_2
+            name: To
+          - entity: number.sunsynk_system_mode_soc_time1
+            name: SOC
+            format: precision0
+      - entity: switch.sunsynk_system_mode_grid_charge_time2
+        type: custom:multiple-entity-row
+        name: Program 2
+        toggle: true
+        state_header: Charge
+        state_color: true
+        icon: mdi:timer
+        entities:
+          - entity: sensor.sunsynk_time_slot_2
+            name: From
+          - entity: sensor.sunsynk_time_slot_3
+            name: To
+          - entity: number.sunsynk_system_mode_soc_time2
+            name: SOC
+            format: precision0
+      - entity: switch.sunsynk_system_mode_grid_charge_time3
+        type: custom:multiple-entity-row
+        name: Program 3
+        toggle: true
+        state_header: Charge
+        state_color: true
+        icon: mdi:timer
+        entities:
+          - entity: sensor.sunsynk_time_slot_3
+            name: From
+          - entity: sensor.sunsynk_time_slot_4
+            name: To
+          - entity: number.sunsynk_system_mode_soc_time3
+            name: SOC
+            format: precision0
+      - entity: switch.sunsynk_system_mode_grid_charge_time4
+        type: custom:multiple-entity-row
+        name: Program 4
+        toggle: true
+        state_header: Charge
+        state_color: true
+        icon: mdi:timer
+        entities:
+          - entity: sensor.sunsynk_time_slot_4
+            name: From
+          - entity: sensor.sunsynk_time_slot_5
+            name: To
+          - entity: number.sunsynk_system_mode_soc_time4
+            name: SOC
+            format: precision0
+      - entity: switch.sunsynk_system_mode_grid_charge_time5
+        type: custom:multiple-entity-row
+        name: Program 5
+        toggle: true
+        state_header: Charge
+        state_color: true
+        icon: mdi:timer
+        entities:
+          - entity: sensor.sunsynk_time_slot_5
+            name: From
+          - entity: sensor.sunsynk_time_slot_6
+            name: To
+          - entity: number.sunsynk_system_mode_soc_time5
+            name: SOC
+            format: precision0
+      - entity: switch.sunsynk_system_mode_grid_charge_time6
+        type: custom:multiple-entity-row
+        name: Program 6
+        toggle: true
+        state_header: Charge
+        state_color: true
+        icon: mdi:timer
+        entities:
+          - entity: sensor.sunsynk_time_slot_6
+            name: From
+          - entity: sensor.sunsynk_time_slot_1
+            name: To
+          - entity: number.sunsynk_system_mode_soc_time6
+            name: SOC
+            format: precision0
+    state_color: true
+view_layout:
+  grid-area: a
+```
+### Example 2
+![image](https://github.com/slipx06/Sunsynk-Home-Assistant-Dash/assets/7227275/c0e10096-76d1-479d-ae27-8f9b9002e403)
+
+```
+type: custom:layout-card
+layout_type: custom:grid-layout
+cards:
+  - type: custom:mushroom-title-card
+    title: Sunsynk System Mode
+    alignment: center
+    view_layout:
+      grid-area: header
+  - type: horizontal-stack
+    cards:
+      - type: entities
+        entities:
+          - entity: switch.sunsynk_toggle_system_timer
+            name: System Timer
+        state_color: true
+      - type: entities
+        entities:
+          - entity: select.sunsynk_energy_pattern
+            name: Energy Pattern
+        state_color: true
+      - type: entities
+        entities:
+          - entity: select.sunsynk_work_mode
+            name: Work Mode
+        state_color: true
+    view_layout:
+      grid-area: system
+  - type: vertical-stack
+    cards:
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-template-card
+            primary: Program 1
+            secondary: >-
+              {{ states("sensor.sunsynk_time_slot_1") }} - {{
+              states("sensor.sunsynk_time_slot_2") }}
+            icon: mdi:timer
+            multiline_secondary: false
+            badge_icon: mdi:lightning-bolt
+            icon_color: blue
+            badge_color: green
+            fill_container: true
+          - type: entities
+            entities:
+              - entity: switch.sunsynk_system_mode_grid_charge_time1
+                name: Grid Charge
+            state_color: true
+      - type: entities
+        entities:
+          - type: custom:slider-entity-row
+            entity: number.sunsynk_system_mode_soc_time1
+            name: Battery SOC
+            hide_state: false
+            grow: true
+          - type: custom:slider-entity-row
+            entity: number.sunsynk_system_mode_power_time1
+            name: Power
+            hide_state: false
+            grow: true
+    view_layout:
+      grid-area: prog1
+  - type: vertical-stack
+    cards:
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-template-card
+            primary: Program 2
+            secondary: >-
+              {{ states("sensor.sunsynk_time_slot_2") }} - {{
+              states("sensor.sunsynk_time_slot_3") }}
+            icon: mdi:timer
+            multiline_secondary: false
+            badge_icon: mdi:lightning-bolt
+            icon_color: blue
+            badge_color: green
+            fill_container: true
+          - type: entities
+            entities:
+              - entity: switch.sunsynk_system_mode_grid_charge_time2
+                name: Grid Charge
+            state_color: true
+      - type: entities
+        entities:
+          - type: custom:slider-entity-row
+            entity: number.sunsynk_system_mode_soc_time2
+            name: Battery SOC
+            hide_state: false
+            grow: true
+          - type: custom:slider-entity-row
+            entity: number.sunsynk_system_mode_power_time2
+            name: Power
+            hide_state: false
+            grow: true
+    view_layout:
+      grid-area: prog2
+  - type: vertical-stack
+    cards:
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-template-card
+            primary: Program 3
+            secondary: >-
+              {{ states("sensor.sunsynk_time_slot_3") }} - {{
+              states("sensor.sunsynk_time_slot_4") }}
+            icon: mdi:timer
+            multiline_secondary: false
+            badge_icon: mdi:lightning-bolt
+            icon_color: blue
+            badge_color: green
+            fill_container: true
+          - type: entities
+            entities:
+              - entity: switch.sunsynk_system_mode_grid_charge_time3
+                name: Grid Charge
+            state_color: true
+      - type: entities
+        entities:
+          - type: custom:slider-entity-row
+            entity: number.sunsynk_system_mode_soc_time3
+            name: Battery SOC
+            hide_state: false
+            grow: true
+          - type: custom:slider-entity-row
+            entity: number.sunsynk_system_mode_power_time3
+            name: Power
+            hide_state: false
+            grow: true
+    view_layout:
+      grid-area: prog3
+  - type: vertical-stack
+    cards:
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-template-card
+            primary: Program 4
+            secondary: >-
+              {{ states("sensor.sunsynk_time_slot_4") }} - {{
+              states("sensor.sunsynk_time_slot_5") }}
+            icon: mdi:timer
+            multiline_secondary: false
+            badge_icon: mdi:lightning-bolt
+            icon_color: blue
+            badge_color: green
+            fill_container: true
+          - type: entities
+            entities:
+              - entity: switch.sunsynk_system_mode_grid_charge_time4
+                name: Grid Charge
+            state_color: true
+      - type: entities
+        entities:
+          - type: custom:slider-entity-row
+            entity: number.sunsynk_system_mode_soc_time4
+            name: Battery SOC
+            hide_state: false
+            grow: true
+          - type: custom:slider-entity-row
+            entity: number.sunsynk_system_mode_power_time4
+            name: Power
+            hide_state: false
+            grow: true
+    view_layout:
+      grid-area: prog4
+  - type: vertical-stack
+    cards:
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-template-card
+            primary: Program 5
+            secondary: >-
+              {{ states("sensor.sunsynk_time_slot_5") }} - {{
+              states("sensor.sunsynk_time_slot_6") }}
+            icon: mdi:timer
+            multiline_secondary: false
+            badge_icon: mdi:lightning-bolt
+            icon_color: blue
+            badge_color: green
+            fill_container: true
+          - type: entities
+            entities:
+              - entity: switch.sunsynk_system_mode_grid_charge_time5
+                name: Grid Charge
+            state_color: true
+      - type: entities
+        entities:
+          - type: custom:slider-entity-row
+            entity: number.sunsynk_system_mode_soc_time5
+            name: Battery SOC
+            hide_state: false
+            grow: true
+          - type: custom:slider-entity-row
+            entity: number.sunsynk_system_mode_power_time5
+            name: Power
+            hide_state: false
+            grow: true
+    view_layout:
+      grid-area: prog5
+  - type: vertical-stack
+    cards:
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-template-card
+            primary: Program 6
+            secondary: >-
+              {{ states("sensor.sunsynk_time_slot_6") }} - {{
+              states("sensor.sunsynk_time_slot_1") }}
+            icon: mdi:timer
+            multiline_secondary: false
+            badge_icon: mdi:lightning-bolt
+            icon_color: blue
+            badge_color: green
+            fill_container: true
+          - type: entities
+            entities:
+              - entity: switch.sunsynk_system_mode_grid_charge_time6
+                name: Grid Charge
+            state_color: true
+      - type: entities
+        entities:
+          - type: custom:slider-entity-row
+            entity: number.sunsynk_system_mode_soc_time6
+            name: Battery SOC
+            hide_state: false
+            grow: true
+          - type: custom:slider-entity-row
+            entity: number.sunsynk_system_mode_power_time6
+            name: Power
+            hide_state: false
+            grow: true
+    view_layout:
+      grid-area: prog6
+layout:
+  grid-template-columns: 2fr 2fr 2fr 2fr
+  grid-template-rows: auto
+  grid-template-areas: |
+    ". header header ."
+    ". system system ."
+    ". prog1 prog2 ."
+    ". prog3 prog4 ."
+    ". prog5 prog6 ."
+  mediaquery:
+    '(max-width: 800px)':
+      grid-template-columns: auto
+      grid-template-areas: |
+        "header"
+        "system"
+        "prog1"
+        "prog2"
+        "prog3"
+        "prog4"
+        "prog5"
+        "prog6"
+```
+
