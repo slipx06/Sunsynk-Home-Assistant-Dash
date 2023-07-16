@@ -771,6 +771,13 @@ sensor:
     address: 255
     icon: "mdi:clock"
 
+  - platform: modbus_controller
+    modbus_controller_id: sunsynk
+    id: grid_peak_shaving_raw
+    register_type: holding
+    address: 280
+    value_type: U_WORD
+
 ################################################ WRITE SETTINGS ############################################
 
 switch:
@@ -1224,3 +1231,32 @@ select:
       "Selling First": 0
       "Zero Export + Limit to Load Only": 1
       "Limited to Home": 2    
+
+  - platform: modbus_controller                  #280 Select Grid Peak Shaving
+    use_write_multiple: true
+    modbus_controller_id: sunsynk
+    name: "${friendly_name} Select Grid Peak Shaving"
+    id: grid_peak_shaving
+    address: 280
+    entity_category: config
+    value_type: U_WORD
+    optionsmap:
+      "Disabled": 0
+      "Enabled": 256
+    lambda: |-
+      // we are only interested in the 8th bit binary 0001 0000 0000 need to map the options 0, 256 in select 
+      //ESP_LOGE("main","Modbus Number incoming value = %d",x);
+      //ESP_LOGE("main","Modbus eval value = %d",(x & 0x0100));
+      if ((x & 0x0100) == 0)
+        return  std::string("Disabled");
+      if ((x & 0x0100) == 256)
+        return  std::string("Enabled");
+      return {};
+    write_lambda: |-
+      //ESP_LOGE("main","Modbus write gets = %d",value);
+      uint16_t unmodified =  id(grid_peak_shaving_raw).state;
+      //ESP_LOGE("main","Modbus write unmodified = %d", unmodified);
+      // optionsmap should only return 2 values... 0 , 256 so bitmask with complement 0x0100 to ensure we keep the original values in register. then appply or with the value that was chosen
+      uint16_t modified = ((unmodified & ~0x0100) | value);
+      //ESP_LOGE("main","Modbus write to write = %d", modified);
+      return modified;
