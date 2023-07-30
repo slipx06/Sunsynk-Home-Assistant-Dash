@@ -24,7 +24,7 @@ Integrations:
 ![image](https://github.com/slipx06/Sunsynk-Home-Assistant-Dash/assets/7227275/2e150171-1ee2-45f6-bace-b844edb1fa32)
 
 ## Installation
-Data can be collected from the inverter using the RS485 port. There are a number of different ways to do this but I'm using an ESP32 chip running ESPHome (See ESPHome.yaml)
+Data can be collected from the inverter using the RS485 port. There are a number of different ways to do this but I'm using an ESP32 chip running ESPHome (See ESPHome-8K-Sunsynk.yaml)
 
 Create a new view on your current Dashboard and set the view type to Panel (1 card) as shown below:
 
