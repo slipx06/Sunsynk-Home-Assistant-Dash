@@ -107,6 +107,7 @@ cards:
         fill: tozeroy
         line:
           color: rgb(255, 155, 48)
+          shape: spline
       - entity: sensor.sunsynk_essential_power
         name: |
           $fn ({ ys,meta }) =>
@@ -114,6 +115,7 @@ cards:
         fill: tozeroy
         line:
           color: rgb(95, 182, 173)
+          shape: spline
       - entity: sensor.sunsynk_grid_ct_power
         name: |
           $fn ({ ys,meta }) =>
@@ -121,6 +123,7 @@ cards:
         fill: tozeroy
         line:
           color: rgb(84, 144, 194)
+          shape: spline
       - entity: sensor.sunsynk_battery_power
         fill: tozeroy
         name: |
@@ -128,6 +131,7 @@ cards:
             "Battery" + "🔋" + "(" +ys[ys.length - 1]+"W)"
         line:
           color: rgb(243, 179, 202)
+          shape: spline
       - entity: sensor.sunsynk_battery_soc
         name: |
           $fn ({ ys,meta }) =>
@@ -417,7 +421,7 @@ cards:
         period: day
         type: bar
         width: $fn() => 1000*60*60*3
-        offset: $fn() => 1000*60*60*3.5
+        offset: $fn() => 1000*60*60*4.5
         texttemplate: '%{y}'
         filters:
           - filter: i>0
@@ -432,7 +436,7 @@ cards:
         period: day
         type: bar
         width: $fn() => 1000*60*60*3
-        offset: $fn() => 1000*60*60*7
+        offset: $fn() => 1000*60*60*7.5
         filters:
           - filter: i>0
           - force_numeric
@@ -462,7 +466,7 @@ cards:
         period: day
         type: bar
         width: $fn() => 1000*60*60*3
-        offset: $fn() => 1000*60*60*14
+        offset: $fn() => 1000*60*60*13.5
         texttemplate: '%{y}'
         filters:
           - filter: i>0
@@ -477,7 +481,7 @@ cards:
         period: day
         type: bar
         width: $fn() => 1000*60*60*3
-        offset: $fn() => 1000*60*60*17.5
+        offset: $fn() => 1000*60*60*16.5
         texttemplate: '%{y}'
         filters:
           - filter: i>0
@@ -1286,6 +1290,8 @@ cards:
             "Solar" + "🔆"
         period: month
         type: bar
+        width: $fn() => 1000*60*60*130
+        offset: $fn() => -1000*60*60*325
         texttemplate: '%{y}'
         filters:
           - delta
@@ -1300,6 +1306,8 @@ cards:
         type: bar
         filters:
           - delta
+        width: $fn() => 1000*60*60*130
+        offset: $fn() => -1000*60*60*195
         texttemplate: '%{y}'
         marker:
           color: rgb(95, 182, 173)
@@ -1311,6 +1319,7 @@ cards:
         period: month
         type: bar
         texttemplate: '%{y}'
+        width: $fn() => 1000*60*60*130
         filters:
           - delta
         marker:
@@ -1319,13 +1328,14 @@ cards:
         statistic: sum
         name: |
           $fn ({ ys,meta }) =>
-            "Battery Discharge" + "🖱️"
+            "Battery Discharge" + "🔋"
         period: month
         type: bar
+        width: $fn() => 1000*60*60*130
+        offset: $fn() => 1000*60*60*65
         texttemplate: '%{y}'
         filters:
           - delta
-          - filter: i>0
         marker:
           color: rgb(151, 90, 182)
       - entity: sensor.sunsynk_day_battery_charge
@@ -1335,6 +1345,8 @@ cards:
             "Battery Charge" + "🔋"
         period: month
         type: bar
+        width: $fn() => 1000*60*60*130
+        offset: $fn() => 1000*60*60*195
         texttemplate: '%{y}'
         filters:
           - delta
