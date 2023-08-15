@@ -318,8 +318,8 @@ cards:
           legend_value: false
           in_header: false
         data_generator: |
-          return entity.attributes.forecast.map((entry) => {
-                return [new Date(entry.period_start), entry.pv_estimate];
+          return entity.attributes.detailedForecast.map((entry) => {
+                return [new Date(entry.period_start), entry.pv_estimate*2];
               });
       - entity: sensor.solcast_forecast_tomorrow
         name: Solar Forecast (D2)
@@ -333,8 +333,8 @@ cards:
           legend_value: false
           in_header: false
         data_generator: |
-          return entity.attributes.forecast.map((entry) => {
-                return [new Date(entry.period_start), entry.pv_estimate];
+          return entity.attributes.detailedForecast.map((entry) => {
+                return [new Date(entry.period_start), entry.pv_estimate*2];
               });
       - entity: sensor.solcast_forecast_d3
         name: Solar Forecast (D3)
@@ -348,8 +348,8 @@ cards:
           legend_value: false
           in_header: false
         data_generator: |
-          return entity.attributes.forecast.map((entry) => {
-                return [new Date(entry.period_start), entry.pv_estimate];
+          return entity.attributes.detailedForecast.map((entry) => {
+                return [new Date(entry.period_start), entry.pv_estimate*2];
               });
       - entity: sensor.solcast_forecast_today
         yaxis_id: header_only
@@ -359,7 +359,7 @@ cards:
           legend_value: true
           in_header: true
           in_chart: false
-      - entity: sensor.solcast_forecast_remaining_today_every_minute
+      - entity: sensor.solcast_forecast_remaining_today
         yaxis_id: header_only
         name: Forecast (D1 Remaining)
         color: grey
