@@ -781,6 +781,16 @@ sensor:
 ################################################ WRITE SETTINGS ############################################
 
 switch:
+  - platform: modbus_controller          # 326 Toggle Force Generator
+    use_write_multiple: true
+    modbus_controller_id: sunsynk
+    name: "${friendly_name} Toggle Force Generator"
+    id: sunsynk_esphome_toggle_force_generator
+    register_type: holding
+    address: 326
+    bitmask: 8192 # 2^13 to target bit 13
+    icon: "mdi:toggle-switch"
+
   - platform: modbus_controller          # 247 Toggle Solar Sell
     use_write_multiple: true
     modbus_controller_id: sunsynk
