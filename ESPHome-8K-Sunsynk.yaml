@@ -785,7 +785,7 @@ switch:
     use_write_multiple: true
     modbus_controller_id: deye
     name: "${friendly_name} Toggle Force Generator"
-    id: deye_esphome_toggle_force_generator
+    id: sunsynk_esphome_toggle_force_generator
     register_type: holding
     address: 326
     bitmask: 8192 # 2^13 to target bit 13
