@@ -781,9 +781,9 @@ sensor:
 ################################################ WRITE SETTINGS ############################################
 
 switch:
-  - platform: modbus_controller # 326 Toggle Force Generator
+  - platform: modbus_controller          # 326 Toggle Force Generator
     use_write_multiple: true
-    modbus_controller_id: deye
+    modbus_controller_id: sunsynk
     name: "${friendly_name} Toggle Force Generator"
     id: sunsynk_esphome_toggle_force_generator
     register_type: holding
