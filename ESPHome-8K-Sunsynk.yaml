@@ -388,6 +388,7 @@ sensor:
     unit_of_measurement: "V"
     device_class: voltage
     state_class: measurement
+    accuracy_decimals: 1
     filters:
       - multiply: 0.1
     value_type: U_WORD
@@ -427,6 +428,7 @@ sensor:
     register_type: holding
     address: 111
     unit_of_measurement: "V"
+    accuracy_decimals: 1
     filters:
       - multiply: 0.1
     device_class: voltage
@@ -790,7 +792,7 @@ switch:
     address: 326
     bitmask: 8192 # 2^13 to target bit 13
     icon: "mdi:toggle-switch"
-
+    
   - platform: modbus_controller          # 247 Toggle Solar Sell
     use_write_multiple: true
     modbus_controller_id: sunsynk
@@ -1256,7 +1258,7 @@ select:
       //ESP_LOGE("main","Modbus write gets = %d",value);
       uint16_t unmodified =  id(grid_peak_shaving_raw).state;
       //ESP_LOGE("main","Modbus write unmodified = %d", unmodified);
-      // optionsmap should only return 2 values... 0 , 256 so bitmask with complement 0x0100 to ensure we keep the original values in register. then appply or with the value that was chosen
+      // optionsmap should only return 2 values... 0 , 256 so bitmask with complement 0x0100 to ensure we keep the original values in register. Then appply OR with the value that was chosen
       uint16_t modified = ((unmodified & ~0x0100) | value);
       //ESP_LOGE("main","Modbus write to write = %d", modified);
       return modified;
