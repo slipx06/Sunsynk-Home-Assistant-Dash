@@ -5,17 +5,17 @@ cards:
     view_layout:
       grid-area: flow
     cardstyle: lite
-    large_font: 'yes'
-    show_solar: 'yes'
-    panel_mode: 'no'
+    large_font: true
+    show_solar: true
+    panel_mode: false
     card_height: 415px
     inverter:
-      modern: 'yes'
+      modern: true
       colour: '#959595'
       autarky: power
     solar:
-      mppts: two
-      show_daily: 'yes'
+      mppts: 2
+      show_daily: true
       colour: '#F4C430'
       animation_speed: 9
       max_power: 6600
@@ -24,20 +24,22 @@ cards:
     battery:
       energy: 15960
       shutdown_soc: 15
-      show_daily: 'yes'
+      show_daily: true
       colour: pink
       animation_speed: 6
       max_power: 4100
     load:
-      show_aux: 'no'
-      show_daily: 'yes'
+      show_aux: false
+      show_daily: true
       animation_speed: 8
       max_power: 8000
-      additional_loads: one
+      additional_loads: 1
       load1_name: Geyser
-      load1_icon: boiler
+      load1_icon: mdi:heating-coil
+      load2_name: Pool
+      load2_icon: mdi:pool
     grid:
-      show_daily_buy: 'yes'
+      show_daily_buy: true
       no_grid_colour: '#BE87E2'
       animation_speed: 8
       max_power: 8000
@@ -65,6 +67,7 @@ cards:
       battery_current_191: sensor.sunsynk_battery_current
       essential_power: sensor.sunsynk_essential_power_1
       essential_load1: sensor.tuya_geyser_current_consumption
+      essential_load2: sensor.sonoff_10013bda3a_power
       nonessential_power: sensor.sunsynk_nonessential_power_1
       grid_ct_power_172: sensor.sunsynk_grid_ct_power
       pv1_voltage_109: sensor.sunsynk_pv1_voltage
@@ -307,7 +310,7 @@ cards:
         group_by:
           func: avg
           duration: 5m
-      - entity: sensor.solcast_forecast_today
+      - entity: sensor.solcast_pv_forecast_forecast_today
         name: Solar Forecast (D1)
         extend_to: false
         color: grey
@@ -319,9 +322,9 @@ cards:
           in_header: false
         data_generator: |
           return entity.attributes.detailedForecast.map((entry) => {
-                return [new Date(entry.period_start), entry.pv_estimate*2];
+                return [new Date(entry.period_start), entry.pv_estimate];
               });
-      - entity: sensor.solcast_forecast_tomorrow
+      - entity: sensor.solcast_pv_forecast_forecast_tomorrow
         name: Solar Forecast (D2)
         float_precision: 3
         extend_to: false
@@ -334,9 +337,9 @@ cards:
           in_header: false
         data_generator: |
           return entity.attributes.detailedForecast.map((entry) => {
-                return [new Date(entry.period_start), entry.pv_estimate*2];
+                return [new Date(entry.period_start), entry.pv_estimate];
               });
-      - entity: sensor.solcast_forecast_d3
+      - entity: sensor.solcast_pv_forecast_forecast_day_3
         name: Solar Forecast (D3)
         float_precision: 3
         extend_to: false
@@ -349,9 +352,9 @@ cards:
           in_header: false
         data_generator: |
           return entity.attributes.detailedForecast.map((entry) => {
-                return [new Date(entry.period_start), entry.pv_estimate*2];
+                return [new Date(entry.period_start), entry.pv_estimate];
               });
-      - entity: sensor.solcast_forecast_today
+      - entity: sensor.solcast_pv_forecast_forecast_today
         yaxis_id: header_only
         name: Solar Forecast (D1)
         color: grey
@@ -359,7 +362,7 @@ cards:
           legend_value: true
           in_header: true
           in_chart: false
-      - entity: sensor.solcast_forecast_remaining_today
+      - entity: sensor.solcast_pv_forecast_forecast_remaining_today
         yaxis_id: header_only
         name: Forecast (D1 Remaining)
         color: grey
@@ -367,7 +370,7 @@ cards:
           legend_value: true
           in_header: true
           in_chart: false
-      - entity: sensor.solcast_forecast_tomorrow
+      - entity: sensor.solcast_pv_forecast_forecast_tomorrow
         yaxis_id: header_only
         name: Forecast (D2)
         color: grey
@@ -375,7 +378,7 @@ cards:
           legend_value: true
           in_header: true
           in_chart: false
-      - entity: sensor.solcast_forecast_d3
+      - entity: sensor.solcast_pv_forecast_forecast_day_3
         yaxis_id: header_only
         name: Solar Forecast (D3)
         color: grey
@@ -383,7 +386,7 @@ cards:
           legend_value: true
           in_header: true
           in_chart: false
-      - entity: sensor.solcast_api_last_polled
+      - entity: sensor.solcast_pv_forecast_api_last_polled
         yaxis_id: header_only
         name: Forecast (Last Update)
         color: grey
@@ -711,7 +714,7 @@ cards:
         decimals: 2
         unit: kWh
         name: Daily
-      - entity: sensor.solcast_forecast_remaining_today
+      - entity: sensor.solcast_pv_forecast_forecast_remaining_today
         decimals: 2
         unit: kWh
         name: Left Today
