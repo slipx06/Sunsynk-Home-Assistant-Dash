@@ -7,7 +7,7 @@ cards:
     cardstyle: lite
     large_font: true
     show_solar: true
-    panel_mode: false
+    panel_mode: true
     card_height: 415px
     inverter:
       modern: true
@@ -168,7 +168,6 @@ cards:
           - 20
           - 105
         fixedrange: true
-      height: 410
       yaxis:
         tickmode: linear
         dtick: 1000
@@ -539,7 +538,7 @@ cards:
         - breakpoint: 10000
           options:
             chart:
-              height: 356px
+              height: 355px
     series:
       - entity: sensor.sunsynk_day_load_energy
         name: Consumption
@@ -576,7 +575,7 @@ cards:
         - breakpoint: 10000
           options:
             chart:
-              height: 356px
+              height: 375px
     series:
       - entity: sensor.sunsynk_day_pv_energy
         name: Solar
@@ -1378,13 +1377,13 @@ cards:
     link_dashboard: true
 layout:
   grid-template-columns: 10% 10% 10% 10% 10% 10% 10% 10% 10% 10%
-  grid-template-rows: auto
+  grid-template-rows: auto 2fr auto auto auto auto auto
   grid-template-areas: |
     "g1 g1 g2 g2 g3 g3 ls ls weather weather"
-    "flow flow flow graph graph graph graph graph stats1 stats1 "
-    "total total total total daily daily daily daily stats stats "
-    "sg sg sg sg sg sg sg sg sg sg"
-    "m m m m m m m m m m"
+    "flow flow flow flow graph graph graph graph graph graph "
+    "total total total total daily daily daily daily daily daily"
+    "sg sg sg sg sg sg sg sg stats stats"
+    "m m m m m m m m stats1 stats1 "
     "bat bat bat bat bat geyser geyser geyser geyser geyser "
     "energy energy energy solar solar solar  solar solar  solar solar "
   justify-items: stretch
@@ -1411,9 +1410,11 @@ layout:
         "weather"
     '(max-width: 1300px)':
       grid-template-columns: 33% 33% 33%
+      grid-template-rows: auto
       grid-template-areas: |
         "g1 g2 g3"
-        "flow graph graph"
+        "flow flow flow "
+        "graph graph graph"
         "stats1 daily daily"
         "stats total total"
         "sg sg sg"
