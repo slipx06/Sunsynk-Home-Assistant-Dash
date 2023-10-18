@@ -587,7 +587,7 @@ sensor:
     device_class: power
     state_class: measurement
     lambda: |-
-      return (id(sunsynk_esphome_pv1_power).state + id(sunsynk_esphome_pv2_power).state) + id(sunsynk_esphome_pv3_power).state) + id(sunsynk_esphome_pv4_power).state);
+      return (id(sunsynk_esphome_pv1_power).state + id(sunsynk_esphome_pv2_power).state + id(sunsynk_esphome_pv3_power).state + id(sunsynk_esphome_pv4_power).state);
     update_interval: 5s
 
 ############################################### OUTPUTS ###############################################
