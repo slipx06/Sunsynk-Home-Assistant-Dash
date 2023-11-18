@@ -189,6 +189,30 @@ sensor:
     filters:
       - multiply: 0.01
 
+  - platform: modbus_controller            # 314 Battery Charge Limit Current
+    modbus_controller_id: inverter
+    name: "${friendly_name} Battery Charge Limit Current"
+    id: inverter_esphome_battery_charge_limit_current
+    register_type: holding
+    address: 314
+    unit_of_measurement: "A"
+    accuracy_decimals: 0
+    device_class: current
+    state_class: measurement
+    value_type: S_WORD
+
+  - platform: modbus_controller            # 315 Battery Discharge Limit Current
+    modbus_controller_id: inverter
+    name: "${friendly_name} Battery Discharge Limit Current"
+    id: inverter_esphome_battery_discharge_limit_current
+    register_type: holding
+    address: 315
+    unit_of_measurement: "A"
+    accuracy_decimals: 0
+    device_class: current
+    state_class: measurement
+    value_type: S_WORD
+
   - platform: modbus_controller            # 217 Battery Capacity Shutdown
     modbus_controller_id: inverter
     name: "${friendly_name} Battery Capacity Shutdown"
