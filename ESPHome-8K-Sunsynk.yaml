@@ -1,7 +1,7 @@
 substitutions:
   settings_skipped_updates: "30"
-  devicename: sunsynk
-  device_description: "Sunsynk RS485 Logger"
+  devicename: "inverter"
+  device_description: "Inverter RS485 Logger"
   friendly_name: "SunSynk"
 
 esphome:
@@ -53,13 +53,13 @@ uart:
   stop_bits: 1
  
 modbus:
-  id: sunsynk_modbus
+  id: inverter_modbus
   flow_control_pin: GPIO16
  
 modbus_controller:
-  - id: sunsynk
+  - id: inverter
     address: 0x01
-    modbus_id: sunsynk_modbus
+    modbus_id: inverter_modbus
     setup_priority: -10
     update_interval: "15s"
     command_throttle: "50ms"
@@ -67,24 +67,24 @@ modbus_controller:
 ############################################### BINARY SENSORS ########################################
 binary_sensor:           
   - platform: modbus_controller            # 194 Grid Connected Status
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Grid Connected Status"
-    id: sunsynk_esphome_grid_connected_status
+    id: inverter_esphome_grid_connected_status
     register_type: holding
     address: 194
 
   - platform: modbus_controller           # 280 Gen Peak Shaving Status
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Gen Peak Shaving Status"
-    id: sunsynk_esphome_gen_peak_shaving_status
+    id: inverter_esphome_gen_peak_shaving_status
     register_type: holding
     address: 280
     bitmask: 0x10
 
   - platform: modbus_controller           # 280 Grid Peak Shaving Status
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Grid Peak Shaving Status"
-    id: sunsynk_esphome_grid_peak_shaving_status
+    id: inverter_esphome_grid_peak_shaving_status
     register_type: holding
     address: 280
     bitmask: 0x100
@@ -95,9 +95,9 @@ binary_sensor:
 ############################################### BATTERY ###############################################
 sensor:
   - platform: modbus_controller            # 182 Battery Temperature
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Battery Temperature"
-    id: sunsynk_esphome_battery_temperature
+    id: inverter_esphome_battery_temperature
     register_type: holding
     address: 182
     unit_of_measurement: "°C"
@@ -110,9 +110,9 @@ sensor:
       - multiply: 0.1
 
   - platform: modbus_controller            # 183 Battery Voltage
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Battery Voltage"
-    id: sunsynk_esphome_battery_voltage
+    id: inverter_esphome_battery_voltage
     register_type: holding
     address: 183
     unit_of_measurement: "V"
@@ -124,9 +124,9 @@ sensor:
     value_type: U_WORD
 
   - platform: modbus_controller            # 184 Battery SOC
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Battery SOC"
-    id: sunsynk_esphome_battery_soc
+    id: inverter_esphome_battery_soc
     register_type: holding
     address: 184
     unit_of_measurement: "%"
@@ -135,9 +135,9 @@ sensor:
     value_type: U_WORD
 
   - platform: modbus_controller            # 190 Battery Power
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Battery Power"
-    id: sunsynk_esphome_battery_power
+    id: inverter_esphome_battery_power
     register_type: holding
     address: 190
     unit_of_measurement: "W"
@@ -145,10 +145,40 @@ sensor:
     device_class: power
     value_type: S_WORD
 
+  - platform: modbus_controller            # Battery Power Charge only needed if you want to use calculate Daily Energy Totals on the inverter
+    modbus_controller_id: inverter
+    name: "${friendly_name} Battery Power Charge"
+    id: inverter_esphome_battery_power_charge
+    register_type: holding
+    address: 190
+    unit_of_measurement: "W"
+    accuracy_decimals: 0
+    device_class: power
+    value_type: S_WORD
+    internal: true
+    lambda: |-
+      if (x > 0) return 0; else return x;
+
+  - platform: modbus_controller            # Battery Power DisCharge only needed if you want to use calculate Daily Energy Totals on the inverter
+    modbus_controller_id: inverter
+    name: "${friendly_name} Battery Power Discharge"
+    id: inverter_esphome_battery_power_discharge
+    register_type: holding
+    address: 190
+    unit_of_measurement: "W"
+    accuracy_decimals: 0
+    device_class: power
+    value_type: S_WORD
+    internal: true
+    lambda: |-
+      if (x < 0) return 0; else return x;
+
+######################################################################################################
+
   - platform: modbus_controller            # 191 Battery Current
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Battery Current"
-    id: sunsynk_esphome_battery_current
+    id: inverter_esphome_battery_current
     register_type: holding
     address: 191
     unit_of_measurement: "A"
@@ -160,9 +190,9 @@ sensor:
       - multiply: 0.01
 
   - platform: modbus_controller            # 217 Battery Capacity Shutdown
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Battery Capacity Shutdown"
-    id: sunsynk_esphome_battery_capacity_shutdown
+    id: inverter_esphome_battery_capacity_shutdown
     register_type: holding
     address: 217
     unit_of_measurement: "%"
@@ -172,9 +202,9 @@ sensor:
 ############################################### INVERTER ##############################################
 
   - platform: modbus_controller            # 175 Inverter Power
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Inverter Power"
-    id: sunsynk_esphome_inverter_power
+    id: inverter_esphome_inverter_power
     register_type: holding
     address: 175
     unit_of_measurement: "W"
@@ -183,9 +213,9 @@ sensor:
     value_type: S_WORD
 
   - platform: modbus_controller            # 154 Inverter Voltage
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Inverter Voltage"
-    id: sunsynk_esphome_inverter_voltage
+    id: inverter_esphome_inverter_voltage
     register_type: holding
     address: 154
     unit_of_measurement: "V"
@@ -197,9 +227,9 @@ sensor:
     value_type: U_WORD 
 
   - platform: modbus_controller            # 164 Inverter Current
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Inverter Current"
-    id: sunsynk_esphome_inverter_current
+    id: inverter_esphome_inverter_current
     register_type: holding
     address: 164
     unit_of_measurement: "A"
@@ -211,9 +241,9 @@ sensor:
       - multiply: 0.01
 
   - platform: modbus_controller            # 193 Inverter Frequency
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Inverter Frequency"
-    id: sunsynk_esphome_inverter_frequency
+    id: inverter_esphome_inverter_frequency
     register_type: holding
     address: 193
     unit_of_measurement: "Hz"
@@ -226,9 +256,9 @@ sensor:
 ############################################### GRID ##################################################
 
   - platform: modbus_controller             # 079 Grid Frequency
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Grid Frequency"
-    id: sunsynk_esphome_grid_frequency
+    id: inverter_esphome_grid_frequency
     register_type: holding
     address: 79
     unit_of_measurement: "Hz"
@@ -239,9 +269,9 @@ sensor:
     state_class: measurement
 
   - platform: modbus_controller             # 169 Grid Power
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Grid Power"
-    id: sunsynk_esphome_grid_power_169
+    id: inverter_esphome_grid_power_169
     register_type: holding
     address: 169
     unit_of_measurement: "W"
@@ -251,9 +281,9 @@ sensor:
     value_type: S_WORD
 
   - platform: modbus_controller             # 167 Grid LD Power
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Grid LD Power 167"
-    id: sunsynk_esphome_grid_power_167
+    id: inverter_esphome_grid_power_167
     register_type: holding
     address: 167
     unit_of_measurement: "W"
@@ -263,9 +293,9 @@ sensor:
     value_type: S_WORD
 
   - platform: modbus_controller             # 168 Grid L2 Power
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Grid L2 Power 168"
-    id: sunsynk_esphome_grid_power_168
+    id: inverter_esphome_grid_power_168
     register_type: holding
     address: 168
     unit_of_measurement: "W"
@@ -275,9 +305,9 @@ sensor:
     value_type: S_WORD
 
   - platform: modbus_controller             # 150 Grid Voltage
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Grid Voltage"
-    id: sunsynk_esphome_grid_voltage
+    id: inverter_esphome_grid_voltage
     register_type: holding
     address: 150
     unit_of_measurement: "V"
@@ -289,9 +319,9 @@ sensor:
     value_type: U_WORD 
 
   - platform: modbus_controller             # 160 Grid Current
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Grid Current"
-    id: sunsynk_esphome_grid_current
+    id: inverter_esphome_grid_current
     register_type: holding
     address: 160
     unit_of_measurement: "A"
@@ -303,9 +333,9 @@ sensor:
       - multiply: 0.01
 
   - platform: modbus_controller             # 172 Grid CT Power
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Grid CT Power"
-    id: sunsynk_esphome_grid_ct_power
+    id: inverter_esphome_grid_ct_power
     register_type: holding
     address: 172
     unit_of_measurement: "W"
@@ -314,12 +344,42 @@ sensor:
     state_class: measurement
     value_type: S_WORD
 
+  - platform: modbus_controller                   # Grid Power Import only needed if you want to use calculate Daily Energy Totals on the inverter
+    modbus_controller_id: inverter
+    name: "${friendly_name} Grid Power Import"
+    id: inverter_esphome_grid_ct_power_import
+    register_type: holding
+    address: 172
+    unit_of_measurement: "W"
+    accuracy_decimals: 0
+    internal: true
+    device_class: power
+    state_class: measurement
+    value_type: S_WORD
+    lambda: |-
+      if (x < 0) return 0; else return x;
+
+  - platform: modbus_controller                   # Grid Power Export only needed if you want to use calculate Daily Energy Totals on the inverter
+    modbus_controller_id: inverter
+    name: "${friendly_name} Grid Power Export"
+    register_type: holding
+    address: 172
+    unit_of_measurement: "W"
+    id: inverter_esphome_grid_ct_power_export
+    accuracy_decimals: 0
+    internal: true
+    device_class: power
+    state_class: measurement
+    value_type: S_WORD
+    lambda: |-
+      if (x > 0) return 0; else return x;
+
 ############################################### LOAD ################################################
 
   - platform: modbus_controller            # 178 Load Power
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Load Power"
-    id: sunsynk_esphome_load_power
+    id: inverter_esphome_load_power
     register_type: holding
     address: 178
     unit_of_measurement: "W"
@@ -329,9 +389,9 @@ sensor:
     value_type: S_WORD
 
   - platform: modbus_controller            # 176 Load L1 Power
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Load L1 Power"
-    id: sunsynk_esphome_load_l1_power
+    id: inverter_esphome_load_l1_power
     register_type: holding
     address: 176
     unit_of_measurement: "W"
@@ -341,9 +401,9 @@ sensor:
     value_type: S_WORD
 
   - platform: modbus_controller            # 177 Load L2 Power
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Load L2 Power"
-    id: sunsynk_esphome_load_l2_power
+    id: inverter_esphome_load_l2_power
     register_type: holding
     address: 177
     unit_of_measurement: "W"
@@ -353,9 +413,9 @@ sensor:
     value_type: S_WORD
 
   - platform: modbus_controller            # 192 Load Frequency
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Load Frequency"
-    id: sunsynk_esphome_load_frequency
+    id: inverter_esphome_load_frequency
     register_type: holding
     address: 192
     unit_of_measurement: "Hz"
@@ -368,9 +428,9 @@ sensor:
 ############################################### SOLAR PV1 #############################################
 
   - platform: modbus_controller            # 186 PV1 Power
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} PV1 Power"
-    id: sunsynk_esphome_pv1_power
+    id: inverter_esphome_pv1_power
     register_type: holding
     address: 186
     unit_of_measurement: "W"
@@ -380,9 +440,9 @@ sensor:
     value_type: U_WORD
 
   - platform: modbus_controller            # 109 PV1 Voltage
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} PV1 Voltage"
-    id: sunsynk_esphome_pv1_voltage
+    id: inverter_esphome_pv1_voltage
     register_type: holding
     address: 109
     unit_of_measurement: "V"
@@ -394,9 +454,9 @@ sensor:
     value_type: U_WORD
 
   - platform: modbus_controller            # 110 PV1 Current
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} PV1 Current"
-    id: sunsynk_esphome_pv1_current
+    id: inverter_esphome_pv1_current
     register_type: holding
     address: 110
     unit_of_measurement: "A"
@@ -410,9 +470,9 @@ sensor:
 ############################################### SOLAR PV2 #############################################
 
   - platform: modbus_controller            # 187 PV2 Power
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} PV2 Power"
-    id: sunsynk_esphome_pv2_power
+    id: inverter_esphome_pv2_power
     register_type: holding
     address: 187
     unit_of_measurement: "W"
@@ -422,9 +482,9 @@ sensor:
     value_type: U_WORD
 
   - platform: modbus_controller            # 111 PV2 Voltage
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} PV2 Voltage"
-    id: sunsynk_esphome_pv2_voltage
+    id: inverter_esphome_pv2_voltage
     register_type: holding
     address: 111
     unit_of_measurement: "V"
@@ -436,9 +496,9 @@ sensor:
     value_type: U_WORD
 
   - platform: modbus_controller            # 112 PV2 Current
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} PV2 Current"
-    id: sunsynk_esphome_pv2_current
+    id: inverter_esphome_pv2_current
     register_type: holding
     address: 112
     unit_of_measurement: "A"
@@ -454,19 +514,20 @@ sensor:
   - platform: template                   # Sum of PV1 and PV2 to get total PV Power
     name: "${friendly_name} Solar Power"
     unit_of_measurement: "W"
+    id: inverter_esphome_pv_total
     accuracy_decimals: 0
     device_class: power
     state_class: measurement
     lambda: |-
-      return (id(sunsynk_esphome_pv1_power).state + id(sunsynk_esphome_pv2_power).state);
+      return (id(inverter_esphome_pv1_power).state + id(inverter_esphome_pv2_power).state);
     update_interval: 5s
 
 ############################################### OUTPUTS ###############################################
 
   - platform: modbus_controller            # 166 Aux Power
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} AUX Power"
-    id: sunsynk_esphome_aux_power
+    id: inverter_esphome_aux_power
     register_type: holding
     address: 166
     unit_of_measurement: "W"
@@ -482,7 +543,7 @@ sensor:
     device_class: power
     state_class: measurement
     lambda: |-
-      return (id(sunsynk_esphome_inverter_power).state + id(sunsynk_esphome_grid_power_167).state - id(sunsynk_esphome_aux_power).state);
+      return (id(inverter_esphome_inverter_power).state + id(inverter_esphome_grid_power_167).state - id(inverter_esphome_aux_power).state);
     update_interval: 5s
 
   - platform: template                   # Essential Power1 based on register 175 + 169 - 166
@@ -492,7 +553,7 @@ sensor:
     device_class: power
     state_class: measurement
     lambda: |-
-      return (id(sunsynk_esphome_inverter_power).state + id(sunsynk_esphome_grid_power_169).state - id(sunsynk_esphome_aux_power).state);
+      return (id(inverter_esphome_inverter_power).state + id(inverter_esphome_grid_power_169).state - id(inverter_esphome_aux_power).state);
     update_interval: 5s
 
   - platform: template                   # Nonessential Power 172 - 167
@@ -502,7 +563,7 @@ sensor:
     device_class: power
     state_class: measurement
     lambda: |-
-      return (id(sunsynk_esphome_grid_ct_power).state - id(sunsynk_esphome_grid_power_167).state);
+      return (id(inverter_esphome_grid_ct_power).state - id(inverter_esphome_grid_power_167).state);
     update_interval: 5s
 
   - platform: template                   # Nonessential Power1 172 - 169
@@ -512,15 +573,15 @@ sensor:
     device_class: power
     state_class: measurement
     lambda: |-
-      return (id(sunsynk_esphome_grid_ct_power).state - id(sunsynk_esphome_grid_power_169).state);
+      return (id(inverter_esphome_grid_ct_power).state - id(inverter_esphome_grid_power_169).state);
     update_interval: 5s
 
 ############################################### ENERGY ################################################
 
   - platform: modbus_controller            # 070 Day Battery Charge
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Day Battery Charge"
-    id: sunsynk_esphome_day_battery_charge
+    id: inverter_esphome_day_battery_charge
     register_type: holding
     address: 70
     unit_of_measurement: "kWh"
@@ -532,9 +593,9 @@ sensor:
       - multiply: 0.1
 
   - platform: modbus_controller            # 071 Day Battery Discharge
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Day Battery Discharge"
-    id: sunsynk_esphome_day_battery_discharge
+    id: inverter_esphome_day_battery_discharge
     register_type: holding
     address: 71
     unit_of_measurement: "kWh"
@@ -546,9 +607,9 @@ sensor:
       - multiply: 0.1
 
   - platform: modbus_controller            # 072 Total Battery Charge
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Total Battery Charge"
-    id: sunsynk_esphome_total_battery_charge
+    id: inverter_esphome_total_battery_charge
     register_type: holding
     address: 72
     unit_of_measurement: "kWh"
@@ -560,9 +621,9 @@ sensor:
      - multiply: 0.1
 
   - platform: modbus_controller            # 074 Total Battery Discharge
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Total Battery Discharge"
-    id: sunsynk_esphome_total_battery_discharge
+    id: inverter_esphome_total_battery_discharge
     register_type: holding
     address: 74
     unit_of_measurement: "kWh"
@@ -574,9 +635,9 @@ sensor:
      - multiply: 0.1
 
   - platform: modbus_controller            # 076 Day Grid Import
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Day Grid Import"
-    id: sunsynk_esphome_day_grid_import
+    id: inverter_esphome_day_grid_import
     register_type: holding
     address: 76
     unit_of_measurement: "kWh"
@@ -588,9 +649,9 @@ sensor:
       - multiply: 0.1
 
   - platform: modbus_controller            # 077 Day Grid Export
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Day Grid Export"
-    id: sunsynk_esphome_day_grid_export
+    id: inverter_esphome_day_grid_export
     register_type: holding
     address: 77
     unit_of_measurement: "kWh"
@@ -602,9 +663,9 @@ sensor:
       - multiply: 0.1
 
   - platform: modbus_controller            # 078 Total Grid Import
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Total Grid Import"
-    id: sunsynk_esphome_total_grid_import
+    id: inverter_esphome_total_grid_import
     register_type: holding
     address: 78
     unit_of_measurement: "kWh"
@@ -616,9 +677,9 @@ sensor:
       - multiply: 0.1
 
   - platform: modbus_controller            # 081 Total Grid Export
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Total Grid Export"
-    id: sunsynk_esphome_total_grid_export
+    id: inverter_esphome_total_grid_export
     register_type: holding
     address: 81
     unit_of_measurement: "kWh"
@@ -630,9 +691,9 @@ sensor:
       - multiply: 0.1
 
   - platform: modbus_controller            # 084 Day Load Energy
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Day Load Energy"
-    id: sunsynk_esphome_day_load_energy
+    id: inverter_esphome_day_load_energy
     register_type: holding
     address: 84
     unit_of_measurement: "kWh"
@@ -644,9 +705,9 @@ sensor:
     value_type: U_WORD
 
   - platform: modbus_controller            # 085 Total Load Energy
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Total Load Energy"
-    id: sunsynk_esphome_total_load_energy
+    id: inverter_esphome_total_load_energy
     register_type: holding
     address: 85
     unit_of_measurement: "kWh"
@@ -658,9 +719,9 @@ sensor:
       - multiply: 0.1
 
   - platform: modbus_controller            # 096 Total PV Energy
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Total PV Energy"
-    id: sunsynk_esphome_total_pv_energy
+    id: inverter_esphome_total_pv_energy
     register_type: holding
     address: 96
     unit_of_measurement: "kWh"
@@ -672,9 +733,9 @@ sensor:
     value_type: U_DWORD_R  
 
   - platform: modbus_controller            # 108 Day PV Energy
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Day PV Energy"
-    id: sunsynk_esphome_day_pv_energy
+    id: inverter_esphome_day_pv_energy
     register_type: holding
     address: 108
     unit_of_measurement: "kWh"
@@ -685,12 +746,82 @@ sensor:
       - multiply: 0.1
     value_type: U_WORD
 
+############################################### OPTIONAL LOCAL ENERGY SENSORS ############################################
+##### Calculates daily energy instead of relying on the inverter registers
+##### You can comment these out if not needed
+
+  - platform: total_daily_energy          # Day PV Energy
+    name: "${friendly_name} Day PV Energy Local"
+    power_id: inverter_esphome_pv_total
+    unit_of_measurement: 'kWh'
+    state_class: total_increasing
+    device_class: energy
+    accuracy_decimals: 3
+    filters:
+      # Multiplication factor from W to kW is 0.001
+      - multiply: 0.001
+
+  - platform: total_daily_energy          # Day Battery Charge Energy
+    name: "${friendly_name} Day Battery Charge Energy Local"
+    power_id: inverter_esphome_battery_power_charge
+    unit_of_measurement: 'kWh'
+    state_class: total_increasing
+    device_class: energy
+    accuracy_decimals: 3
+    filters:
+      # Multiplication factor from W to kW is 0.001
+      - multiply: 0.001
+
+  - platform: total_daily_energy          # Day Battery DisCharge Energy
+    name: "${friendly_name} Day Battery Discharge Energy Local"
+    power_id: inverter_esphome_battery_power_discharge
+    unit_of_measurement: 'kWh'
+    state_class: total_increasing
+    device_class: energy
+    accuracy_decimals: 3
+    filters:
+      # Multiplication factor from W to kW is 0.001
+      - multiply: 0.001
+
+  - platform: total_daily_energy          # Day Load Energy
+    name: "${friendly_name} Day Load Energy Local"
+    power_id: inverter_esphome_load_power
+    unit_of_measurement: 'kWh'
+    state_class: total_increasing
+    device_class: energy
+    accuracy_decimals: 3
+    filters:
+      # Multiplication factor from W to kW is 0.001
+      - multiply: 0.001
+
+  - platform: total_daily_energy          # Day Grid Import Energy
+    name: "${friendly_name} Day Grid Import Energy Local"
+    power_id: inverter_esphome_grid_ct_power_import
+    unit_of_measurement: 'kWh'
+    state_class: total_increasing
+    device_class: energy
+    accuracy_decimals: 3
+    filters:
+      # Multiplication factor from W to kW is 0.001
+      - multiply: 0.001
+
+  - platform: total_daily_energy          # Day Grid Export Energy
+    name: "${friendly_name} Day Grid Export Energy Local"
+    power_id: inverter_esphome_grid_ct_power_export
+    unit_of_measurement: 'kWh'
+    state_class: total_increasing
+    device_class: energy
+    accuracy_decimals: 3
+    filters:
+      # Multiplication factor from W to kW is 0.001
+      - multiply: 0.001
+
 ############################################### TEMPERATURE ################################################
 
   - platform: modbus_controller            # 090 DC Transformer Temperature
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} DC Transformer Temperature"
-    id: sunsynk_esphome_dc_transformer_temperature
+    id: inverter_esphome_dc_transformer_temperature
     register_type: holding
     address: 090
     unit_of_measurement: "°C"
@@ -703,9 +834,9 @@ sensor:
       - multiply:  0.1
 
   - platform: modbus_controller            # 091 Radiator Temperature
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Radiator Temperature"
-    id: sunsynk_esphome_radiator_temperature
+    id: inverter_esphome_radiator_temperature
     register_type: holding
     address: 091
     unit_of_measurement: "°C"
@@ -720,61 +851,61 @@ sensor:
 ################################################ READ SETTINGS #############################################
 
   - platform: modbus_controller          # 250 System Mode Time 1
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} System Mode Time1"
-    id: sunsynk_esphome_system_mode_time1
+    id: inverter_esphome_system_mode_time1
     register_type: holding
     skip_updates: ${settings_skipped_updates}
     address: 250
     icon: "mdi:clock"
 
   - platform: modbus_controller          # 251 System Mode Time 2
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} System Mode Time2"
-    id: sunsynk_esphome_system_mode_time2
+    id: inverter_esphome_system_mode_time2
     register_type: holding
     skip_updates: ${settings_skipped_updates}
     address: 251   
     icon: "mdi:clock"
 
   - platform: modbus_controller          # 252 System Mode Time 3
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} System Mode Time3"
-    id: sunsynk_esphome_system_mode_time3
+    id: inverter_esphome_system_mode_time3
     register_type: holding
     skip_updates: ${settings_skipped_updates}
     address: 252
     icon: "mdi:clock"
 
   - platform: modbus_controller          # 253 System Mode Time 4
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} System Mode Time4"
-    id: sunsynk_esphome_system_mode_time4
+    id: inverter_esphome_system_mode_time4
     register_type: holding
     skip_updates: ${settings_skipped_updates}
     address: 253
     icon: "mdi:clock"
 
   - platform: modbus_controller          # 254 System Mode Time 5
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} System Mode Time5"
-    id: sunsynk_esphome_system_mode_time5
+    id: inverter_esphome_system_mode_time5
     register_type: holding
     skip_updates: ${settings_skipped_updates}
     address: 254
     icon: "mdi:clock"
 
   - platform: modbus_controller          # 255 System Mode Time 6
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} System Mode Time6"
-    id: sunsynk_esphome_system_mode_time6
+    id: inverter_esphome_system_mode_time6
     register_type: holding
     skip_updates: ${settings_skipped_updates}
     address: 255
     icon: "mdi:clock"
 
   - platform: modbus_controller        # 255 Grid Peak Shaving raw register value
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     id: grid_peak_shaving_raw
     register_type: holding
     address: 280
@@ -785,9 +916,9 @@ sensor:
 switch:
   - platform: modbus_controller          # 326 Toggle Force Generator
     use_write_multiple: true
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Toggle Force Generator"
-    id: sunsynk_esphome_toggle_force_generator
+    id: inverter_esphome_toggle_force_generator
     register_type: holding
     address: 326
     bitmask: 8192 # 2^13 to target bit 13
@@ -795,9 +926,9 @@ switch:
     
   - platform: modbus_controller          # 247 Toggle Solar Sell
     use_write_multiple: true
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Toggle Solar sell"
-    id: sunsynk_esphome_toggle_solar_sell
+    id: inverter_esphome_toggle_solar_sell
     register_type: holding
     address: 247
     bitmask: 1
@@ -805,9 +936,9 @@ switch:
 
   - platform: modbus_controller          # 248 Toggle System Timer
     use_write_multiple: true
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Toggle System Timer" 
-    id: sunsynk_esphome_toggle_Time_of_Use
+    id: inverter_esphome_toggle_Time_of_Use
     register_type: holding
     address: 248
     bitmask: 1
@@ -815,9 +946,9 @@ switch:
 
   - platform: modbus_controller          # 243 Priority Load
     use_write_multiple: true
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Toggle Priority Load" 
-    id: sunsynk_esphome_toggle_priority_load
+    id: inverter_esphome_toggle_priority_load
     register_type: holding
     address: 243
     bitmask: 1
@@ -825,59 +956,59 @@ switch:
 
   - platform: modbus_controller          # 274 System Mode Grid Charge Time 1
     use_write_multiple: true
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} System Mode Grid Charge Time1"
-    id: sunsynk_esphome_toggle_grid_charge_time1
+    id: inverter_esphome_toggle_grid_charge_time1
     register_type: holding
     address: 274
     bitmask: 1
     icon: "mdi:toggle-switch"
 
   - platform: modbus_controller          # 275 System Mode Grid Charge Time 2
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     use_write_multiple: true
     name: "${friendly_name} System Mode Grid Charge Time2"
-    id: sunsynk_esphome_toggle_grid_charge_time2
+    id: inverter_esphome_toggle_grid_charge_time2
     register_type: holding
     address: 275
     bitmask: 1
     icon: "mdi:toggle-switch"
 
   - platform: modbus_controller          # 276 System Mode Grid Charge Time 3
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     use_write_multiple: true
     name: "${friendly_name} System Mode Grid Charge Time3"
-    id: sunsynk_esphome_toggle_grid_charge_time3
+    id: inverter_esphome_toggle_grid_charge_time3
     register_type: holding
     address: 276
     bitmask: 1
     icon: "mdi:toggle-switch"
 
   - platform: modbus_controller          # 277 System Mode Grid Charge Time 4
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     use_write_multiple: true
     name: "${friendly_name} System Mode Grid Charge Time4"
-    id: sunsynk_esphome_toggle_grid_charge_time4
+    id: inverter_esphome_toggle_grid_charge_time4
     register_type: holding
     address: 277
     bitmask: 1
     icon: "mdi:toggle-switch"
 
   - platform: modbus_controller          # 278 System Mode Grid Charge Time 5
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     use_write_multiple: true
     name: "${friendly_name} System Mode Grid Charge Time5"
-    id: sunsynk_esphome_toggle_grid_charge_time5
+    id: inverter_esphome_toggle_grid_charge_time5
     register_type: holding
     address: 278
     bitmask: 1
     icon: "mdi:toggle-switch"
 
   - platform: modbus_controller          # 279 System Mode Grid Charge Time 6
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     use_write_multiple: true
     name: "${friendly_name} System Mode Grid Charge Time6"
-    id: sunsynk_esphome_toggle_grid_charge_time6
+    id: inverter_esphome_toggle_grid_charge_time6
     register_type: holding
     address: 279
     bitmask: 1
@@ -886,8 +1017,8 @@ switch:
 number:
   - platform: modbus_controller         # 268 System Mode SoC Time 1
     use_write_multiple: true
-    modbus_controller_id: sunsynk
-    id: sunsynk_esphome_set_soc_time1
+    modbus_controller_id: inverter
+    id: inverter_esphome_set_soc_time1
     name: "${friendly_name} System Mode SoC Time1"
     unit_of_measurement: "%"
     address: 268
@@ -898,8 +1029,8 @@ number:
 
   - platform: modbus_controller         # 269 System Mode SoC Time 2
     use_write_multiple: true
-    modbus_controller_id: sunsynk
-    id: sunsynk_esphome_set_soc_time2
+    modbus_controller_id: inverter
+    id: inverter_esphome_set_soc_time2
     name: "${friendly_name} System Mode SoC Time2"
     unit_of_measurement: "%"
     address: 269
@@ -910,8 +1041,8 @@ number:
 
   - platform: modbus_controller         # 270 System Mode SoC Time 3
     use_write_multiple: true
-    modbus_controller_id: sunsynk
-    id: sunsynk_esphome_set_soc_time3
+    modbus_controller_id: inverter
+    id: inverter_esphome_set_soc_time3
     name: "${friendly_name} System Mode SoC Time3"
     unit_of_measurement: "%"
     address: 270
@@ -922,8 +1053,8 @@ number:
 
   - platform: modbus_controller         # 271 System Mode SoC Time 4
     use_write_multiple: true
-    modbus_controller_id: sunsynk
-    id: sunsynk_esphome_set_soc_time4
+    modbus_controller_id: inverter
+    id: inverter_esphome_set_soc_time4
     name: "${friendly_name} System Mode SoC Time4"
     unit_of_measurement: "%"
     address: 271
@@ -934,8 +1065,8 @@ number:
 
   - platform: modbus_controller         # 272 System Mode SoC Time 5
     use_write_multiple: true
-    modbus_controller_id: sunsynk
-    id: sunsynk_esphome_set_soc_time5
+    modbus_controller_id: inverter
+    id: inverter_esphome_set_soc_time5
     name: "${friendly_name} System Mode SoC Time5"
     unit_of_measurement: "%"
     address: 272
@@ -946,8 +1077,8 @@ number:
 
   - platform: modbus_controller         # 273 System Mode SoC Time 6
     use_write_multiple: true
-    modbus_controller_id: sunsynk
-    id: sunsynk_esphome_set_soc_time6
+    modbus_controller_id: inverter
+    id: inverter_esphome_set_soc_time6
     name: "${friendly_name} System Mode SoC Time6"
     unit_of_measurement: "%"
     address: 273
@@ -958,8 +1089,8 @@ number:
 
   - platform: modbus_controller         # 256 System Mode Power Time 1
     use_write_multiple: true
-    modbus_controller_id: sunsynk
-    id: sunsynk_esphome_set_power_time1
+    modbus_controller_id: inverter
+    id: inverter_esphome_set_power_time1
     name: "${friendly_name} System Mode Power Time1"
     unit_of_measurement: "W"
     address: 256
@@ -970,8 +1101,8 @@ number:
 
   - platform: modbus_controller         # 257 System Mode Power Time 2
     use_write_multiple: true
-    modbus_controller_id: sunsynk
-    id: sunsynk_esphome_set_power_time2
+    modbus_controller_id: inverter
+    id: inverter_esphome_set_power_time2
     name: "${friendly_name} System Mode Power Time2"
     unit_of_measurement: "W"
     address: 257
@@ -982,8 +1113,8 @@ number:
 
   - platform: modbus_controller         # 258 System Mode Power Time 3
     use_write_multiple: true
-    modbus_controller_id: sunsynk
-    id: sunsynk_esphome_set_power_time3
+    modbus_controller_id: inverter
+    id: inverter_esphome_set_power_time3
     name: "${friendly_name} System Mode Power Time3"
     unit_of_measurement: "W"
     address: 258
@@ -994,8 +1125,8 @@ number:
 
   - platform: modbus_controller         # 259 System Mode Power Time 4
     use_write_multiple: true
-    modbus_controller_id: sunsynk
-    id: sunsynk_esphome_set_power_time4
+    modbus_controller_id: inverter
+    id: inverter_esphome_set_power_time4
     name: "${friendly_name} System Mode Power Time4"
     unit_of_measurement: "W"
     address: 259
@@ -1006,8 +1137,8 @@ number:
 
   - platform: modbus_controller         # 260 System Mode Power Time 5
     use_write_multiple: true
-    modbus_controller_id: sunsynk
-    id: sunsynk_esphome_set_power_time5
+    modbus_controller_id: inverter
+    id: inverter_esphome_set_power_time5
     name: "${friendly_name} System Mode Power Time5"
     unit_of_measurement: "W"
     address: 260
@@ -1018,8 +1149,8 @@ number:
 
   - platform: modbus_controller         # 261 System Mode Power Time 6
     use_write_multiple: true
-    modbus_controller_id: sunsynk
-    id: sunsynk_esphome_set_power_time6
+    modbus_controller_id: inverter
+    id: inverter_esphome_set_power_time6
     name: "${friendly_name} System Mode Power Time6"
     unit_of_measurement: "W"
     address: 261
@@ -1030,8 +1161,8 @@ number:
 
   - platform: modbus_controller         # 230 Grid Charge Battery current
     use_write_multiple: true
-    modbus_controller_id: sunsynk
-    id: sunsynk_esphome_grid_charge_bat_current
+    modbus_controller_id: inverter
+    id: inverter_esphome_grid_charge_bat_current
     name: "${friendly_name} Grid Charge Battery current"
     unit_of_measurement: "A"
     address: 230
@@ -1042,8 +1173,8 @@ number:
 
   - platform: modbus_controller         # 210 Battery Max Charge current
     use_write_multiple: true
-    modbus_controller_id: sunsynk
-    id: sunsynk_esphome_bat_max_charge_current
+    modbus_controller_id: inverter
+    id: inverter_esphome_bat_max_charge_current
     name: "${friendly_name} Battery Max Charge current"
     unit_of_measurement: "A"
     address: 210
@@ -1054,8 +1185,8 @@ number:
 
   - platform: modbus_controller         # 211 Battery Max Discharge current
     use_write_multiple: true
-    modbus_controller_id: sunsynk
-    id: sunsynk_esphome_bat_max_discharge_current
+    modbus_controller_id: inverter
+    id: inverter_esphome_bat_max_discharge_current
     name: "${friendly_name} Battery Max Discharge current"
     unit_of_measurement: "A"
     address: 211
@@ -1066,9 +1197,9 @@ number:
 
   - platform: modbus_controller            # 293 Grid Peak Shaving Power
     use_write_multiple: true
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Grid Peak shaving power"
-    id: sunsynk_grid_peak_shaving_power
+    id: inverter_grid_peak_shaving_power
     address: 293
     unit_of_measurement: "W"
     min_value: 0
@@ -1078,9 +1209,9 @@ number:
 
   - platform: modbus_controller            # 245 Max Sell Power
     use_write_multiple: true
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Max Sell power"
-    id: sunsynk_max_sell_power
+    id: inverter_max_sell_power
     address: 245
     unit_of_measurement: "W"
     min_value: 0
@@ -1093,9 +1224,9 @@ number:
 
 text_sensor:
   - platform: modbus_controller            # 059 Overall State
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Overall State"
-    id: sunsynk_esphome_overall_state
+    id: inverter_esphome_overall_state
     register_type: holding
     skip_updates: ${settings_skipped_updates}
     raw_encode: HEXBYTES
@@ -1113,13 +1244,13 @@ text_sensor:
 
   - platform: template
     name: "${friendly_name} Time Slot 1"
-    id: sunsynk_esphome_time_slot_1
+    id: inverter_esphome_time_slot_1
     icon: "mdi:clock"
     lambda: |-
         int minutes, hours;
-        if (id(sunsynk_esphome_system_mode_time1).state) {
-        minutes = static_cast<int>(id(sunsynk_esphome_system_mode_time1).state) % 100;
-        hours = static_cast<int>(id(sunsynk_esphome_system_mode_time1).state) / 100;
+        if (id(inverter_esphome_system_mode_time1).state) {
+        minutes = static_cast<int>(id(inverter_esphome_system_mode_time1).state) % 100;
+        hours = static_cast<int>(id(inverter_esphome_system_mode_time1).state) / 100;
         } else {
           minutes = 0;
           hours = 0;
@@ -1129,13 +1260,13 @@ text_sensor:
         return esphome::optional<std::string>(formatted_time);
   - platform: template
     name: "${friendly_name} Time Slot 2"
-    id: sunsynk_esphome_time_slot_2
+    id: inverter_esphome_time_slot_2
     icon: "mdi:clock"
     lambda: |-
         int minutes, hours;
-        if (id(sunsynk_esphome_system_mode_time2).state) {
-        minutes = static_cast<int>(id(sunsynk_esphome_system_mode_time2).state) % 100;
-        hours = static_cast<int>(id(sunsynk_esphome_system_mode_time2).state) / 100;
+        if (id(inverter_esphome_system_mode_time2).state) {
+        minutes = static_cast<int>(id(inverter_esphome_system_mode_time2).state) % 100;
+        hours = static_cast<int>(id(inverter_esphome_system_mode_time2).state) / 100;
         } else {
           minutes = 0;
           hours = 0;
@@ -1145,13 +1276,13 @@ text_sensor:
         return esphome::optional<std::string>(formatted_time);
   - platform: template
     name: "${friendly_name} Time Slot 3"
-    id: sunsynk_esphome_time_slot_3
+    id: inverter_esphome_time_slot_3
     icon: "mdi:clock"
     lambda: |-
         int minutes, hours;
-        if (id(sunsynk_esphome_system_mode_time3).state) {
-        minutes = static_cast<int>(id(sunsynk_esphome_system_mode_time3).state) % 100;
-        hours = static_cast<int>(id(sunsynk_esphome_system_mode_time3).state) / 100;
+        if (id(inverter_esphome_system_mode_time3).state) {
+        minutes = static_cast<int>(id(inverter_esphome_system_mode_time3).state) % 100;
+        hours = static_cast<int>(id(inverter_esphome_system_mode_time3).state) / 100;
         } else {
           minutes = 0;
           hours = 0;
@@ -1161,13 +1292,13 @@ text_sensor:
         return esphome::optional<std::string>(formatted_time);
   - platform: template
     name: "${friendly_name} Time Slot 4"
-    id: sunsynk_esphome_time_slot_4
+    id: inverter_esphome_time_slot_4
     icon: "mdi:clock"
     lambda: |-
         int minutes, hours;
-        if (id(sunsynk_esphome_system_mode_time4).state) {
-        minutes = static_cast<int>(id(sunsynk_esphome_system_mode_time4).state) % 100;
-        hours = static_cast<int>(id(sunsynk_esphome_system_mode_time4).state) / 100;
+        if (id(inverter_esphome_system_mode_time4).state) {
+        minutes = static_cast<int>(id(inverter_esphome_system_mode_time4).state) % 100;
+        hours = static_cast<int>(id(inverter_esphome_system_mode_time4).state) / 100;
         } else {
           minutes = 0;
           hours = 0;
@@ -1177,13 +1308,13 @@ text_sensor:
         return esphome::optional<std::string>(formatted_time);
   - platform: template
     name: "${friendly_name} Time Slot 5"
-    id: sunsynk_esphome_time_slot_5
+    id: inverter_esphome_time_slot_5
     icon: "mdi:clock"
     lambda: |-
         int minutes, hours;
-        if (id(sunsynk_esphome_system_mode_time5).state) {
-        minutes = static_cast<int>(id(sunsynk_esphome_system_mode_time5).state) % 100;
-        hours = static_cast<int>(id(sunsynk_esphome_system_mode_time5).state) / 100;
+        if (id(inverter_esphome_system_mode_time5).state) {
+        minutes = static_cast<int>(id(inverter_esphome_system_mode_time5).state) % 100;
+        hours = static_cast<int>(id(inverter_esphome_system_mode_time5).state) / 100;
         } else {
           minutes = 0;
           hours = 0;
@@ -1193,13 +1324,13 @@ text_sensor:
         return esphome::optional<std::string>(formatted_time);
   - platform: template
     name: "${friendly_name} Time Slot 6"
-    id: sunsynk_esphome_time_slot_6
+    id: inverter_esphome_time_slot_6
     icon: "mdi:clock"
     lambda: |-
         int minutes, hours;
-        if (id(sunsynk_esphome_system_mode_time6).state) {
-        minutes = static_cast<int>(id(sunsynk_esphome_system_mode_time6).state) % 100;
-        hours = static_cast<int>(id(sunsynk_esphome_system_mode_time6).state) / 100;
+        if (id(inverter_esphome_system_mode_time6).state) {
+        minutes = static_cast<int>(id(inverter_esphome_system_mode_time6).state) % 100;
+        hours = static_cast<int>(id(inverter_esphome_system_mode_time6).state) / 100;
         } else {
           minutes = 0;
           hours = 0;
@@ -1214,8 +1345,8 @@ text_sensor:
 select:
   - platform: modbus_controller                   #243 Select Energy Patern
     use_write_multiple: true
-    modbus_controller_id: sunsynk
-    id: sunsynk_esphome_select_energy_pattern
+    modbus_controller_id: inverter
+    id: inverter_esphome_select_energy_pattern
     name: "${friendly_name} Energy Pattern"
     address: 243
     value_type: U_WORD
@@ -1225,8 +1356,8 @@ select:
          
   - platform: modbus_controller                   #244 Select Work Mode
     use_write_multiple: true
-    modbus_controller_id: sunsynk
-    id: sunsynk_esphome_select_work_mode
+    modbus_controller_id: inverter
+    id: inverter_esphome_select_work_mode
     name: "${friendly_name} Work Mode"
     address: 244
     value_type: U_WORD
@@ -1237,9 +1368,9 @@ select:
 
   - platform: modbus_controller                  #280 Select Grid Peak Shaving
     use_write_multiple: true
-    modbus_controller_id: sunsynk
+    modbus_controller_id: inverter
     name: "${friendly_name} Grid Peak Shaving"
-    id: sunsynk_esphome_select_grid_peak_shaving
+    id: inverter_esphome_select_grid_peak_shaving
     address: 280
     value_type: U_WORD
     optionsmap:
