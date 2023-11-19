@@ -157,7 +157,7 @@ sensor:
     value_type: S_WORD
     internal: true
     lambda: |-
-      if (x > 0) return 0; else return x;
+      if (x > 0) return 0; else return x *-1;
 
   - platform: modbus_controller            # Battery Power DisCharge only needed if you want to use calculate Daily Energy Totals on the inverter
     modbus_controller_id: inverter
@@ -396,7 +396,7 @@ sensor:
     state_class: measurement
     value_type: S_WORD
     lambda: |-
-      if (x > 0) return 0; else return x;
+      if (x > 0) return 0; else return x *-1;
 
 ############################################### LOAD ################################################
 
