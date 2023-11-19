@@ -278,7 +278,8 @@ view_layout:
   grid-area: a
 ```
 ### Example 2
-![image](https://github.com/slipx06/Sunsynk-Home-Assistant-Dash/assets/7227275/c0e10096-76d1-479d-ae27-8f9b9002e403)
+![image](https://github.com/slipx06/Sunsynk-Home-Assistant-Dash/assets/7227275/ff40ea09-0aa3-4987-abb4-69fd195f5286)
+
 
 ```
 type: custom:layout-card
@@ -325,18 +326,18 @@ cards:
             fill_container: true
           - type: entities
             entities:
-              - entity: switch.sunsynk_system_mode_grid_charge_time1
-                name: Grid Charge
+              - entity: select.sunsynk_prog1_charge_option
+                name: Option
             state_color: true
       - type: entities
         entities:
           - type: custom:slider-entity-row
-            entity: number.sunsynk_system_mode_soc_time1
+            entity: number.sunsynk_prog1_capacity
             name: Battery SOC
             hide_state: false
             grow: true
           - type: custom:slider-entity-row
-            entity: number.sunsynk_system_mode_power_time1
+            entity: number.sunsynk_prog1_power
             name: Power
             hide_state: false
             grow: true
@@ -359,18 +360,18 @@ cards:
             fill_container: true
           - type: entities
             entities:
-              - entity: switch.sunsynk_system_mode_grid_charge_time2
-                name: Grid Charge
+              - entity: select.sunsynk_prog2_charge_option
+                name: Option
             state_color: true
       - type: entities
         entities:
           - type: custom:slider-entity-row
-            entity: number.sunsynk_system_mode_soc_time2
+            entity: number.sunsynk_prog2_capacity
             name: Battery SOC
             hide_state: false
             grow: true
           - type: custom:slider-entity-row
-            entity: number.sunsynk_system_mode_power_time2
+            entity: number.sunsynk_prog2_power
             name: Power
             hide_state: false
             grow: true
@@ -393,18 +394,18 @@ cards:
             fill_container: true
           - type: entities
             entities:
-              - entity: switch.sunsynk_system_mode_grid_charge_time3
-                name: Grid Charge
+              - entity: select.sunsynk_prog3_charge_option
+                name: Option
             state_color: true
       - type: entities
         entities:
           - type: custom:slider-entity-row
-            entity: number.sunsynk_system_mode_soc_time3
+            entity: number.sunsynk_prog3_capacity
             name: Battery SOC
             hide_state: false
             grow: true
           - type: custom:slider-entity-row
-            entity: number.sunsynk_system_mode_power_time3
+            entity: number.sunsynk_prog3_power
             name: Power
             hide_state: false
             grow: true
@@ -427,18 +428,18 @@ cards:
             fill_container: true
           - type: entities
             entities:
-              - entity: switch.sunsynk_system_mode_grid_charge_time4
-                name: Grid Charge
+              - entity: select.sunsynk_prog4_charge_option
+                name: Option
             state_color: true
       - type: entities
         entities:
           - type: custom:slider-entity-row
-            entity: number.sunsynk_system_mode_soc_time4
+            entity: number.sunsynk_prog4_capacity
             name: Battery SOC
             hide_state: false
             grow: true
           - type: custom:slider-entity-row
-            entity: number.sunsynk_system_mode_power_time4
+            entity: number.sunsynk_prog4_power
             name: Power
             hide_state: false
             grow: true
@@ -461,18 +462,18 @@ cards:
             fill_container: true
           - type: entities
             entities:
-              - entity: switch.sunsynk_system_mode_grid_charge_time5
-                name: Grid Charge
+              - entity: select.sunsynk_prog5_charge_option
+                name: Option
             state_color: true
       - type: entities
         entities:
           - type: custom:slider-entity-row
-            entity: number.sunsynk_system_mode_soc_time5
+            entity: number.sunsynk_prog5_capacity
             name: Battery SOC
             hide_state: false
             grow: true
           - type: custom:slider-entity-row
-            entity: number.sunsynk_system_mode_power_time5
+            entity: number.sunsynk_prog5_power
             name: Power
             hide_state: false
             grow: true
@@ -495,18 +496,18 @@ cards:
             fill_container: true
           - type: entities
             entities:
-              - entity: switch.sunsynk_system_mode_grid_charge_time6
-                name: Grid Charge
+              - entity: select.sunsynk_prog6_charge_option
+                name: Option
             state_color: true
       - type: entities
         entities:
           - type: custom:slider-entity-row
-            entity: number.sunsynk_system_mode_soc_time6
+            entity: number.sunsynk_prog6_capacity
             name: Battery SOC
             hide_state: false
             grow: true
           - type: custom:slider-entity-row
-            entity: number.sunsynk_system_mode_power_time6
+            entity: number.sunsynk_prog6_power
             name: Power
             hide_state: false
             grow: true
@@ -527,6 +528,7 @@ layout:
       grid-template-areas: |
         "header"
         "system"
+        "priority"
         "prog1"
         "prog2"
         "prog3"
