@@ -183,7 +183,7 @@ cards:
         state_color: true
   - type: entities
     entities:
-      - entity: switch.sunsynk_system_mode_grid_charge_time1
+      - entity: switch.sunsynk_prog1_grid_charge
         type: custom:multiple-entity-row
         name: Program 1
         toggle: true
@@ -195,10 +195,10 @@ cards:
             name: From
           - entity: sensor.sunsynk_time_slot_2
             name: To
-          - entity: number.sunsynk_system_mode_soc_time1
+          - entity: number.sunsynk_prog1_capacity
             name: SOC
             format: precision0
-      - entity: switch.sunsynk_system_mode_grid_charge_time2
+      - entity: switch.sunsynk_prog2_grid_charge
         type: custom:multiple-entity-row
         name: Program 2
         toggle: true
@@ -210,10 +210,10 @@ cards:
             name: From
           - entity: sensor.sunsynk_time_slot_3
             name: To
-          - entity: number.sunsynk_system_mode_soc_time2
+          - entity: number.sunsynk_prog2_capacity
             name: SOC
             format: precision0
-      - entity: switch.sunsynk_system_mode_grid_charge_time3
+      - entity: switch.sunsynk_prog3_grid_charge
         type: custom:multiple-entity-row
         name: Program 3
         toggle: true
@@ -225,10 +225,10 @@ cards:
             name: From
           - entity: sensor.sunsynk_time_slot_4
             name: To
-          - entity: number.sunsynk_system_mode_soc_time3
+          - entity: number.sunsynk_prog3_capacity
             name: SOC
             format: precision0
-      - entity: switch.sunsynk_system_mode_grid_charge_time4
+      - entity: switch.sunsynk_prog4_grid_charge
         type: custom:multiple-entity-row
         name: Program 4
         toggle: true
@@ -240,10 +240,10 @@ cards:
             name: From
           - entity: sensor.sunsynk_time_slot_5
             name: To
-          - entity: number.sunsynk_system_mode_soc_time4
+          - entity: number.sunsynk_prog4_capacity
             name: SOC
             format: precision0
-      - entity: switch.sunsynk_system_mode_grid_charge_time5
+      - entity: switch.sunsynk_prog5_grid_charge
         type: custom:multiple-entity-row
         name: Program 5
         toggle: true
@@ -255,10 +255,10 @@ cards:
             name: From
           - entity: sensor.sunsynk_time_slot_6
             name: To
-          - entity: number.sunsynk_system_mode_soc_time5
+          - entity: number.sunsynk_prog5_capacity
             name: SOC
             format: precision0
-      - entity: switch.sunsynk_system_mode_grid_charge_time6
+      - entity: switch.sunsynk_prog6_grid_charge
         type: custom:multiple-entity-row
         name: Program 6
         toggle: true
@@ -270,7 +270,7 @@ cards:
             name: From
           - entity: sensor.sunsynk_time_slot_1
             name: To
-          - entity: number.sunsynk_system_mode_soc_time6
+          - entity: number.sunsynk_prog6_capacity
             name: SOC
             format: precision0
     state_color: true
