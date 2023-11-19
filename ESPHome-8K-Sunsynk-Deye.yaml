@@ -874,65 +874,109 @@ sensor:
 
 ################################################ READ SETTINGS #############################################
 
-  - platform: modbus_controller          # 250 System Mode Time 1
+  - platform: modbus_controller          # 250 Prog1 Time
     modbus_controller_id: inverter
-    name: "${friendly_name} System Mode Time1"
+    name: "${friendly_name} Prog1 Time"
     id: inverter_esphome_system_mode_time1
     register_type: holding
     skip_updates: ${settings_skipped_updates}
     address: 250
     icon: "mdi:clock"
 
-  - platform: modbus_controller          # 251 System Mode Time 2
+  - platform: modbus_controller          # 251 Prog2 Time
     modbus_controller_id: inverter
-    name: "${friendly_name} System Mode Time2"
+    name: "${friendly_name} Prog2 Time"
     id: inverter_esphome_system_mode_time2
     register_type: holding
     skip_updates: ${settings_skipped_updates}
     address: 251   
     icon: "mdi:clock"
 
-  - platform: modbus_controller          # 252 System Mode Time 3
+  - platform: modbus_controller          # 252 Prog3 Time
     modbus_controller_id: inverter
-    name: "${friendly_name} System Mode Time3"
+    name: "${friendly_name} Prog3 Time"
     id: inverter_esphome_system_mode_time3
     register_type: holding
     skip_updates: ${settings_skipped_updates}
     address: 252
     icon: "mdi:clock"
 
-  - platform: modbus_controller          # 253 System Mode Time 4
+  - platform: modbus_controller          # 253 Prog4 Time
     modbus_controller_id: inverter
-    name: "${friendly_name} System Mode Time4"
+    name: "${friendly_name} Prog4 Time"
     id: inverter_esphome_system_mode_time4
     register_type: holding
     skip_updates: ${settings_skipped_updates}
     address: 253
     icon: "mdi:clock"
 
-  - platform: modbus_controller          # 254 System Mode Time 5
+  - platform: modbus_controller          # 254 Prog5 Time
     modbus_controller_id: inverter
-    name: "${friendly_name} System Mode Time5"
+    name: "${friendly_name} Prog5 Time"
     id: inverter_esphome_system_mode_time5
     register_type: holding
     skip_updates: ${settings_skipped_updates}
     address: 254
     icon: "mdi:clock"
 
-  - platform: modbus_controller          # 255 System Mode Time 6
+  - platform: modbus_controller          # 255 Prog6 Time
     modbus_controller_id: inverter
-    name: "${friendly_name} System Mode Time6"
+    name: "${friendly_name} Prog6 Time"
     id: inverter_esphome_system_mode_time6
     register_type: holding
     skip_updates: ${settings_skipped_updates}
     address: 255
     icon: "mdi:clock"
 
+################################################ SAVE RAW REGISTERS ############################################
+
   - platform: modbus_controller        # 255 Grid Peak Shaving raw register value
     modbus_controller_id: inverter
     id: grid_peak_shaving_raw
     register_type: holding
     address: 280
+    value_type: U_WORD
+
+  - platform: modbus_controller        # 274 raw register value
+    modbus_controller_id: inverter
+    id: reg_274_raw
+    register_type: holding
+    address: 274
+    value_type: U_WORD
+
+  - platform: modbus_controller        # 275 raw register value
+    modbus_controller_id: inverter
+    id: reg_275_raw
+    register_type: holding
+    address: 275
+    value_type: U_WORD
+
+  - platform: modbus_controller        # 276 raw register value
+    modbus_controller_id: inverter
+    id: reg_276_raw
+    register_type: holding
+    address: 276
+    value_type: U_WORD
+
+  - platform: modbus_controller        # 277 raw register value
+    modbus_controller_id: inverter
+    id: reg_277_raw
+    register_type: holding
+    address: 277
+    value_type: U_WORD
+
+  - platform: modbus_controller        # 278 raw register value
+    modbus_controller_id: inverter
+    id: reg_278_raw
+    register_type: holding
+    address: 278
+    value_type: U_WORD
+
+  - platform: modbus_controller        # 279 raw register value
+    modbus_controller_id: inverter
+    id: reg_279_raw
+    register_type: holding
+    address: 279
     value_type: U_WORD
 
 ################################################ WRITE SETTINGS ############################################
@@ -978,60 +1022,60 @@ switch:
     bitmask: 1
     icon: "mdi:toggle-switch"
 
-  - platform: modbus_controller          # 274 System Mode Grid Charge Time 1
+  - platform: modbus_controller          # 274 Prog1 Charge
     use_write_multiple: true
     modbus_controller_id: inverter
-    name: "${friendly_name} System Mode Grid Charge Time1"
+    name: "${friendly_name} Prog1 Grid Charge"
     id: inverter_esphome_toggle_grid_charge_time1
     register_type: holding
     address: 274
     bitmask: 1
     icon: "mdi:toggle-switch"
 
-  - platform: modbus_controller          # 275 System Mode Grid Charge Time 2
+  - platform: modbus_controller          # 275 Prog2 Charge
     modbus_controller_id: inverter
     use_write_multiple: true
-    name: "${friendly_name} System Mode Grid Charge Time2"
+    name: "${friendly_name} Prog1 Grid Charge"
     id: inverter_esphome_toggle_grid_charge_time2
     register_type: holding
     address: 275
     bitmask: 1
     icon: "mdi:toggle-switch"
 
-  - platform: modbus_controller          # 276 System Mode Grid Charge Time 3
+  - platform: modbus_controller          # 276 Prog3 Charge
     modbus_controller_id: inverter
     use_write_multiple: true
-    name: "${friendly_name} System Mode Grid Charge Time3"
+    name: "${friendly_name} Prog3 Grid Charge"
     id: inverter_esphome_toggle_grid_charge_time3
     register_type: holding
     address: 276
     bitmask: 1
     icon: "mdi:toggle-switch"
 
-  - platform: modbus_controller          # 277 System Mode Grid Charge Time 4
+  - platform: modbus_controller          # 277 Prog4 Charge
     modbus_controller_id: inverter
     use_write_multiple: true
-    name: "${friendly_name} System Mode Grid Charge Time4"
+    name: "${friendly_name} Prog4 Grid Charge"
     id: inverter_esphome_toggle_grid_charge_time4
     register_type: holding
     address: 277
     bitmask: 1
     icon: "mdi:toggle-switch"
 
-  - platform: modbus_controller          # 278 System Mode Grid Charge Time 5
+  - platform: modbus_controller          # Prog5 Charge
     modbus_controller_id: inverter
     use_write_multiple: true
-    name: "${friendly_name} System Mode Grid Charge Time5"
+    name: "${friendly_name} Prog5 Charge"
     id: inverter_esphome_toggle_grid_charge_time5
     register_type: holding
     address: 278
     bitmask: 1
     icon: "mdi:toggle-switch"
 
-  - platform: modbus_controller          # 279 System Mode Grid Charge Time 6
+  - platform: modbus_controller          # 279 Prog6 Charge
     modbus_controller_id: inverter
     use_write_multiple: true
-    name: "${friendly_name} System Mode Grid Charge Time6"
+    name: "${friendly_name} Prog6 Charge"
     id: inverter_esphome_toggle_grid_charge_time6
     register_type: holding
     address: 279
@@ -1039,11 +1083,11 @@ switch:
     icon: "mdi:toggle-switch"
 
 number:
-  - platform: modbus_controller         # 268 System Mode SoC Time 1
+  - platform: modbus_controller         # 268 Prog1 Capacity
     use_write_multiple: true
     modbus_controller_id: inverter
     id: inverter_esphome_set_soc_time1
-    name: "${friendly_name} System Mode SoC Time1"
+    name: "${friendly_name} Prog1 Capacity"
     unit_of_measurement: "%"
     address: 268
     min_value: 0
@@ -1051,11 +1095,11 @@ number:
     step: 5
     value_type: U_WORD  
 
-  - platform: modbus_controller         # 269 System Mode SoC Time 2
+  - platform: modbus_controller         # 269 Prog2 Capacity
     use_write_multiple: true
     modbus_controller_id: inverter
     id: inverter_esphome_set_soc_time2
-    name: "${friendly_name} System Mode SoC Time2"
+    name: "${friendly_name} Prog2 Capacity"
     unit_of_measurement: "%"
     address: 269
     min_value: 0
@@ -1063,11 +1107,11 @@ number:
     step: 5
     value_type: U_WORD  
 
-  - platform: modbus_controller         # 270 System Mode SoC Time 3
+  - platform: modbus_controller         # 270 Prog3 Capacity
     use_write_multiple: true
     modbus_controller_id: inverter
     id: inverter_esphome_set_soc_time3
-    name: "${friendly_name} System Mode SoC Time3"
+    name: "${friendly_name} Prog3 Capacity"
     unit_of_measurement: "%"
     address: 270
     min_value: 0
@@ -1075,11 +1119,11 @@ number:
     step: 5
     value_type: U_WORD  
 
-  - platform: modbus_controller         # 271 System Mode SoC Time 4
+  - platform: modbus_controller         # 271 Prog4 Capacity
     use_write_multiple: true
     modbus_controller_id: inverter
     id: inverter_esphome_set_soc_time4
-    name: "${friendly_name} System Mode SoC Time4"
+    name: "${friendly_name} Prog4 Capacity"
     unit_of_measurement: "%"
     address: 271
     min_value: 0
@@ -1087,11 +1131,11 @@ number:
     step: 5
     value_type: U_WORD  
 
-  - platform: modbus_controller         # 272 System Mode SoC Time 5
+  - platform: modbus_controller         # 272 Prog5 Capacity
     use_write_multiple: true
     modbus_controller_id: inverter
     id: inverter_esphome_set_soc_time5
-    name: "${friendly_name} System Mode SoC Time5"
+    name: "${friendly_name} Prog5 Capacity"
     unit_of_measurement: "%"
     address: 272
     min_value: 0
@@ -1099,11 +1143,11 @@ number:
     step: 5
     value_type: U_WORD  
 
-  - platform: modbus_controller         # 273 System Mode SoC Time 6
+  - platform: modbus_controller         # 273 Prog6 Capacity
     use_write_multiple: true
     modbus_controller_id: inverter
     id: inverter_esphome_set_soc_time6
-    name: "${friendly_name} System Mode SoC Time6"
+    name: "${friendly_name} Prog6 Capacity"
     unit_of_measurement: "%"
     address: 273
     min_value: 0
@@ -1111,11 +1155,11 @@ number:
     step: 5
     value_type: U_WORD  
 
-  - platform: modbus_controller         # 256 System Mode Power Time 1
+  - platform: modbus_controller         # 256 Prog1 Power
     use_write_multiple: true
     modbus_controller_id: inverter
     id: inverter_esphome_set_power_time1
-    name: "${friendly_name} System Mode Power Time1"
+    name: "${friendly_name} Prog1 Power"
     unit_of_measurement: "W"
     address: 256
     min_value: 0
@@ -1123,11 +1167,11 @@ number:
     step: 100
     value_type: U_WORD  
 
-  - platform: modbus_controller         # 257 System Mode Power Time 2
+  - platform: modbus_controller         # 257 Prog2 Power
     use_write_multiple: true
     modbus_controller_id: inverter
     id: inverter_esphome_set_power_time2
-    name: "${friendly_name} System Mode Power Time2"
+    name: "${friendly_name} Prog2 Power"
     unit_of_measurement: "W"
     address: 257
     min_value: 0
@@ -1135,11 +1179,11 @@ number:
     step: 100
     value_type: U_WORD  
 
-  - platform: modbus_controller         # 258 System Mode Power Time 3
+  - platform: modbus_controller         # 258 Prog3 Power
     use_write_multiple: true
     modbus_controller_id: inverter
     id: inverter_esphome_set_power_time3
-    name: "${friendly_name} System Mode Power Time3"
+    name: "${friendly_name} Prog3 Power"
     unit_of_measurement: "W"
     address: 258
     min_value: 0
@@ -1147,11 +1191,11 @@ number:
     step: 100
     value_type: U_WORD  
 
-  - platform: modbus_controller         # 259 System Mode Power Time 4
+  - platform: modbus_controller         # 259 Prog4 Power
     use_write_multiple: true
     modbus_controller_id: inverter
     id: inverter_esphome_set_power_time4
-    name: "${friendly_name} System Mode Power Time4"
+    name: "${friendly_name} Prog4 Power"
     unit_of_measurement: "W"
     address: 259
     min_value: 0
@@ -1159,11 +1203,11 @@ number:
     step: 100
     value_type: U_WORD  
 
-  - platform: modbus_controller         # 260 System Mode Power Time 5
+  - platform: modbus_controller         # 260 Prog5 Power
     use_write_multiple: true
     modbus_controller_id: inverter
     id: inverter_esphome_set_power_time5
-    name: "${friendly_name} System Mode Power Time5"
+    name: "${friendly_name} Prog5 Power"
     unit_of_measurement: "W"
     address: 260
     min_value: 0
@@ -1171,11 +1215,11 @@ number:
     step: 100
     value_type: U_WORD  
 
-  - platform: modbus_controller         # 261 System Mode Power Time 6
+  - platform: modbus_controller         # 261 Prog6 Power
     use_write_multiple: true
     modbus_controller_id: inverter
     id: inverter_esphome_set_power_time6
-    name: "${friendly_name} System Mode Power Time6"
+    name: "${friendly_name} Prog6 Power"
     unit_of_measurement: "W"
     address: 261
     min_value: 0
@@ -1416,4 +1460,328 @@ select:
       // optionsmap should only return 2 values... 0 , 256 so bitmask with complement 0x0100 to ensure we keep the original values in register. Then appply OR with the value that was chosen
       uint16_t modified = ((unmodified & ~0x0100) | value);
       //ESP_LOGE("main","Modbus write to write = %d", modified);
+      return modified;
+
+  - platform: modbus_controller                  #274 Select Prog1 Charge Option
+    use_write_multiple: true
+    modbus_controller_id: inverter
+    name: "${friendly_name} Prog1 Charge Option"
+    id: inverter_esphome_select_system_mode_charge_option_time_1
+    address: 274
+    value_type: U_WORD
+    optionsmap:
+      "No Grid or Gen": 0
+      "Allow Grid": 1
+      "Allow Gen": 2
+      "Allow Grid & Gen": 3
+    lambda: |-
+      if ((x & 0x0003) == 0)
+        return  std::string("No Grid or Gen");
+      if ((x & 0x0003) == 1)
+        return  std::string("Allow Grid");
+      if ((x & 0x0003) == 2)
+        return  std::string("Allow Gen");
+      if ((x & 0x0003) == 3)
+        return  std::string("Allow Grid & Gen");
+      return {};
+    write_lambda: |-
+      uint16_t unmodified =  id(reg_274_raw).state;
+      uint16_t modified = ((unmodified & ~0x0003) | value);
+      return modified;
+
+  - platform: modbus_controller                  #275  Select Prog2 Charge Option
+    use_write_multiple: true
+    modbus_controller_id: inverter
+    name: "${friendly_name} Prog2 Charge Option"
+    id: inverter_esphome_select_system_mode_charge_option_time_2
+    address: 275
+    value_type: U_WORD
+    optionsmap:
+      "No Grid or Gen": 0
+      "Allow Grid": 1
+      "Allow Gen": 2
+      "Allow Grid & Gen": 3
+    lambda: |-
+      if ((x & 0x0003) == 0)
+        return  std::string("No Grid or Gen");
+      if ((x & 0x0003) == 1)
+        return  std::string("Allow Grid");
+      if ((x & 0x0003) == 2)
+        return  std::string("Allow Gen");
+      if ((x & 0x0003) == 3)
+        return  std::string("Allow Grid & Gen");
+      return {};
+    write_lambda: |-
+      uint16_t unmodified =  id(reg_275_raw).state;
+      uint16_t modified = ((unmodified & ~0x0003) | value);
+      return modified;
+
+  - platform: modbus_controller                  #276  Select Prog3 Charge Option
+    use_write_multiple: true
+    modbus_controller_id: inverter
+    name: "${friendly_name} Prog3 Charge Option"
+    id: inverter_esphome_select_system_mode_charge_option_time_3
+    address: 276
+    value_type: U_WORD
+    optionsmap:
+      "No Grid or Gen": 0
+      "Allow Grid": 1
+      "Allow Gen": 2
+      "Allow Grid & Gen": 3
+    lambda: |-
+      if ((x & 0x0003) == 0)
+        return  std::string("No Grid or Gen");
+      if ((x & 0x0003) == 1)
+        return  std::string("Allow Grid");
+      if ((x & 0x0003) == 2)
+        return  std::string("Allow Gen");
+      if ((x & 0x0003) == 3)
+        return  std::string("Allow Grid & Gen");
+      return {};
+    write_lambda: |-
+      uint16_t unmodified =  id(reg_276_raw).state;
+      uint16_t modified = ((unmodified & ~0x0003) | value);
+      return modified;
+
+  - platform: modbus_controller                  #277  Select Prog4 Charge Option
+    use_write_multiple: true
+    modbus_controller_id: inverter
+    name: "${friendly_name} Prog4 Charge Option"
+    id: inverter_esphome_select_system_mode_charge_option_time_4
+    address: 277
+    value_type: U_WORD
+    optionsmap:
+      "No Grid or Gen": 0
+      "Allow Grid": 1
+      "Allow Gen": 2
+      "Allow Grid & Gen": 3
+    lambda: |-
+      if ((x & 0x0003) == 0)
+        return  std::string("No Grid or Gen");
+      if ((x & 0x0003) == 1)
+        return  std::string("Allow Grid");
+      if ((x & 0x0003) == 2)
+        return  std::string("Allow Gen");
+      if ((x & 0x0003) == 3)
+        return  std::string("Allow Grid & Gen");
+      return {};
+    write_lambda: |-
+      uint16_t unmodified =  id(reg_277_raw).state;
+      uint16_t modified = ((unmodified & ~0x0003) | value);
+      return modified;
+
+  - platform: modbus_controller                  #278  Select Prog5 Charge Option
+    use_write_multiple: true
+    modbus_controller_id: inverter
+    name: "${friendly_name} Prog5 Charge Option"
+    id: inverter_esphome_select_system_mode_charge_option_time_5
+    address: 278
+    value_type: U_WORD
+    optionsmap:
+      "No Grid or Gen": 0
+      "Allow Grid": 1
+      "Allow Gen": 2
+      "Allow Grid & Gen": 3
+    lambda: |-
+      if ((x & 0x0003) == 0)
+        return  std::string("No Grid or Gen");
+      if ((x & 0x0003) == 1)
+        return  std::string("Allow Grid");
+      if ((x & 0x0003) == 2)
+        return  std::string("Allow Gen");
+      if ((x & 0x0003) == 3)
+        return  std::string("Allow Grid & Gen");
+      return {};
+    write_lambda: |-
+      uint16_t unmodified =  id(reg_278_raw).state;
+      uint16_t modified = ((unmodified & ~0x0003) | value);
+      return modified;
+
+  - platform: modbus_controller                  #279  Select Prog6 Charge Option
+    use_write_multiple: true
+    modbus_controller_id: inverter
+    name: "${friendly_name} Prog6 Charge Option"
+    id: inverter_esphome_select_system_mode_charge_option_time_6
+    address: 279
+    value_type: U_WORD
+    optionsmap:
+      "No Grid or Gen": 0
+      "Allow Grid": 1
+      "Allow Gen": 2
+      "Allow Grid & Gen": 3
+    lambda: |-
+      if ((x & 0x0003) == 0)
+        return  std::string("No Grid or Gen");
+      if ((x & 0x0003) == 1)
+        return  std::string("Allow Grid");
+      if ((x & 0x0003) == 2)
+        return  std::string("Allow Gen");
+      if ((x & 0x0003) == 3)
+        return  std::string("Allow Grid & Gen");
+      return {};
+    write_lambda: |-
+      uint16_t unmodified =  id(reg_279_raw).state;
+      uint16_t modified = ((unmodified & ~0x0003) | value);
+      return modified;
+
+  - platform: modbus_controller                  #274  Select Prog1 Mode Option
+    use_write_multiple: true
+    modbus_controller_id: inverter
+    name: "${friendly_name} Prog1 Mode Option"
+    id: inverter_esphome_select_system_mode_program_option_time_1
+    address: 274
+    value_type: U_WORD
+    optionsmap:
+      "None": 0
+      "General": 4
+      "Backup": 8
+      "Charge": 16
+    lambda: |-
+      if ((x & 0x1C) == 0)
+        return  std::string("None");
+      if ((x & 0x1C) == 4)
+        return  std::string("General");
+      if ((x & 0x1C) == 8)
+        return  std::string("Battery");
+      if ((x & 0x1C) == 16)
+        return  std::string("Charge");
+      return {};
+    write_lambda: |-
+      uint16_t unmodified =  id(reg_274_raw).state;
+      uint16_t modified = ((unmodified & ~0x1C) | value);
+      return modified;
+
+  - platform: modbus_controller                  #275  Select Prog2 Mode Option
+    use_write_multiple: true
+    modbus_controller_id: inverter
+    name: "${friendly_name} Prog2 Mode Option"
+    id: inverter_esphome_select_system_mode_program_option_time_2
+    address: 275
+    value_type: U_WORD
+    optionsmap:
+      "None": 0
+      "General": 4
+      "Backup": 8
+      "Charge": 16
+    lambda: |-
+      if ((x & 0x1C) == 0)
+        return  std::string("None");
+      if ((x & 0x1C) == 4)
+        return  std::string("General");
+      if ((x & 0x1C) == 8)
+        return  std::string("Battery");
+      if ((x & 0x1C) == 16)
+        return  std::string("Charge");
+      return {};
+    write_lambda: |-
+      uint16_t unmodified =  id(reg_275_raw).state;
+      uint16_t modified = ((unmodified & ~0x1C) | value);
+      return modified;
+
+  - platform: modbus_controller                  #276  Select Prog3 Mode Option
+    use_write_multiple: true
+    modbus_controller_id: inverter
+    name: "${friendly_name} Prog3 Mode Option"
+    id: inverter_esphome_select_system_mode_program_option_time_3
+    address: 276
+    value_type: U_WORD
+    optionsmap:
+      "None": 0
+      "General": 4
+      "Backup": 8
+      "Charge": 16
+    lambda: |-
+      if ((x & 0x1C) == 0)
+        return  std::string("None");
+      if ((x & 0x1C) == 4)
+        return  std::string("General");
+      if ((x & 0x1C) == 8)
+        return  std::string("Battery");
+      if ((x & 0x1C) == 16)
+        return  std::string("Charge");
+      return {};
+    write_lambda: |-
+      uint16_t unmodified =  id(reg_276_raw).state;
+      uint16_t modified = ((unmodified & ~0x1C) | value);
+      return modified;
+
+  - platform: modbus_controller                  #277  Select Prog4 Mode Option
+    use_write_multiple: true
+    modbus_controller_id: inverter
+    name: "${friendly_name} Prog4 Mode Option"
+    id: inverter_esphome_select_system_mode_program_option_time_4
+    address: 277
+    value_type: U_WORD
+    optionsmap:
+      "None": 0
+      "General": 4
+      "Backup": 8
+      "Charge": 16
+    lambda: |-
+      if ((x & 0x1C) == 0)
+        return  std::string("None");
+      if ((x & 0x1C) == 4)
+        return  std::string("General");
+      if ((x & 0x1C) == 8)
+        return  std::string("Battery");
+      if ((x & 0x1C) == 16)
+        return  std::string("Charge");
+      return {};
+    write_lambda: |-
+      uint16_t unmodified =  id(reg_277_raw).state;
+      uint16_t modified = ((unmodified & ~0x1C) | value);
+      return modified;
+
+  - platform: modbus_controller                  #278  Select Prog5 Mode Option
+    use_write_multiple: true
+    modbus_controller_id: inverter
+    name: "${friendly_name} Prog5 Mode Option"
+    id: inverter_esphome_select_system_mode_program_option_time_5
+    address: 278
+    value_type: U_WORD
+    optionsmap:
+      "None": 0
+      "General": 4
+      "Backup": 8
+      "Charge": 16
+    lambda: |-
+      if ((x & 0x1C) == 0)
+        return  std::string("None");
+      if ((x & 0x1C) == 4)
+        return  std::string("General");
+      if ((x & 0x1C) == 8)
+        return  std::string("Battery");
+      if ((x & 0x1C) == 16)
+        return  std::string("Charge");
+      return {};
+    write_lambda: |-
+      uint16_t unmodified =  id(reg_278_raw).state;
+      uint16_t modified = ((unmodified & ~0x1C) | value);
+      return modified;
+
+  - platform: modbus_controller                  #279  Select Prog6 Mode Option
+    use_write_multiple: true
+    modbus_controller_id: inverter
+    name: "${friendly_name} Prog6 Mode Option"
+    id: inverter_esphome_select_system_mode_program_option_time_6
+    address: 279
+    value_type: U_WORD
+    optionsmap:
+      "None": 0
+      "General": 4
+      "Backup": 8
+      "Charge": 16
+    lambda: |-
+      if ((x & 0x1C) == 0)
+        return  std::string("None");
+      if ((x & 0x1C) == 4)
+        return  std::string("General");
+      if ((x & 0x1C) == 8)
+        return  std::string("Battery");
+      if ((x & 0x1C) == 16)
+        return  std::string("Charge");
+      return {};
+    write_lambda: |-
+      uint16_t unmodified =  id(reg_279_raw).state;
+      uint16_t modified = ((unmodified & ~0x1C) | value);
       return modified;
