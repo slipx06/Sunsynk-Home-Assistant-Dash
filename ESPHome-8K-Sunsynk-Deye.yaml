@@ -13,6 +13,16 @@ esp32:
   framework:
     type: arduino
 
+# Enable webserver
+web_server:
+  port: 80
+  auth:
+    username: !secret web_server_username
+    password: !secret web_server_password
+  version: 2
+  log: false
+  ota: false
+
 # Enable logging
 logger:
   baud_rate: 0
@@ -1115,6 +1125,7 @@ sensor:
     address: 16
     value_type: U_WORD
     internal: true
+    skip_updates: ${settings_skipped_updates}
 
   - platform: modbus_controller        # 17 raw register value
     modbus_controller_id: inverter
@@ -1123,6 +1134,7 @@ sensor:
     address: 17
     value_type: U_WORD
     internal: true
+    skip_updates: ${settings_skipped_updates}
 
 ################################################ WRITE SETTINGS ############################################
 
