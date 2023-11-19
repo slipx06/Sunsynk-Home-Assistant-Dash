@@ -54,17 +54,17 @@ Added remaining battery time. You will need to add the following template sensor
           {% set sellTime5 = strptime(states('sensor.sunsynk_time_slot_5'), '%H:%M') %}
           {% set sellTime6 = strptime(states('sensor.sunsynk_time_slot_6'), '%H:%M') %}
           {% if now >= sellTime1 and now < sellTime2 %}
-            {{ states('number.sunsynk_system_mode_soc_time1') | int }}
+            {{ states('number.sunsynk_prog1_capacity') | int }}
           {% elif now >= sellTime2 and now < sellTime3 %}
-            {{ states('number.sunsynk_system_mode_soc_time2') | int }}
+            {{ states('number.sunsynk_prog2_capacity') | int }}
           {% elif now >= sellTime3 and now < sellTime4 %}
-            {{ states('number.sunsynk_system_mode_soc_time3') | int }}
+            {{ states('number.sunsynk_prog3_capacity') | int }}
           {% elif now >= sellTime4 and now < sellTime5 %}
-            {{ states('number.sunsynk_system_mode_soc_time4') | int }}
+            {{ states('number.sunsynk_prog4_capacity') | int }}
           {% elif now >= sellTime5 and now < sellTime6 %}
-            {{ states('number.sunsynk_system_mode_soc_time5') | int }}
+            {{ states('number.sunsynk_prog5_capacity') | int }}
           {% elif now >= sellTime6 or now < sellTime1 %}
-            {{ states('number.sunsynk_system_mode_soc_time6') | int }}
+            {{ states('number.sunsynk_prog6_capacity') | int }}
           {% else %}
             {{ states('sensor.sunsynk_battery_capacity_shutdown') | int }}
           {% endif %}
