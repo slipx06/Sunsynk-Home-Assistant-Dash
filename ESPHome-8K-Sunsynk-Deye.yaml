@@ -982,6 +982,26 @@ sensor:
 ################################################ WRITE SETTINGS ############################################
 
 switch:
+  - platform: modbus_controller          # 232 Toggle Grid Charge
+    use_write_multiple: true
+    modbus_controller_id: inverter
+    name: "${friendly_name} Toggle Grid Charge"
+    id: inverter_esphome_toggle_grid_charge
+    register_type: holding
+    address: 232
+    bitmask: 1
+    icon: "mdi:toggle-switch"
+
+  - platform: modbus_controller          # 231 Toggle Generator Charge
+    use_write_multiple: true
+    modbus_controller_id: inverter
+    name: "${friendly_name} Toggle Generator Charge"
+    id: inverter_esphome_toggle_generator_charge
+    register_type: holding
+    address: 231
+    bitmask: 1
+    icon: "mdi:toggle-switch"
+
   - platform: modbus_controller          # 326 Toggle Force Generator
     use_write_multiple: true
     modbus_controller_id: inverter
@@ -1035,7 +1055,7 @@ switch:
   - platform: modbus_controller          # 275 Prog2 Charge
     modbus_controller_id: inverter
     use_write_multiple: true
-    name: "${friendly_name} Prog1 Grid Charge"
+    name: "${friendly_name} Prog2 Grid Charge"
     id: inverter_esphome_toggle_grid_charge_time2
     register_type: holding
     address: 275
@@ -1065,7 +1085,7 @@ switch:
   - platform: modbus_controller          # Prog5 Charge
     modbus_controller_id: inverter
     use_write_multiple: true
-    name: "${friendly_name} Prog5 Charge"
+    name: "${friendly_name} Prog5 Grid Charge"
     id: inverter_esphome_toggle_grid_charge_time5
     register_type: holding
     address: 278
@@ -1075,7 +1095,7 @@ switch:
   - platform: modbus_controller          # 279 Prog6 Charge
     modbus_controller_id: inverter
     use_write_multiple: true
-    name: "${friendly_name} Prog6 Charge"
+    name: "${friendly_name} Prog6 Grid Charge"
     id: inverter_esphome_toggle_grid_charge_time6
     register_type: holding
     address: 279
@@ -1432,7 +1452,19 @@ select:
     optionsmap:
       "Selling First": 0
       "Zero Export + Limit to Load Only": 1
-      "Limited to Home": 2    
+      "Limited to Home": 2  
+
+  - platform: modbus_controller                   #235 Select Generator Input
+    use_write_multiple: true
+    modbus_controller_id: inverter
+    id: inverter_esphome_select_generator_input
+    name: "${friendly_name} Generator Input"
+    address: 235
+    value_type: U_WORD
+    optionsmap:
+      "Disable": 0
+      "Output": 1
+      "Input": 2    
 
   - platform: modbus_controller                  #280 Select Grid Peak Shaving
     use_write_multiple: true
