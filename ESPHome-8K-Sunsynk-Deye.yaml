@@ -1404,6 +1404,96 @@ number:
     step: 100
     value_type: U_WORD  
 
+  - platform: modbus_controller         # 262 Prog1 Voltage
+    use_write_multiple: true
+    modbus_controller_id: inverter
+    id: inverter_esphome_set_voltage_time1
+    name: "${friendly_name} Prog1 Voltage"
+    unit_of_measurement: "V"
+    address: 262
+    min_value: 41
+    max_value: 60
+    step: 0.1
+    value_type: U_WORD
+    lambda: "return  x * 0.01; "
+    write_lambda: |-
+      return x * 100 ;
+
+  - platform: modbus_controller         # 263 Prog2 Voltage
+    use_write_multiple: true
+    modbus_controller_id: inverter
+    id: inverter_esphome_set_voltage_time2
+    name: "${friendly_name} Prog2 Voltage"
+    unit_of_measurement: "V"
+    address: 263
+    min_value: 41
+    max_value: 60
+    step: 0.1
+    value_type: U_WORD
+    lambda: "return  x * 0.01; "
+    write_lambda: |-
+      return x * 100 ;
+
+  - platform: modbus_controller         # 264 Prog3 Voltage
+    use_write_multiple: true
+    modbus_controller_id: inverter
+    id: inverter_esphome_set_voltage_time3
+    name: "${friendly_name} Prog3 Voltage"
+    unit_of_measurement: "V"
+    address: 264
+    min_value: 41
+    max_value: 60
+    step: 0.1
+    value_type: U_WORD
+    lambda: "return  x * 0.01; "
+    write_lambda: |-
+      return x * 100 ;
+
+  - platform: modbus_controller         # 265 Prog4 Voltage
+    use_write_multiple: true
+    modbus_controller_id: inverter
+    id: inverter_esphome_set_voltage_time4
+    name: "${friendly_name} Prog4 Voltage"
+    unit_of_measurement: "V"
+    address: 265
+    min_value: 41
+    max_value: 60
+    step: 0.1
+    value_type: U_WORD
+    lambda: "return  x * 0.01; "
+    write_lambda: |-
+      return x * 100 ;
+
+  - platform: modbus_controller         # 266 Prog5 Voltage
+    use_write_multiple: true
+    modbus_controller_id: inverter
+    id: inverter_esphome_set_voltage_time5
+    name: "${friendly_name} Prog5 Voltage"
+    unit_of_measurement: "V"
+    address: 266
+    min_value: 41
+    max_value: 60
+    step: 0.1
+    value_type: U_WORD
+    lambda: "return  x * 0.01; "
+    write_lambda: |-
+      return x * 100 ;
+
+  - platform: modbus_controller         # 267 Prog6 Voltage
+    use_write_multiple: true
+    modbus_controller_id: inverter
+    id: inverter_esphome_set_voltage_time6
+    name: "${friendly_name} Prog6 Voltage"
+    unit_of_measurement: "V"
+    address: 267
+    min_value: 41
+    max_value: 60
+    step: 0.1
+    value_type: U_WORD
+    lambda: "return  x * 0.01; "
+    write_lambda: |-
+      return x * 100 ;
+
   - platform: modbus_controller         # 230 Grid Charge Battery current
     use_write_multiple: true
     modbus_controller_id: inverter
@@ -1463,7 +1553,6 @@ number:
     max_value: 8000
     step: 500
     value_type: U_WORD
-
 
 ################################################ TEXT SENSORS ##################################################
 
