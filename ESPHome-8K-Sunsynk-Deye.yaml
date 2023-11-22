@@ -155,7 +155,7 @@ sensor:
     device_class: power
     value_type: S_WORD
 
-  - platform: modbus_controller            # Battery Power Charge only needed if you want to use calculate Daily Energy Totals on the inverter
+  - platform: modbus_controller            # Battery Power Charge only needed if you want to calculate Daily Energy Totals using ESPHome
     modbus_controller_id: inverter
     name: "${friendly_name} Battery Power Charge"
     id: inverter_esphome_battery_power_charge
@@ -169,7 +169,7 @@ sensor:
     lambda: |-
       if (x > 0) return 0; else return x *-1;
 
-  - platform: modbus_controller            # Battery Power DisCharge only needed if you want to use calculate Daily Energy Totals on the inverter
+  - platform: modbus_controller            # Battery Power DisCharge only needed if you want to calculate Daily Energy Totals using ESPHome
     modbus_controller_id: inverter
     name: "${friendly_name} Battery Power Discharge"
     id: inverter_esphome_battery_power_discharge
