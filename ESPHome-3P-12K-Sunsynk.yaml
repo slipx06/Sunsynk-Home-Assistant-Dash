@@ -325,7 +325,7 @@ sensor:
     name: "${friendly_name} Grid L2 Current"
     id: sunsynk_esphome_grid_current_L2
     register_type: holding
-    address: 160
+    address: 611
     unit_of_measurement: "A"
     accuracy_decimals: 1
     device_class: current
@@ -339,7 +339,7 @@ sensor:
     name: "${friendly_name} Grid L3 Current"
     id: sunsynk_esphome_grid_current_L3 
     register_type: holding
-    address: 160
+    address: 612
     unit_of_measurement: "A"
     accuracy_decimals: 1
     device_class: current
