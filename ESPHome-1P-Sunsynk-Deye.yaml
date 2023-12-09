@@ -662,7 +662,51 @@ sensor:
       - multiply: 0.1
     value_type: U_WORD
 
+#################################################### SOLAR PV3 #############################################
+#### Uncomment this if you have a third MPPT single phase
+    
+  #- platform: modbus_controller            # 188 PV3 Power
+  #  modbus_controller_id: inverter
+  #  name: "${friendly_name} PV3 Power"
+  #  id: inverter_esphome_pv3_power
+  #  register_type: holding
+  #  address: 188
+  #  unit_of_measurement: "W"
+  #  accuracy_decimals: 0
+  #  device_class: power
+  #  state_class: measurement
+  #  value_type: U_WORD
+
+  #- platform: modbus_controller            # 113 PV3 Voltage
+  #  modbus_controller_id: inverter
+  #  name: "${friendly_name} PV3 Voltage"
+  #  id: inverter_esphome_pv3_voltage
+  #  register_type: holding
+  #  address: 113
+  #  unit_of_measurement: "V"
+  #  accuracy_decimals: 1
+  #  filters:
+  #    - multiply: 0.1
+  #  device_class: voltage
+  #  state_class: measurement
+  #  value_type: U_WORD
+
+  #- platform: modbus_controller            # 114 PV3 Current
+  #  modbus_controller_id: inverter
+  #  name: "${friendly_name} PV3 Current"
+  #  id: inverter_esphome_pv3_current
+  #  register_type: holding
+  #  address: 114
+  #  unit_of_measurement: "A"
+  #  accuracy_decimals: 1
+  #  device_class: current
+  #  state_class: measurement
+  #  filters:
+  #    - multiply: 0.1
+  #  value_type: U_WORD
+
 ############################################### SOLAR TOTAL ###########################################
+# Choose one below
 
   - platform: template                     # Sum of PV1 and PV2 to get total PV Power
     name: "${friendly_name} Solar Power"
@@ -674,6 +718,17 @@ sensor:
     lambda: |-
       return (id(inverter_esphome_pv1_power).state + id(inverter_esphome_pv2_power).state);
     update_interval: 5s
+    
+  #- platform: template                     # Sum of PV1, PV2 and PV3 to get total PV Power
+  #  name: "${friendly_name} Solar Power"
+  #  unit_of_measurement: "W"
+  #  id: inverter_esphome_pv_total
+  #  accuracy_decimals: 0
+  #  device_class: power
+  #  state_class: measurement
+  #  lambda: |-
+  #    return (id(inverter_esphome_pv1_power).state + id(inverter_esphome_pv2_power).state + id(inverter_esphome_pv3_power).state);
+  #  update_interval: 5s
 
 ############################################### OUTPUTS ###############################################
 
