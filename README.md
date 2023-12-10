@@ -18,10 +18,10 @@ Integrations:
 
 ## Screenshots
 
-![image](https://github.com/slipx06/Sunsynk-Home-Assistant-Dash/assets/7227275/269cde5f-30db-4de8-8ad1-6a2b0d31799b)
-![image](https://github.com/slipx06/Sunsynk-Home-Assistant-Dash/assets/7227275/7ca741c1-faff-45cd-9f20-34010c4c5a5f)
-![image](https://github.com/slipx06/Sunsynk-Home-Assistant-Dash/assets/7227275/af72d28b-540a-452f-998c-7f9f7c2ca2a8)
-![image](https://github.com/slipx06/Sunsynk-Home-Assistant-Dash/assets/7227275/2e150171-1ee2-45f6-bace-b844edb1fa32)
+![image](https://github.com/slipx06/Sunsynk-Home-Assistant-Dash/assets/7227275/b8ca11e9-bfeb-4304-81f2-5eb8f9586152)
+![image](https://github.com/slipx06/Sunsynk-Home-Assistant-Dash/assets/7227275/7bb47ce1-5a02-42b6-9f19-66b30713a1c8)
+![image](https://github.com/slipx06/Sunsynk-Home-Assistant-Dash/assets/7227275/10f55ea5-4876-4839-af09-5de1ca3a7967)
+![image](https://github.com/slipx06/Sunsynk-Home-Assistant-Dash/assets/7227275/2bf9c6b5-3105-400a-bfd0-89f3f8dbc722)
 
 ## Installation
 Data can be collected from the inverter using the RS485 port. There are a number of different ways to do this but I'm using an ESP32 chip running ESPHome (See ESPHome-8K-Sunsynk.yaml)
@@ -29,6 +29,7 @@ Data can be collected from the inverter using the RS485 port. There are a number
 Create a new view on your current Dashboard and set the view type to Panel (1 card) as shown below:
 
 ![image](https://user-images.githubusercontent.com/7227275/223527428-b4508e6c-cf2d-473a-b63c-ffad11d2630d.png)
+
 
 You can then edit the Dashboard (using the code editor) and paste the contents of the Dashboard.
 You'll need to adjust all the sensor names to match yours and install the necessary custom components. 
