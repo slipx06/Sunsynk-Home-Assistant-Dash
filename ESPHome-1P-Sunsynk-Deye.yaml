@@ -74,7 +74,7 @@ modbus_controller:
     update_interval: "15s"
     command_throttle: "50ms"
 
-#Set the interval to sync your iverter time with HA or comment out to disable 
+#Set the interval to sync your inverter time with HA or comment out to disable 
 interval:
   - interval: 3600s
     then:
@@ -104,7 +104,38 @@ interval:
           }
 
 ############################################### BINARY SENSORS ########################################
-binary_sensor:           
+binary_sensor:
+  - platform: homeassistant            # Manual Time sync. Creat a input_boolean sensor in HA
+    entity_id: input_boolean.sync_inverter_time
+    name: "Sync Time"
+    id: sync_time
+    on_press:
+      then:
+        - lambda: |-
+            esphome::modbus_controller::ModbusController *controller = id(inverter);
+            time_t now = ::time(nullptr);
+            struct tm *time_info = ::localtime(&now);
+            int seconds = time_info->tm_sec;
+            int minutes = time_info->tm_min;
+            int hour = time_info->tm_hour;
+            int day = time_info->tm_mday;
+            int month = time_info->tm_mon + 1;
+            int year = time_info->tm_year;
+            year = year + 1900;
+            int year1 = year - 2000;
+            
+            uint16_t reg22_value = (year1 << 8) | month;
+            uint16_t reg23_value = (day << 8) | hour;
+            uint16_t reg24_value = (minutes << 8) | seconds;
+            
+            if (year != 1970) {
+              std::vector<uint16_t> rtc_data = {reg22_value, reg23_value, reg24_value};
+              esphome::modbus_controller::ModbusCommandItem set_rtc_command =
+                  esphome::modbus_controller::ModbusCommandItem::create_write_multiple_command(controller, 22, rtc_data.size(), rtc_data);
+              controller->queue_command(set_rtc_command);
+              ESP_LOGI("Time Sync", "Seconds: %d, Minutes: %d, Hour: %d, Day: %d, Month: %d, Year: %d", seconds, minutes, hour, day, month, year);
+            }
+
   - platform: modbus_controller            # 194 Grid Connected Status
     modbus_controller_id: inverter
     name: "${friendly_name} Grid Connected Status"
