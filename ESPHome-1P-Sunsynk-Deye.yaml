@@ -74,7 +74,7 @@ modbus_controller:
     update_interval: "15s"
     command_throttle: "50ms"
 
-#Set the interval to sync your iverter time with HA or comment out to disable 
+#Set the interval to sync your inverter time with HA or comment out to disable 
 interval:
   - interval: 3600s
     then:
