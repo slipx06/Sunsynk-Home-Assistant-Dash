@@ -105,7 +105,7 @@ interval:
 
 ############################################### BINARY SENSORS ########################################
 binary_sensor:
-  - platform: homeassistant            # Manual Time sync. Creat a input_boolean sensor in HA
+  - platform: homeassistant            # Manual Time sync. Create an input_boolean sensor in HA
     entity_id: input_boolean.sync_inverter_time
     name: "Sync Time"
     id: sync_time
