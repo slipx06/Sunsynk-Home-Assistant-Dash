@@ -2047,164 +2047,165 @@ select:
       uint16_t modified = ((unmodified & ~0x0003) | value);
       return modified;
 
-  - platform: modbus_controller            #274  Select Prog1 Mode Option
-    use_write_multiple: true
-    modbus_controller_id: inverter
-    name: "${friendly_name} Prog1 Mode Option"
-    id: inverter_esphome_select_system_mode_program_option_time_1
-    address: 274
-    value_type: U_WORD
-    optionsmap:
-      "None": 0
-      "General": 4
-      "Backup": 8
-      "Charge": 16
-    lambda: |-
-      if ((x & 0x1C) == 0)
-        return  std::string("None");
-      if ((x & 0x1C) == 4)
-        return  std::string("General");
-      if ((x & 0x1C) == 8)
-        return  std::string("Battery");
-      if ((x & 0x1C) == 16)
-        return  std::string("Charge");
-      return {};
-    write_lambda: |-
-      uint16_t unmodified =  id(reg_274_raw).state;
-      uint16_t modified = ((unmodified & ~0x1C) | value);
-      return modified;
+#Disabled as these are for Turbo Energy Inverters
+  # - platform: modbus_controller            #274  Select Prog1 Mode Option
+  #   use_write_multiple: true
+  #   modbus_controller_id: inverter
+  #   name: "${friendly_name} Prog1 Mode Option"
+  #   id: inverter_esphome_select_system_mode_program_option_time_1
+  #   address: 274
+  #   value_type: U_WORD
+  #   optionsmap:
+  #     "None": 0
+  #     "General": 4
+  #     "Backup": 8
+  #     "Charge": 16
+  #   lambda: |-
+  #     if ((x & 0x1C) == 0)
+  #       return  std::string("None");
+  #     if ((x & 0x1C) == 4)
+  #       return  std::string("General");
+  #     if ((x & 0x1C) == 8)
+  #       return  std::string("Battery");
+  #     if ((x & 0x1C) == 16)
+  #       return  std::string("Charge");
+  #     return {};
+  #   write_lambda: |-
+  #     uint16_t unmodified =  id(reg_274_raw).state;
+  #     uint16_t modified = ((unmodified & ~0x1C) | value);
+  #     return modified;
 
-  - platform: modbus_controller            #275  Select Prog2 Mode Option
-    use_write_multiple: true
-    modbus_controller_id: inverter
-    name: "${friendly_name} Prog2 Mode Option"
-    id: inverter_esphome_select_system_mode_program_option_time_2
-    address: 275
-    value_type: U_WORD
-    optionsmap:
-      "None": 0
-      "General": 4
-      "Backup": 8
-      "Charge": 16
-    lambda: |-
-      if ((x & 0x1C) == 0)
-        return  std::string("None");
-      if ((x & 0x1C) == 4)
-        return  std::string("General");
-      if ((x & 0x1C) == 8)
-        return  std::string("Battery");
-      if ((x & 0x1C) == 16)
-        return  std::string("Charge");
-      return {};
-    write_lambda: |-
-      uint16_t unmodified =  id(reg_275_raw).state;
-      uint16_t modified = ((unmodified & ~0x1C) | value);
-      return modified;
+  # - platform: modbus_controller            #275  Select Prog2 Mode Option
+  #   use_write_multiple: true
+  #   modbus_controller_id: inverter
+  #   name: "${friendly_name} Prog2 Mode Option"
+  #   id: inverter_esphome_select_system_mode_program_option_time_2
+  #   address: 275
+  #   value_type: U_WORD
+  #   optionsmap:
+  #     "None": 0
+  #     "General": 4
+  #     "Backup": 8
+  #     "Charge": 16
+  #   lambda: |-
+  #     if ((x & 0x1C) == 0)
+  #       return  std::string("None");
+  #     if ((x & 0x1C) == 4)
+  #       return  std::string("General");
+  #     if ((x & 0x1C) == 8)
+  #       return  std::string("Battery");
+  #     if ((x & 0x1C) == 16)
+  #       return  std::string("Charge");
+  #     return {};
+  #   write_lambda: |-
+  #     uint16_t unmodified =  id(reg_275_raw).state;
+  #     uint16_t modified = ((unmodified & ~0x1C) | value);
+  #     return modified;
 
-  - platform: modbus_controller            #276  Select Prog3 Mode Option
-    use_write_multiple: true
-    modbus_controller_id: inverter
-    name: "${friendly_name} Prog3 Mode Option"
-    id: inverter_esphome_select_system_mode_program_option_time_3
-    address: 276
-    value_type: U_WORD
-    optionsmap:
-      "None": 0
-      "General": 4
-      "Backup": 8
-      "Charge": 16
-    lambda: |-
-      if ((x & 0x1C) == 0)
-        return  std::string("None");
-      if ((x & 0x1C) == 4)
-        return  std::string("General");
-      if ((x & 0x1C) == 8)
-        return  std::string("Battery");
-      if ((x & 0x1C) == 16)
-        return  std::string("Charge");
-      return {};
-    write_lambda: |-
-      uint16_t unmodified =  id(reg_276_raw).state;
-      uint16_t modified = ((unmodified & ~0x1C) | value);
-      return modified;
+  # - platform: modbus_controller            #276  Select Prog3 Mode Option
+  #   use_write_multiple: true
+  #   modbus_controller_id: inverter
+  #   name: "${friendly_name} Prog3 Mode Option"
+  #   id: inverter_esphome_select_system_mode_program_option_time_3
+  #   address: 276
+  #   value_type: U_WORD
+  #   optionsmap:
+  #     "None": 0
+  #     "General": 4
+  #     "Backup": 8
+  #     "Charge": 16
+  #   lambda: |-
+  #     if ((x & 0x1C) == 0)
+  #       return  std::string("None");
+  #     if ((x & 0x1C) == 4)
+  #       return  std::string("General");
+  #     if ((x & 0x1C) == 8)
+  #       return  std::string("Battery");
+  #     if ((x & 0x1C) == 16)
+  #       return  std::string("Charge");
+  #     return {};
+  #   write_lambda: |-
+  #     uint16_t unmodified =  id(reg_276_raw).state;
+  #     uint16_t modified = ((unmodified & ~0x1C) | value);
+  #     return modified;
 
-  - platform: modbus_controller            #277  Select Prog4 Mode Option
-    use_write_multiple: true
-    modbus_controller_id: inverter
-    name: "${friendly_name} Prog4 Mode Option"
-    id: inverter_esphome_select_system_mode_program_option_time_4
-    address: 277
-    value_type: U_WORD
-    optionsmap:
-      "None": 0
-      "General": 4
-      "Backup": 8
-      "Charge": 16
-    lambda: |-
-      if ((x & 0x1C) == 0)
-        return  std::string("None");
-      if ((x & 0x1C) == 4)
-        return  std::string("General");
-      if ((x & 0x1C) == 8)
-        return  std::string("Battery");
-      if ((x & 0x1C) == 16)
-        return  std::string("Charge");
-      return {};
-    write_lambda: |-
-      uint16_t unmodified =  id(reg_277_raw).state;
-      uint16_t modified = ((unmodified & ~0x1C) | value);
-      return modified;
+  # - platform: modbus_controller            #277  Select Prog4 Mode Option
+  #   use_write_multiple: true
+  #   modbus_controller_id: inverter
+  #   name: "${friendly_name} Prog4 Mode Option"
+  #   id: inverter_esphome_select_system_mode_program_option_time_4
+  #   address: 277
+  #   value_type: U_WORD
+  #   optionsmap:
+  #     "None": 0
+  #     "General": 4
+  #     "Backup": 8
+  #     "Charge": 16
+  #   lambda: |-
+  #     if ((x & 0x1C) == 0)
+  #       return  std::string("None");
+  #     if ((x & 0x1C) == 4)
+  #       return  std::string("General");
+  #     if ((x & 0x1C) == 8)
+  #       return  std::string("Battery");
+  #     if ((x & 0x1C) == 16)
+  #       return  std::string("Charge");
+  #     return {};
+  #   write_lambda: |-
+  #     uint16_t unmodified =  id(reg_277_raw).state;
+  #     uint16_t modified = ((unmodified & ~0x1C) | value);
+  #     return modified;
 
-  - platform: modbus_controller            #278  Select Prog5 Mode Option
-    use_write_multiple: true
-    modbus_controller_id: inverter
-    name: "${friendly_name} Prog5 Mode Option"
-    id: inverter_esphome_select_system_mode_program_option_time_5
-    address: 278
-    value_type: U_WORD
-    optionsmap:
-      "None": 0
-      "General": 4
-      "Backup": 8
-      "Charge": 16
-    lambda: |-
-      if ((x & 0x1C) == 0)
-        return  std::string("None");
-      if ((x & 0x1C) == 4)
-        return  std::string("General");
-      if ((x & 0x1C) == 8)
-        return  std::string("Battery");
-      if ((x & 0x1C) == 16)
-        return  std::string("Charge");
-      return {};
-    write_lambda: |-
-      uint16_t unmodified =  id(reg_278_raw).state;
-      uint16_t modified = ((unmodified & ~0x1C) | value);
-      return modified;
+  # - platform: modbus_controller            #278  Select Prog5 Mode Option
+  #   use_write_multiple: true
+  #   modbus_controller_id: inverter
+  #   name: "${friendly_name} Prog5 Mode Option"
+  #   id: inverter_esphome_select_system_mode_program_option_time_5
+  #   address: 278
+  #   value_type: U_WORD
+  #   optionsmap:
+  #     "None": 0
+  #     "General": 4
+  #     "Backup": 8
+  #     "Charge": 16
+  #   lambda: |-
+  #     if ((x & 0x1C) == 0)
+  #       return  std::string("None");
+  #     if ((x & 0x1C) == 4)
+  #       return  std::string("General");
+  #     if ((x & 0x1C) == 8)
+  #       return  std::string("Battery");
+  #     if ((x & 0x1C) == 16)
+  #       return  std::string("Charge");
+  #     return {};
+  #   write_lambda: |-
+  #     uint16_t unmodified =  id(reg_278_raw).state;
+  #     uint16_t modified = ((unmodified & ~0x1C) | value);
+  #     return modified;
 
-  - platform: modbus_controller            #279  Select Prog6 Mode Option
-    use_write_multiple: true
-    modbus_controller_id: inverter
-    name: "${friendly_name} Prog6 Mode Option"
-    id: inverter_esphome_select_system_mode_program_option_time_6
-    address: 279
-    value_type: U_WORD
-    optionsmap:
-      "None": 0
-      "General": 4
-      "Backup": 8
-      "Charge": 16
-    lambda: |-
-      if ((x & 0x1C) == 0)
-        return  std::string("None");
-      if ((x & 0x1C) == 4)
-        return  std::string("General");
-      if ((x & 0x1C) == 8)
-        return  std::string("Battery");
-      if ((x & 0x1C) == 16)
-        return  std::string("Charge");
-      return {};
-    write_lambda: |-
-      uint16_t unmodified =  id(reg_279_raw).state;
-      uint16_t modified = ((unmodified & ~0x1C) | value);
-      return modified;
+  # - platform: modbus_controller            #279  Select Prog6 Mode Option
+  #   use_write_multiple: true
+  #   modbus_controller_id: inverter
+  #   name: "${friendly_name} Prog6 Mode Option"
+  #   id: inverter_esphome_select_system_mode_program_option_time_6
+  #   address: 279
+  #   value_type: U_WORD
+  #   optionsmap:
+  #     "None": 0
+  #     "General": 4
+  #     "Backup": 8
+  #     "Charge": 16
+  #   lambda: |-
+  #     if ((x & 0x1C) == 0)
+  #       return  std::string("None");
+  #     if ((x & 0x1C) == 4)
+  #       return  std::string("General");
+  #     if ((x & 0x1C) == 8)
+  #       return  std::string("Battery");
+  #     if ((x & 0x1C) == 16)
+  #       return  std::string("Charge");
+  #     return {};
+  #   write_lambda: |-
+  #     uint16_t unmodified =  id(reg_279_raw).state;
+  #     uint16_t modified = ((unmodified & ~0x1C) | value);
+  #     return modified;
