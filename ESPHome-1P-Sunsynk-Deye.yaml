@@ -1805,7 +1805,7 @@ text_sensor:
     raw_encode: HEXBYTES
     address: 003
     register_count: 5
-    response_size: 9
+    response_size: 10
     internal: true
 
 
