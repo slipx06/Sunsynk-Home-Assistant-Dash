@@ -1826,6 +1826,41 @@ text_sensor:
 
       return asciiData;
 
+  - platform: modbus_controller            # 013 Inverter MCU Firmware Version
+    modbus_controller_id: inverter
+    id: inverter_esphome_MCU_version_13
+    register_type: holding
+    skip_updates: ${settings_skipped_updates}
+    raw_encode: HEXBYTES
+    address: 013
+    internal: true
+
+  - platform: modbus_controller            # 015 Inverter MCU Firmware Version
+    modbus_controller_id: inverter
+    id: inverter_esphome_MCU_version_15
+    register_type: holding
+    skip_updates: ${settings_skipped_updates}
+    raw_encode: HEXBYTES
+    address: 015
+    internal: true
+
+  - platform: template                      # 015-013 Inverter MCU version
+    name: "${friendly_name} MCU Version"
+    id: inverter_esphome_main_version
+    icon: "mdi:text"
+    lambda: |-
+      return id( inverter_esphome_MCU_version_15).state + "-" + id(inverter_esphome_MCU_version_13).state;
+
+  - platform: modbus_controller             # 016 Inverter LCD Firmware Version
+    modbus_controller_id: inverter
+    id: inverter_esphome_comm_lcd_firmware_16
+    name: "${friendly_name} COMM Version"
+    register_type: holding
+    skip_updates: ${settings_skipped_updates}
+    raw_encode: HEXBYTES
+    icon: "mdi:text"
+    address: 016
+
 ################################################ SELECT SENSORS ################################################
 
 select:
