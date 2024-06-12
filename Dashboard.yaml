@@ -2,9 +2,7 @@ type: custom:layout-card
 layout_type: custom:grid-layout
 cards:
   - type: custom:sunsynk-power-flow-card
-    view_layout:
-      grid-area: flow
-    cardstyle: lite
+    cardstyle: compact
     large_font: true
     show_solar: true
     panel_mode: true
@@ -23,6 +21,9 @@ cards:
       pv2_name: North
       display_mode: 2
       auto_scale: true
+      pv2_max_power: 3850
+      pv1_max_power: 2750
+      efficiency: 3
     battery:
       energy: 15960
       shutdown_soc: sensor.sunsynk_battery_capacity_shutdown
@@ -31,24 +32,35 @@ cards:
       animation_speed: 6
       max_power: 4100
       auto_scale: true
+      show_absolute: true
+      animate: true
+      path_threshold: 90
     load:
       show_aux: false
       show_daily: true
       animation_speed: 8
       max_power: 8000
-      additional_loads: 2
       load1_name: Geyser
-      load1_icon: mdi:water-boiler
-      load2_name: Pool
-      load2_icon: mdi:pool
+      load1_icon: sensor.template_mdi
+      load3_name: Pool
+      load3_icon: mdi:pool
       auto_scale: true
+      path_threshold: 90
+      additional_loads: 3
+      load2_name: Dishwasher
+      load2_icon: mdi:dishwasher
+      off_threshold: 3
     grid:
       show_daily_buy: true
-      no_grid_colour: '#BE87E2'
+      no_grid_colour: green
       animation_speed: 8
       max_power: 8000
       auto_scale: true
-      export_colour: maroon
+      grid_off_colour:
+        - 122
+        - 0
+        - 0
+      grid_name: ''
     entities:
       use_timer_248: switch.sunsynk_toggle_system_timer
       priority_load_243: switch.sunsynk_toggle_priority_load
@@ -73,7 +85,7 @@ cards:
       battery_current_191: sensor.sunsynk_battery_current
       essential_power: sensor.sunsynk_essential_power_1
       essential_load1: sensor.tuya_geyser_current_consumption
-      essential_load2: sensor.sonoff_10013bda3a_power
+      essential_load3: sensor.sonoff_10013bda3a_power
       nonessential_power: sensor.sunsynk_nonessential_power_1
       grid_ct_power_172: sensor.sunsynk_grid_ct_power
       pv1_voltage_109: sensor.sunsynk_pv1_voltage
@@ -106,7 +118,14 @@ cards:
       prog6_capacity: number.sunsynk_prog6_capacity
       prog6_charge: switch.sunsynk_prog6_grid_charge
       essential_load1_extra: sensor.daily_geyser_energy
-      essential_load2_extra: sensor.pool_temperature
+      essential_load3_extra: sensor.pool_temperature
+      environment_temp: sensor.home_realfeel_temperature
+      prepaid_units: sensor.prepaid_units_left
+      essential_load2: sensor.sonoff_pow_r2_energy_power
+      essential_load2_extra: sensor.sonoff_pow_r2_energy_today
+    dynamic_line_width: true
+    view_layout:
+      grid-area: flow
   - type: custom:plotly-graph
     view_layout:
       grid-area: graph
@@ -135,6 +154,10 @@ cards:
         line:
           color: rgb(84, 144, 194)
           shape: spline
+        filters:
+          - sliding_window_moving_average:
+              window_size: 1
+              extended: true
       - entity: sensor.sunsynk_battery_power
         fill: tozeroy
         name: |
@@ -185,7 +208,7 @@ cards:
     view_layout:
       grid-area: daily
     entities:
-      - entity: sensor.sunsynk_day_pv_energy
+      - entity: sensor.sunsynk_day_pv_energy_local
         statistic: state
         name: |
           $fn ({ ys,meta }) =>
@@ -197,7 +220,7 @@ cards:
           - filter: i>0
         marker:
           color: rgb(255, 155, 48)
-      - entity: sensor.sunsynk_day_load_energy
+      - entity: sensor.sunsynk_day_load_energy_local
         statistic: state
         name: |
           $fn ({ ys,meta }) =>
@@ -209,7 +232,7 @@ cards:
         texttemplate: '%{y}'
         marker:
           color: rgb(95, 182, 173)
-      - entity: sensor.sunsynk_day_grid_import
+      - entity: sensor.sunsynk_day_grid_import_energy_local
         statistic: state
         name: |
           $fn ({ ys,meta }) =>
@@ -221,7 +244,7 @@ cards:
           - filter: i>0
         marker:
           color: rgb(84, 144, 194)
-      - entity: sensor.sunsynk_day_battery_discharge
+      - entity: sensor.sunsynk_day_battery_discharge_energy_local
         statistic: state
         name: |
           $fn ({ ys,meta }) =>
@@ -233,7 +256,7 @@ cards:
           - filter: i>0
         marker:
           color: rgb(151, 90, 182)
-      - entity: sensor.sunsynk_day_battery_charge
+      - entity: sensor.sunsynk_day_battery_charge_energy_local
         statistic: state
         name: |
           $fn ({ ys,meta }) =>
@@ -262,163 +285,164 @@ cards:
       displayModeBar: false
       scrollZoom: false
     time_offset: 12h
-  - type: custom:apexcharts-card
+  - type: custom:plotly-graph
     view_layout:
       grid-area: solar
-    header:
-      show: true
-      standard_format: true
-      show_states: true
-      colorize_states: true
-    apex_config:
-      chart:
-        height: 350px
-      tooltip:
-        enabled: true
-        shared: true
-        followCursor: true
-    graph_span: 4d
-    now:
-      show: true
-      label: Now
-    span:
-      start: day
-      offset: '-1day'
-    all_series_config:
-      type: area
-      opacity: 0.3
-      stroke_width: 1
-    series:
-      - entity: sensor.sunsynk_battery_soc
-        name: Battery
-        float_precision: 0
-        type: line
-        color: '#f06292'
-        opacity: 0.6
-        yaxis_id: capacity
-        extend_to: now
-        show:
-          legend_value: true
-          in_header: false
-        group_by:
-          func: last
-          duration: 5m
+    hours_to_show: 4d
+    time_offset: 2.5d
+    refresh_interval: auto
+    entities:
       - entity: sensor.sunsynk_solar_power
         name: Solar Power
-        float_precision: 3
-        color: '#ff9800'
-        yaxis_id: kWh
-        unit: kW
-        transform: return x/1000;
-        extend_to: now
-        show:
-          legend_value: true
-          in_header: false
-        group_by:
-          func: avg
-          duration: 5m
-      - entity: sensor.solcast_pv_forecast_forecast_today
-        name: Solar Forecast (D1)
-        extend_to: false
-        color: grey
-        opacity: 0.3
-        stroke_width: 0
-        yaxis_id: kWh
-        show:
-          legend_value: false
-          in_header: false
-        data_generator: |
-          return entity.attributes.detailedForecast.map((entry) => {
-                return [new Date(entry.period_start), entry.pv_estimate];
-              });
-      - entity: sensor.solcast_pv_forecast_forecast_tomorrow
-        name: Solar Forecast (D2)
-        float_precision: 3
-        extend_to: false
-        color: grey
-        opacity: 0.3
-        stroke_width: 0
-        yaxis_id: kWh
-        show:
-          legend_value: false
-          in_header: false
-        data_generator: |
-          return entity.attributes.detailedForecast.map((entry) => {
-                return [new Date(entry.period_start), entry.pv_estimate];
-              });
-      - entity: sensor.solcast_pv_forecast_forecast_day_3
-        name: Solar Forecast (D3)
-        float_precision: 3
-        extend_to: false
-        color: grey
-        opacity: 0.3
-        stroke_width: 0
-        yaxis_id: kWh
-        show:
-          legend_value: false
-          in_header: false
-        data_generator: |
-          return entity.attributes.detailedForecast.map((entry) => {
-                return [new Date(entry.period_start), entry.pv_estimate];
-              });
-      - entity: sensor.solcast_pv_forecast_forecast_today
-        yaxis_id: header_only
-        name: Solar Forecast (D1)
-        color: grey
-        show:
-          legend_value: true
-          in_header: true
-          in_chart: false
-      - entity: sensor.solcast_pv_forecast_forecast_remaining_today
-        yaxis_id: header_only
-        name: Forecast (D1 Remaining)
-        color: grey
-        show:
-          legend_value: true
-          in_header: true
-          in_chart: false
-      - entity: sensor.solcast_pv_forecast_forecast_tomorrow
-        yaxis_id: header_only
-        name: Forecast (D2)
-        color: grey
-        show:
-          legend_value: true
-          in_header: true
-          in_chart: false
-      - entity: sensor.solcast_pv_forecast_forecast_day_3
-        yaxis_id: header_only
-        name: Solar Forecast (D3)
-        color: grey
-        show:
-          legend_value: true
-          in_header: true
-          in_chart: false
-      - entity: sensor.solcast_pv_forecast_api_last_polled
-        yaxis_id: header_only
-        name: Forecast (Last Update)
-        color: grey
-        unit: ' min.'
-        transform: return ((Date.now()) - (new Date(x).getTime())) / 60 / 60 / 24
-        show:
-          legend_value: true
-          in_header: true
-          in_chart: false
-    yaxis:
-      - id: capacity
-        show: true
-        opposite: true
-        decimals: 0
-        max: 100
-        min: 0
-        apex_config:
-          tickAmount: 5
-      - id: kWh
-        show: true
-        min: 0
-        apex_config:
-          tickAmount: 5
-      - id: header_only
-        show: false
+        line:
+          color: rgb(255, 155, 48)
+          shape: spline
+          width: 1
+        fill: tozeroy
+        fillcolor: rgba(255, 155, 48, 0.3)
+        yaxis: y3
+        show_value: false
+        showlegend: false
+      - entity: sensor.energy_production_today_sum
+        line:
+          color: rgb(125, 125, 125)
+          shape: spline
+        fill: tozeroy
+        filters:
+          - fn: |
+              ({meta}) => ({
+                 xs: meta.wh_period.map(({ start }) => new Date(start)),
+                 ys: meta.wh_period.map(({ value }) => value),
+              })
+        yaxis: y1
+        showlegend: true
+      - entity: sensor.energy_production_tomorrow_sum
+        line:
+          color: rgb(90,90,90)
+          shape: spline
+        fill: tozeroy
+        filters:
+          - fn: |
+              ({meta}) => ({
+                 xs: meta.wh_period.map(({ start }) => new Date(start)),
+                 ys: meta.wh_period.map(({ value }) => value),
+              })
+        yaxis: y1
+      - entity: sensor.energy_production_d2_sum
+        line:
+          color: rgb(50,50,50)
+          shape: spline
+        fill: tozeroy
+        filters:
+          - fn: |
+              ({meta}) => ({
+                 xs: meta.wh_period.map(({ start }) => new Date(start)),
+                 ys: meta.wh_period.map(({ value }) => value),
+              })
+        yaxis: y1
+        showlegend: true
+      - entity: sensor.sunsynk_battery_soc
+        name: Battery
+        line:
+          color: red
+          shape: spline
+          width: 1
+        yaxis: y2
+        show_value: true
+        showlegend: false
+        visible: true
+      - entity: ''
+        name: Now
+        yaxis: y9
+        showlegend: false
+        line:
+          width: 2
+          dash: dot
+          color: aqua
+        x: $ex [Date.now(), Date.now()]
+        'y':
+          - 0
+          - 1
+    defaults:
+      yaxes:
+        fixedrange: true
+    layout:
+      height: 410
+      margin:
+        t: 55
+        l: 50
+      showlegend: false
+      legend:
+        x: 0.1
+        'y': -0.8
+      yaxis2:
+        range:
+          - 20
+          - 105
+        fixedrange: true
+      annotations:
+        - text: |-
+            $fn ({hass}) =>
+              "<span style='font-size: 24px;'><span style='color: orange'>"
+              + Number(hass.states['sensor.energy_production_tomorrow_sum'].state).toFixed(1) + "</span></span>kWh<br>"
+              +  "</span><span style=''>Forecast Today</span><br>"
+          xref: x domain
+          yref: y domain
+          xanchor: center
+          yanchor: center
+          x: 0.06
+          'y': 1.2
+          showarrow: false
+        - text: |-
+            $fn ({hass}) =>
+              "<span style='font-size: 24px;'><span style='color: dodgerblue'>"
+              + Number(hass.states['sensor.meteo_energy_production_today_remaining'].state).toFixed(1) + "</span></span>kWh<br>"
+              +  "</span><span style=''>Remaining</span><br>"
+          xref: x domain
+          yref: y domain
+          xanchor: center
+          yanchor: center
+          x: 0.28
+          'y': 1.2
+          showarrow: false
+        - text: |-
+            $fn ({hass}) =>
+              "<span style='font-size: 24px;'><span style='color: '>"
+              + Number(hass.states['sensor.energy_production_tomorrow_sum'].state).toFixed(1) + "</span></span>kWh<br>"
+              +  "</span><span style=''>Forecast Tomorrow</span><br>"
+          xref: x domain
+          yref: y domain
+          xanchor: center
+          yanchor: centre
+          x: 0.5
+          'y': 1.2
+          showarrow: false
+        - text: |-
+            $fn ({hass}) =>
+              "<span style='font-size: 24px;'><span style='color: white'>"
+              + Number(hass.states['sensor.energy_production_d2_sum'].state).toFixed(1) + "</span></span>kWh<br>"
+              +  "</span><span style=''>Forecast Day 2</span><br>"
+          xref: x domain
+          yref: y domain
+          xanchor: center
+          yanchor: center
+          x: 0.72
+          'y': 1.2
+          showarrow: false
+        - text: |-
+            $fn ({hass}) =>
+              "<span style='font-size: 24px;'><span style='color: red'>"
+              + Number(hass.states['sensor.sunsynk_battery_soc'].state) + "</span></span>%<br>"
+              +  "</span><span style=''>SOC</span><br>"
+          xref: x domain
+          yref: y domain
+          xanchor: center
+          yanchor: center
+          x: 0.94
+          'y': 1.2
+          showarrow: false
+    config:
+      scrollZoom: false
   - type: custom:plotly-graph
     view_layout:
       grid-area: total
@@ -515,85 +539,123 @@ cards:
     config:
       displayModeBar: false
       scrollZoom: false
-  - type: custom:apexcharts-card
+  - type: custom:plotly-graph
     view_layout:
       grid-area: stats
-    chart_type: donut
-    header:
-      show: true
-      title: Generation Purpose
-      show_states: true
-      colorize_states: true
-    apex_config:
-      chart:
-        toolbar:
-          show: false
-          autoSelected: zoom
-      stroke:
-        width: 1
-        curve: smooth
-      legend:
-        show: false
-      responsive:
-        - breakpoint: 800
-          options:
-            chart:
-              height: 360px
-        - breakpoint: 1300
-          options:
-            chart:
-              height: 360px
-        - breakpoint: 10000
-          options:
-            chart:
-              height: 355px
-    series:
+    title: Generation Purpose
+    entities:
       - entity: sensor.sunsynk_day_load_energy
-        name: Consumption
-      - entity: sensor.sunsynk_day_battery_charge
-        name: Charging
-  - type: custom:apexcharts-card
+        type: pie
+        hole: 0.6
+        values: >-
+          $ex [
+          hass.states["sensor.sunsynk_day_battery_charge_energy_local"].state,
+          hass.states["sensor.sunsynk_day_load_energy_local"].state
+           ]
+        marker:
+          colors:
+            - rgb(84, 144, 194)
+            - rgb(95, 182, 173)
+        textinfo: value+percent
+    hours_to_show: 1
+    refresh_interval: auto
+    layout:
+      height: 400
+      margin:
+        t: 60
+      showlegend: false
+      annotations:
+        - text: |-
+            $fn ({hass}) =>
+              "<span style='font-size: 24px;'><span style='color: rgb(84, 144, 194)'>"
+              + Number(hass.states['sensor.sunsynk_day_battery_charge_energy_local'].state).toFixed(1) + "</span></span>kWh<br>"
+              +  "</span><span style=''>Charging</span><br>"
+          xref: paper
+          yref: paper
+          xanchor: center
+          yanchor: center
+          x: 0.9
+          'y': 1.2
+          showarrow: false
+        - text: |-
+            $fn ({hass}) =>
+              "<span style='font-size: 24px;'><span style='color: rgb(95, 182, 173)'>"
+              + Number(hass.states['sensor.sunsynk_day_load_energy_local'].state).toFixed(1) + "</span></span>kWh<br>"
+              +  "</span><span style=''>Consumption</span><br>"
+          xref: paper
+          yref: paper
+          xanchor: center
+          yanchor: center
+          x: 0.05
+          'y': 1.2
+          showarrow: false
+  - type: custom:plotly-graph
     view_layout:
       grid-area: stats1
-    chart_type: donut
-    header:
-      show: true
-      title: Generation Today
-      show_states: true
-      colorize_states: true
-    apex_config:
-      chart:
-        toolbar:
-          show: false
-          autoSelected: zoom
-      stroke:
-        width: 1
-        curve: smooth
-      legend:
-        show: false
-      responsive:
-        - breakpoint: 800
-          options:
-            chart:
-              height: 360px
-        - breakpoint: 1300
-          options:
-            chart:
-              height: 360px
-        - breakpoint: 10000
-          options:
-            chart:
-              height: 375px
-    series:
-      - entity: sensor.sunsynk_day_pv_energy
-        name: Solar
-        color: rgb(255, 155, 48)
-      - entity: sensor.sunsynk_day_battery_discharge
-        name: Battery
-        color: rgb(151, 90, 182)
-      - entity: sensor.sunsynk_day_grid_import
-        name: Grid
-        color: rgb(84, 144, 194)
+    title: Generation Today
+    entities:
+      - entity: sensor.sunysnk_battery_day_charge
+        type: pie
+        hole: 0.6
+        values: >-
+          $ex [
+          hass.states["sensor.sunsynk_day_battery_discharge_energy_local"].state,
+          hass.states["sensor.sunsynk_day_grid_import_energy_local"].state,
+          hass.states["sensor.sunsynk_day_pv_energy_local"].state ]
+        labels:
+          - Battery Charge
+          - Grid Offpeak
+          - Solar
+        marker:
+          colors:
+            - rgb(151, 90, 182)
+            - rgb(84, 144, 194)
+            - rgb(255, 155, 48)
+        textinfo: value+percent
+    hours_to_show: 1
+    refresh_interval: auto
+    layout:
+      height: 410
+      margin:
+        t: 60
+      showlegend: false
+      annotations:
+        - text: |-
+            $fn ({hass}) =>
+              "<span style='font-size: 24px;'><span style='color: rgb(255, 155, 48'>"
+              + Number(hass.states['sensor.sunsynk_day_pv_energy_local'].state).toFixed(1) + "</span></span>kWh<br>"
+              +  "</span><span style=''>Solar</span><br>"
+          xref: paper
+          yref: paper
+          xanchor: center
+          yanchor: center
+          x: 0.05
+          'y': 1.2
+          showarrow: false
+        - text: |-
+            $fn ({hass}) =>
+              "<span style='font-size: 24px;'><span style='color: rgb(151, 90, 182)'>"
+              + Number(hass.states['sensor.sunsynk_day_battery_discharge_energy_local'].state).toFixed(1) + "</span></span>kWh<br>"
+              +  "</span><span style=''>Battery</span><br>"
+          xref: paper
+          yref: paper
+          xanchor: center
+          yanchor: center
+          x: 0.5
+          'y': 1.2
+          showarrow: false
+        - text: |-
+            $fn ({hass}) =>
+              "<span style='font-size: 24px;'><span style='color: rgb(84, 144, 194)'>"
+              + Number(hass.states['sensor.sunsynk_day_grid_import_energy_local'].state).toFixed(1) + "</span></span>kWh<br>"
+              +  "</span><span style=''>Grid</span><br>"
+          xref: paper
+          yref: paper
+          xanchor: center
+          yanchor: centre
+          x: 0.9
+          'y': 1.2
+          showarrow: false
   - type: vertical-stack
     cards:
       - type: custom:plotly-graph
@@ -689,138 +751,6 @@ cards:
     content: "  ## System Timer Settings\n<table width=\"100%\"  border=0>\n  <tbody> \n  <tr>\n    <td align=\"left\">\n    <b>Time Slot</b>\n    </td>\n    <td align=\"left\">\n    <b>Battery SOC</b>\n    </td>\n    <td align=\"left\">\n\t<b>Grid</b>\n\t</td>\n  </tr>\n  <tr>\n    <td align=\"left\">\n    {{states('sensor.sunsynk_time_slot_1')}} - {{states('sensor.sunsynk_time_slot_2')}}\n    </td>\n    <td align=\"left\">\n    {{ states('number.sunsynk_prog1_capacity') | round(0) }} %\n    </td>\n    <td align=\"left\">\n\t{% if is_state('switch.sunsynk_prog1_grid_charge', 'on') %} <ha-icon icon=\"mdi:checkbox-marked-outline\"></ha-icon> {% else %} <ha-icon icon=\"mdi:checkbox-blank-outline\"></ha-icon> {% endif %}\n\t</td>\n  </tr>\n  <tr>\n    <td align=\"left\">\n    {{states('sensor.sunsynk_time_slot_2')}} - {{states('sensor.sunsynk_time_slot_3')}}\n    </td>\n    <td align=\"left\">\n    {{ states('number.sunsynk_prog2_capacity') | round(0) }} %\n    </td>\n    <td align=\"left\">\n\t{% if is_state('switch.sunsynk_prog2_grid_charge', 'on') %} <ha-icon icon=\"mdi:checkbox-marked-outline\"></ha-icon> {% else %} <ha-icon icon=\"mdi:checkbox-blank-outline\"></ha-icon> {% endif %}\n\t</td>\n  </tr>\n  <tr>\n    <td align=\"left\">\n    {{states('sensor.sunsynk_time_slot_3')}} - {{states('sensor.sunsynk_time_slot_4')}}\n    </td>\n    <td align=\"left\">\n    {{ states('number.sunsynk_prog3_capacity') | round(0) }} %\n    </td>\n    <td align=\"left\">\n\t{% if is_state('switch.sunsynk_prog3_grid_charge', 'on') %} <ha-icon icon=\"mdi:checkbox-marked-outline\"></ha-icon> {% else %} <ha-icon icon=\"mdi:checkbox-blank-outline\"></ha-icon> {% endif %}\n\t</td>\n  </tr>\n  <tr>\n    <td align=\"left\">\n    {{states('sensor.sunsynk_time_slot_4')}} - {{states('sensor.sunsynk_time_slot_5')}}\n    </td>\n    <td align=\"left\">\n    {{ states('number.sunsynk_prog4_capacity') | round(0) }} %\n    </td>\n    <td align=\"left\">\n\t{% if is_state('switch.sunsynk_prog4_grid_charge', 'on') %} <ha-icon icon=\"mdi:checkbox-marked-outline\"></ha-icon> {% else %} <ha-icon icon=\"mdi:checkbox-blank-outline\"></ha-icon> {% endif %}\n\t</td>\n  </tr>\n  <tr>\n    <td align=\"left\">\n    {{states('sensor.sunsynk_time_slot_5')}} - {{states('sensor.sunsynk_time_slot_6')}}\n    </td>\n    <td align=\"left\">\n    {{ states('number.sunsynk_prog5_capacity') | round(0) }} %\n    </td>\n    <td align=\"left\">\n\t{% if is_state('switch.sunsynk_prog5_grid_charge', 'on') %} <ha-icon icon=\"mdi:checkbox-marked-outline\"></ha-icon> {% else %} <ha-icon icon=\"mdi:checkbox-blank-outline\"></ha-icon> {% endif %}\n\t</td>\n  </tr>\n  <tr>\n    <td align=\"left\">\n    {{states('sensor.sunsynk_time_slot_6')}} - {{states('sensor.sunsynk_time_slot_1')}}\n    </td>\n    <td align=\"left\">\n    {{ states('number.sunsynk_prog6_capacity') | round(0) }} %\n    </td>\n    <td align=\"left\">\n\t{% if is_state('switch.sunsynk_prog6_grid_charge', 'on') %} <ha-icon icon=\"mdi:checkbox-marked-outline\"></ha-icon> {% else %} <ha-icon icon=\"mdi:checkbox-blank-outline\"></ha-icon> {% endif %}\n\t</td>\n  </tr>\n  </tbody>\n</table>"
     view_layout:
       grid-area: weather
-  - type: custom:flex-horseshoe-card
-    view_layout:
-      grid-area: g2
-    entities:
-      - entity: sensor.sunsynk_battery_soc
-        decimals: 0
-        unit: '%'
-        name: BATTERY
-      - entity: sensor.sunsynk_battery_voltage
-        decimals: 2
-        unit: V
-      - entity: sensor.sunsynk_battery_current
-        decimals: 2
-        unit: A
-      - entity: sensor.sunsynk_battery_power
-        decimals: 0
-        unit: W
-      - entity: sensor.sunsynk_day_battery_discharge
-        decimals: 2
-        unit: kWh
-        name: Discharge
-      - entity: sensor.sunsynk_day_battery_charge
-        decimals: 2
-        unit: kWh
-        name: Charge
-    show:
-      horseshoe_style: autominmax
-    layout:
-      hlines:
-        - id: 0
-          xpos: 50
-          ypos: 40
-          length: 70
-          styles:
-            - opacity: 0.2;
-        - id: 0
-          xpos: 50
-          ypos: 60
-          length: 70
-          styles:
-            - opacity: 0.2;
-      vlines:
-        - id: 0
-          xpos: 50
-          ypos: 50
-          length: 18
-          styles:
-            - opacity: 0.2;
-      states:
-        - id: 0
-          entity_index: 0
-          xpos: 50
-          ypos: 33
-          styles:
-            - font-size: 3em;
-            - opacity: 0.9;
-        - id: 1
-          entity_index: 1
-          xpos: 44
-          ypos: 53
-          styles:
-            - font-size: 1.5em;
-            - text-anchor: end;
-        - id: 2
-          entity_index: 2
-          xpos: 55
-          ypos: 53
-          styles:
-            - text-anchor: start;
-            - font-size: 1.5em;
-        - id: 3
-          entity_index: 3
-          xpos: 50
-          ypos: 75
-          styles:
-            - text-anchor: middle;
-            - font-size: 2em;
-        - id: 4
-          entity_index: 4
-          xpos: 76
-          ypos: 7
-          styles:
-            - text-anchor: start;
-            - font-size: 1.2em;
-        - id: 5
-          entity_index: 5
-          xpos: 0
-          ypos: 7
-          styles:
-            - text-anchor: start;
-            - font-size: 1.2em;
-      icons:
-        - id: 0
-          entity_index: 1
-          xpos: 30
-          ypos: 52
-          align: start
-          size: 1
-      names:
-        - id: 0
-          entity_index: 0
-          xpos: 50
-          ypos: 95
-          styles:
-            - font-size: 1.2em;
-        - id: 1
-          entity_index: 4
-          xpos: 81
-          ypos: 12
-          styles:
-            - font-size: 0.5em;
-            - text-anchor: start;
-        - id: 2
-          entity_index: 5
-          xpos: 0
-          ypos: 12
-          styles:
-            - font-size: 0.5em;
-            - text-anchor: start;
-    horseshoe_scale:
-      min: 0
-      max: 100
-      width: 6
-    color_stops:
-      '0': pink
-      '2000': pink
-    card_mod:
-      style: |
-        ha-card {
-          --ha-card-background: var(--card-background-color);
-          color: var(--primary-color);
-        }
   - type: custom:flex-horseshoe-card
     view_layout:
       grid-area: g3
@@ -944,11 +874,11 @@ cards:
             - text-anchor: start;
         - id: 3
           entity_index: 3
-          xpos: 44
+          xpos: 50
           ypos: 80
           styles:
             - font-size: 0.5em;
-            - text-anchor: start;
+            - text-anchor: middle;
     horseshoe_scale:
       min: 0
       max: 8000
@@ -962,157 +892,6 @@ cards:
           --ha-card-background: var(--card-background-color);
           color: var(--primary-color); 
         }
-  - type: markdown
-    content: >-
-      {% set stage_sensor = "sensor.load_shedding_stage_eskom" %} {% set
-      area_sensor =
-      "sensor.load_shedding_area_jhbcitypower3_10_noordhangext49505154586778" %}
-      {% set area_schedule = state_attr(area_sensor, "forecast") %} {% if
-      area_schedule %}
-        {% set start_time = area_schedule[0].start_time %}
-        {% set end_time = area_schedule[0].end_time %}
-        {% if is_state(area_sensor, "off") %}
-          {% set starts_in = timedelta(minutes=state_attr(area_sensor, "starts_in")).total_seconds() | int // 60 %}
-          {% set mins = starts_in % 60 %}
-          {% set hrs = starts_in // 60 % 24 %}
-          {% set days = starts_in // 1440 %}
-          {% set alert = "Load Shedding starts in {d}d {h}h {m}m ({next})".format(d=days, m=mins, h=hrs, next=as_timestamp(start_time) | timestamp_custom("%H:%M", True)) %}
-          {% if starts_in > 1440 %}
-            <ha-alert alert-type="success">{{ states(stage_sensor) }}</ha-alert>
-          {% elif 60 < starts_in <= 1440 %}
-            <ha-alert alert-type="warning">{{ alert }}</ha-alert>
-          {% else %}
-            <ha-alert alert-type="error">{{ alert }}</ha-alert>
-          {% endif %}
-        {% else %}
-          {% set ends_in = timedelta(minutes=state_attr(area_sensor, "ends_in")).total_seconds() | int // 60 %}
-            {% set mins = ends_in % 60 %}
-            {% set hrs = ends_in // 60 % 24 %}
-            {% set days = ends_in // 1440 %}
-            {% set alert = "Load Shedding ends in {d}d {h}h {m}m ({next})".format(d=days, m=mins, h=hrs, next=as_timestamp(end_time) | timestamp_custom("%H:%M", True)) %}
-            <ha-alert alert-type="error">{{ alert }}</ha-alert>
-        {% endif %}
-      {% else %}
-        {% set stage = state_attr(stage_sensor, "next_stage") %}
-        {% set start_time = state_attr(stage_sensor, "next_start_time") %}
-        {% set end_time = state_attr(stage_sensor, "next_end_time") %}
-        {% set starts_in = timedelta(minutes=state_attr(stage_sensor, "starts_in")).total_seconds() | int // 60 %}
-        {% set mins = starts_in % 60 %}
-        {% set hrs = starts_in // 60 % 24 %}
-        {% set days = starts_in // 1440 %}
-        {% if (start_time == 0 or end_time == 0) %}
-        {% set alert = "No Load Shedding" %}
-        {% else %}
-        {% set alert = "Stage {stage} starts in {d}d {h}h {m}m ({next})".format(stage=stage, d=days, m=mins, h=hrs, next=as_timestamp(start_time) | timestamp_custom("%H:%M", True)) %}
-        {% endif %}
-        <ha-alert alert-type="success">{{ alert }}</ha-alert>
-      {% endif %}{% set area_forecast = state_attr(area_sensor, "forecast" )%}
-      {% if area_forecast %} <table width="100%"  border=0>
-        <tbody>
-        {% for forecast in area_forecast[:3] %}
-        <tr>
-          <td align="left">
-          {{ as_timestamp(forecast.start_time) | timestamp_custom("%-d %B", True) }}
-          </td>
-          <td align="left">
-          {{ as_timestamp(forecast.start_time) | timestamp_custom("%H:%M", True) }} - {{ as_timestamp(forecast.end_time) | timestamp_custom("%H:%M", True) }}
-          </td>
-          <td align="right">{{ forecast.stage }}</td>
-        </tr>
-        {% endfor %}
-        </tbody>
-      </table> {% endif %}
-
-
-      {% set soc1 = states('sensor.soc_battery_time_left_friendly') %}
-
-      {% set load1 = states('sensor.sunsynk_load_power') %}
-
-      {% set socsec1 = states('sensor.soc_battery_time_left') | int %}
-
-      {% set state = states('sensor.sunsynk_battery_power') | int %}
-
-      {% if state <= 0 -%}
-        <ha-alert alert-type="success">{{ soc1 }} to {{states('sensor.markdown_battery_charge_time_left')}}%</ha-alert>
-      {% else %}
-        {% if socsec1 > 21601 %}
-        <ha-alert alert-type="success"> Battery runtime to {{states('sensor.battery_cap')}}% is {{ soc1 }} at current ({{state}} W) battery load. ETA@{{states('sensor.markdown_discharge_time')}}</ha-alert>
-        {% elif 10800 < socsec1 <= 21600 %}
-        <ha-alert alert-type="warning">Battery runtime to {{states('sensor.battery_cap')}}% is {{ soc1 }} at current ({{state}} W) battery load. ETA@{{states('sensor.markdown_discharge_time')}}</ha-alert>     
-        {% elif socsec1 <= 10800 %}
-        <ha-alert alert-type="error"> Battery runtime to {{states('sensor.battery_cap')}}% is {{ soc1 }} at current ({{state}} W) battery load. ETA@{{states('sensor.markdown_discharge_time')}}</ha-alert>
-        {% endif %}
-      {% endif %}
-    view_layout:
-      grid-area: ls
-  - type: custom:plotly-graph
-    view_layout:
-      grid-area: sg
-    entities:
-      - entity: sensor.sunsynk_day_pv_energy
-        statistic: state
-        name: |
-          $fn ({ ys,meta }) =>
-            "Solar" + "🔆" + "(" +ys[ys.length - 1]+"kWh)"
-        period: day
-        type: bar
-        texttemplate: '%{y}'
-        filters:
-          - filter: i>0
-        marker:
-          color: rgb(255, 155, 48)
-      - entity: sensor.sunsynk_day_grid_import
-        statistic: state
-        name: |
-          $fn ({ ys,meta }) =>
-            "Grid Import" + "💡" + "(" +ys[ys.length - 1]+"kWh)"
-        period: day
-        type: bar
-        texttemplate: '%{y}'
-        filters:
-          - filter: i>0
-        marker:
-          color: rgb(84, 144, 194)
-      - entity: sensor.sunsynk_day_load_energy
-        statistic: state
-        show_value: true
-        name: |
-          $fn ({ ys,meta }) =>
-            "Load" + "⚡" + "(" +ys[ys.length - 1]+"kWh)"
-        period: day
-        type: line
-        texttemplate: '%{y}'
-        line:
-          color: rgb(95, 182, 173)
-          width: 2
-    hours_to_show: 31d
-    title: null
-    refresh_interval: 600
-    defaults:
-      yaxes:
-        fixedrange: true
-    layout:
-      legend:
-        bgcolor: rgba(0,0,0,0)
-        itemsizing: constant
-        font:
-          size: 11
-        x: 0.4
-      height: 410
-      barmode: stack
-      xaxis:
-        rangeselector:
-          'y': 1.05
-          buttons:
-            - count: 7
-              step: day
-            - count: 31
-              step: day
-            - count: 90
-              step: day
-    config:
-      displayModeBar: false
-      scrollZoom: false
   - type: custom:flex-horseshoe-card
     view_layout:
       grid-area: g1
@@ -1291,6 +1070,289 @@ cards:
           --ha-card-background: var(--card-background-color);
           color: var(--primary-color); 
         }
+  - type: markdown
+    content: >-
+      {% set stage_sensor = "sensor.load_shedding_stage_eskom" %} {% set
+      area_sensor =
+      "sensor.load_shedding_area_jhbcitypower3_5_noordhangext49505154586778" %}
+      {% set area_schedule = state_attr(area_sensor, "forecast") %} {% if
+      area_schedule %}
+        {% set start_time = area_schedule[0].start_time %}
+        {% set end_time = area_schedule[0].end_time %}
+        {% if is_state(area_sensor, "off") %}
+          {% set starts_in = timedelta(minutes=state_attr(area_sensor, "starts_in")).total_seconds() | int // 60 %}
+          {% set mins = starts_in % 60 %}
+          {% set hrs = starts_in // 60 % 24 %}
+          {% set days = starts_in // 1440 %}
+          {% set alert = "Load Shedding starts in {d}d {h}h {m}m ({next})".format(d=days, m=mins, h=hrs, next=as_timestamp(start_time) | timestamp_custom("%H:%M", True)) %}
+          {% if starts_in > 1440 %}
+            <ha-alert alert-type="success">{{ states(stage_sensor) }}</ha-alert>
+          {% elif 60 < starts_in <= 1440 %}
+            <ha-alert alert-type="warning">{{ alert }}</ha-alert>
+          {% else %}
+            <ha-alert alert-type="error">{{ alert }}</ha-alert>
+          {% endif %}
+        {% else %}
+          {% set ends_in = timedelta(minutes=state_attr(area_sensor, "ends_in")).total_seconds() | int // 60 %}
+            {% set mins = ends_in % 60 %}
+            {% set hrs = ends_in // 60 % 24 %}
+            {% set days = ends_in // 1440 %}
+            {% set alert = "Load Shedding ends in {d}d {h}h {m}m ({next})".format(d=days, m=mins, h=hrs, next=as_timestamp(end_time) | timestamp_custom("%H:%M", True)) %}
+            <ha-alert alert-type="error">{{ alert }}</ha-alert>
+        {% endif %}
+      {% else %}
+        {% set stage = state_attr(stage_sensor, "next_stage") %}
+        {% set start_time = state_attr(stage_sensor, "next_start_time") %}
+        {% set end_time = state_attr(stage_sensor, "next_end_time") %}
+        {% set starts_in = timedelta(minutes=state_attr(stage_sensor, "starts_in")).total_seconds() | int // 60 %}
+        {% set mins = starts_in % 60 %}
+        {% set hrs = starts_in // 60 % 24 %}
+        {% set days = starts_in // 1440 %}
+        {% if (start_time == 0 or end_time == 0) %}
+        {% set alert = "No Load Shedding" %}
+        {% else %}
+        {% set alert = "Stage {stage} starts in {d}d {h}h {m}m ({next})".format(stage=stage, d=days, m=mins, h=hrs, next=as_timestamp(start_time) | timestamp_custom("%H:%M", True)) %}
+        {% endif %}
+        <ha-alert alert-type="success">{{ alert }}</ha-alert>
+      {% endif %}{% set area_forecast = state_attr(area_sensor, "forecast" )%}
+      {% if area_forecast %} <table width="100%"  border=0>
+        <tbody>
+        {% for forecast in area_forecast[:3] %}
+        <tr>
+          <td align="left">
+          {{ as_timestamp(forecast.start_time) | timestamp_custom("%-d %B", True) }}
+          </td>
+          <td align="left">
+          {{ as_timestamp(forecast.start_time) | timestamp_custom("%H:%M", True) }} - {{ as_timestamp(forecast.end_time) | timestamp_custom("%H:%M", True) }}
+          </td>
+          <td align="right">{{ forecast.stage }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table> {% endif %}
+
+
+      {% set soc1 = states('sensor.soc_battery_time_left_friendly') %}
+
+      {% set load1 = states('sensor.sunsynk_load_power') %}
+
+      {% set socsec1 = states('sensor.soc_battery_time_left') | int %}
+
+      {% set state = states('sensor.sunsynk_battery_power') | int %}
+
+      {% if state <= 0 -%}
+        <ha-alert alert-type="success">{{ soc1 }} to {{states('sensor.markdown_battery_charge_time_left')}}%</ha-alert>
+      {% else %}
+        {% if socsec1 > 21601 %}
+        <ha-alert alert-type="success"> Battery runtime to {{states('sensor.battery_cap')}}% is {{ soc1 }} at current ({{state}} W) battery load. ETA@{{states('sensor.markdown_discharge_time')}}</ha-alert>
+        {% elif 10800 < socsec1 <= 21600 %}
+        <ha-alert alert-type="warning">Battery runtime to {{states('sensor.battery_cap')}}% is {{ soc1 }} at current ({{state}} W) battery load. ETA@{{states('sensor.markdown_discharge_time')}}</ha-alert>     
+        {% elif socsec1 <= 10800 %}
+        <ha-alert alert-type="error"> Battery runtime to {{states('sensor.battery_cap')}}% is {{ soc1 }} at current ({{state}} W) battery load. ETA@{{states('sensor.markdown_discharge_time')}}</ha-alert>
+        {% endif %}
+      {% endif %}
+    view_layout:
+      grid-area: ls
+  - type: custom:flex-horseshoe-card
+    view_layout:
+      grid-area: g2
+    entities:
+      - entity: sensor.sunsynk_battery_soc
+        decimals: 0
+        unit: '%'
+        name: BATTERY
+      - entity: sensor.sunsynk_battery_voltage
+        decimals: 2
+        unit: V
+      - entity: sensor.sunsynk_battery_current
+        decimals: 2
+        unit: A
+      - entity: sensor.sunsynk_battery_power
+        decimals: 0
+        unit: W
+      - entity: sensor.sunsynk_day_battery_discharge
+        decimals: 2
+        unit: kWh
+        name: Discharge
+      - entity: sensor.sunsynk_day_battery_charge
+        decimals: 2
+        unit: kWh
+        name: Charge
+    show:
+      horseshoe_style: autominmax
+    layout:
+      hlines:
+        - id: 0
+          xpos: 50
+          ypos: 40
+          length: 70
+          styles:
+            - opacity: 0.2;
+        - id: 0
+          xpos: 50
+          ypos: 60
+          length: 70
+          styles:
+            - opacity: 0.2;
+      vlines:
+        - id: 0
+          xpos: 50
+          ypos: 50
+          length: 18
+          styles:
+            - opacity: 0.2;
+      states:
+        - id: 0
+          entity_index: 0
+          xpos: 50
+          ypos: 33
+          styles:
+            - font-size: 3em;
+            - opacity: 0.9;
+        - id: 1
+          entity_index: 1
+          xpos: 44
+          ypos: 53
+          styles:
+            - font-size: 1.5em;
+            - text-anchor: end;
+        - id: 2
+          entity_index: 2
+          xpos: 55
+          ypos: 53
+          styles:
+            - text-anchor: start;
+            - font-size: 1.5em;
+        - id: 3
+          entity_index: 3
+          xpos: 50
+          ypos: 75
+          styles:
+            - text-anchor: middle;
+            - font-size: 2em;
+        - id: 4
+          entity_index: 4
+          xpos: 76
+          ypos: 7
+          styles:
+            - text-anchor: start;
+            - font-size: 1.2em;
+        - id: 5
+          entity_index: 5
+          xpos: 0
+          ypos: 7
+          styles:
+            - text-anchor: start;
+            - font-size: 1.2em;
+      icons:
+        - id: 0
+          entity_index: 1
+          xpos: 30
+          ypos: 52
+          align: start
+          size: 1
+      names:
+        - id: 0
+          entity_index: 0
+          xpos: 50
+          ypos: 95
+          styles:
+            - font-size: 1.2em;
+        - id: 1
+          entity_index: 4
+          xpos: 81
+          ypos: 12
+          styles:
+            - font-size: 0.5em;
+            - text-anchor: start;
+        - id: 2
+          entity_index: 5
+          xpos: 0
+          ypos: 12
+          styles:
+            - font-size: 0.5em;
+            - text-anchor: start;
+    horseshoe_scale:
+      min: 0
+      max: 100
+      width: 6
+    color_stops:
+      '0': pink
+      '2000': pink
+    card_mod:
+      style: |
+        ha-card {
+          --ha-card-background: var(--card-background-color);
+          color: var(--primary-color);
+        }
+  - type: custom:plotly-graph
+    view_layout:
+      grid-area: sg
+    entities:
+      - entity: sensor.sunsynk_day_pv_energy_local
+        statistic: state
+        name: |
+          $fn ({ ys,meta }) =>
+            "Solar" + "🔆" + "(" +ys[ys.length - 1]+"kWh)"
+        period: day
+        type: bar
+        texttemplate: '%{y}'
+        filters:
+          - filter: i>0
+        marker:
+          color: rgb(255, 155, 48)
+      - entity: sensor.sunsynk_day_grid_import_energy_local
+        statistic: state
+        name: |
+          $fn ({ ys,meta }) =>
+            "Grid Import" + "💡" + "(" +ys[ys.length - 1]+"kWh)"
+        period: day
+        type: bar
+        texttemplate: '%{y}'
+        filters:
+          - filter: i>0
+        marker:
+          color: rgb(84, 144, 194)
+      - entity: sensor.sunsynk_day_load_energy_local
+        statistic: state
+        show_value: true
+        name: |
+          $fn ({ ys,meta }) =>
+            "Load" + "⚡" + "(" +ys[ys.length - 1]+"kWh)"
+        period: day
+        type: line
+        texttemplate: '%{y}'
+        line:
+          color: rgb(95, 182, 173)
+          width: 2
+    hours_to_show: 31d
+    title: null
+    refresh_interval: 600
+    defaults:
+      yaxes:
+        fixedrange: true
+    layout:
+      legend:
+        bgcolor: rgba(0,0,0,0)
+        itemsizing: constant
+        font:
+          size: 11
+        x: 0.4
+      height: 415
+      barmode: stack
+      xaxis:
+        rangeselector:
+          'y': 1.05
+          buttons:
+            - count: 7
+              step: day
+            - count: 31
+              step: day
+            - count: 90
+              step: day
+    config:
+      displayModeBar: false
+      scrollZoom: false
   - type: custom:plotly-graph
     view_layout:
       grid-area: m
