@@ -310,10 +310,12 @@ cards:
         fill: tozeroy
         filters:
           - fn: |
-              ({meta}) => ({
-                 xs: meta.wh_period.map(({ start }) => new Date(start)),
-                 ys: meta.wh_period.map(({ value }) => value),
-              })
+              ({meta}) => {
+                const entries = Object.entries(meta.wh_period); 
+                const xs = entries.map(([start, _]) => new Date(start));
+                const ys = entries.map(([_, value]) => value);
+                return { xs, ys };
+              }
         yaxis: y1
         showlegend: true
       - entity: sensor.energy_production_tomorrow_sum
@@ -323,10 +325,12 @@ cards:
         fill: tozeroy
         filters:
           - fn: |
-              ({meta}) => ({
-                 xs: meta.wh_period.map(({ start }) => new Date(start)),
-                 ys: meta.wh_period.map(({ value }) => value),
-              })
+              ({meta}) => {
+                const entries = Object.entries(meta.wh_period); 
+                const xs = entries.map(([start, _]) => new Date(start));
+                const ys = entries.map(([_, value]) => value);
+                return { xs, ys };
+              }
         yaxis: y1
       - entity: sensor.energy_production_d2_sum
         line:
@@ -335,10 +339,12 @@ cards:
         fill: tozeroy
         filters:
           - fn: |
-              ({meta}) => ({
-                 xs: meta.wh_period.map(({ start }) => new Date(start)),
-                 ys: meta.wh_period.map(({ value }) => value),
-              })
+              ({meta}) => {
+                const entries = Object.entries(meta.wh_period); 
+                const xs = entries.map(([start, _]) => new Date(start));
+                const ys = entries.map(([_, value]) => value);
+                return { xs, ys };
+              }
         yaxis: y1
         showlegend: true
       - entity: sensor.sunsynk_battery_soc
