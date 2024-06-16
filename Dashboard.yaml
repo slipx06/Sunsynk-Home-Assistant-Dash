@@ -464,7 +464,6 @@ cards:
         offset: $fn() => 1000*60*60*4.5
         texttemplate: '%{y}'
         filters:
-          - filter: i>0
           - force_numeric
         marker:
           color: rgb(255, 155, 48)
@@ -478,7 +477,6 @@ cards:
         width: $fn() => 1000*60*60*3
         offset: $fn() => 1000*60*60*7.5
         filters:
-          - filter: i>0
           - force_numeric
         texttemplate: '%{y}'
         marker:
@@ -494,7 +492,6 @@ cards:
         offset: $fn() => 1000*60*60*10.5
         texttemplate: '%{y}'
         filters:
-          - filter: i>0
           - force_numeric
         marker:
           color: rgb(84, 144, 194)
@@ -509,7 +506,6 @@ cards:
         offset: $fn() => 1000*60*60*13.5
         texttemplate: '%{y}'
         filters:
-          - filter: i>0
           - force_numeric
         marker:
           color: rgb(151, 90, 182)
@@ -524,7 +520,6 @@ cards:
         offset: $fn() => 1000*60*60*16.5
         texttemplate: '%{y}'
         filters:
-          - filter: i>0
           - force_numeric
         marker:
           color: yellow
@@ -1076,89 +1071,113 @@ cards:
           --ha-card-background: var(--card-background-color);
           color: var(--primary-color); 
         }
-  - type: markdown
-    content: >-
-      {% set stage_sensor = "sensor.load_shedding_stage_eskom" %} {% set
-      area_sensor =
-      "sensor.load_shedding_area_jhbcitypower3_5_noordhangext49505154586778" %}
-      {% set area_schedule = state_attr(area_sensor, "forecast") %} {% if
-      area_schedule %}
-        {% set start_time = area_schedule[0].start_time %}
-        {% set end_time = area_schedule[0].end_time %}
-        {% if is_state(area_sensor, "off") %}
-          {% set starts_in = timedelta(minutes=state_attr(area_sensor, "starts_in")).total_seconds() | int // 60 %}
-          {% set mins = starts_in % 60 %}
-          {% set hrs = starts_in // 60 % 24 %}
-          {% set days = starts_in // 1440 %}
-          {% set alert = "Load Shedding starts in {d}d {h}h {m}m ({next})".format(d=days, m=mins, h=hrs, next=as_timestamp(start_time) | timestamp_custom("%H:%M", True)) %}
-          {% if starts_in > 1440 %}
-            <ha-alert alert-type="success">{{ states(stage_sensor) }}</ha-alert>
-          {% elif 60 < starts_in <= 1440 %}
-            <ha-alert alert-type="warning">{{ alert }}</ha-alert>
-          {% else %}
-            <ha-alert alert-type="error">{{ alert }}</ha-alert>
-          {% endif %}
-        {% else %}
-          {% set ends_in = timedelta(minutes=state_attr(area_sensor, "ends_in")).total_seconds() | int // 60 %}
-            {% set mins = ends_in % 60 %}
-            {% set hrs = ends_in // 60 % 24 %}
-            {% set days = ends_in // 1440 %}
-            {% set alert = "Load Shedding ends in {d}d {h}h {m}m ({next})".format(d=days, m=mins, h=hrs, next=as_timestamp(end_time) | timestamp_custom("%H:%M", True)) %}
-            <ha-alert alert-type="error">{{ alert }}</ha-alert>
-        {% endif %}
-      {% else %}
-        {% set stage = state_attr(stage_sensor, "next_stage") %}
-        {% set start_time = state_attr(stage_sensor, "next_start_time") %}
-        {% set end_time = state_attr(stage_sensor, "next_end_time") %}
-        {% set starts_in = timedelta(minutes=state_attr(stage_sensor, "starts_in")).total_seconds() | int // 60 %}
-        {% set mins = starts_in % 60 %}
-        {% set hrs = starts_in // 60 % 24 %}
-        {% set days = starts_in // 1440 %}
-        {% if (start_time == 0 or end_time == 0) %}
-        {% set alert = "No Load Shedding" %}
-        {% else %}
-        {% set alert = "Stage {stage} starts in {d}d {h}h {m}m ({next})".format(stage=stage, d=days, m=mins, h=hrs, next=as_timestamp(start_time) | timestamp_custom("%H:%M", True)) %}
-        {% endif %}
-        <ha-alert alert-type="success">{{ alert }}</ha-alert>
-      {% endif %}{% set area_forecast = state_attr(area_sensor, "forecast" )%}
-      {% if area_forecast %} <table width="100%"  border=0>
-        <tbody>
-        {% for forecast in area_forecast[:3] %}
-        <tr>
-          <td align="left">
-          {{ as_timestamp(forecast.start_time) | timestamp_custom("%-d %B", True) }}
-          </td>
-          <td align="left">
-          {{ as_timestamp(forecast.start_time) | timestamp_custom("%H:%M", True) }} - {{ as_timestamp(forecast.end_time) | timestamp_custom("%H:%M", True) }}
-          </td>
-          <td align="right">{{ forecast.stage }}</td>
-        </tr>
-        {% endfor %}
-        </tbody>
-      </table> {% endif %}
-
-
-      {% set soc1 = states('sensor.soc_battery_time_left_friendly') %}
-
-      {% set load1 = states('sensor.sunsynk_load_power') %}
-
-      {% set socsec1 = states('sensor.soc_battery_time_left') | int %}
-
-      {% set state = states('sensor.sunsynk_battery_power') | int %}
-
-      {% if state <= 0 -%}
-        <ha-alert alert-type="success">{{ soc1 }} to {{states('sensor.markdown_battery_charge_time_left')}}%</ha-alert>
-      {% else %}
-        {% if socsec1 > 21601 %}
-        <ha-alert alert-type="success"> Battery runtime to {{states('sensor.battery_cap')}}% is {{ soc1 }} at current ({{state}} W) battery load. ETA@{{states('sensor.markdown_discharge_time')}}</ha-alert>
-        {% elif 10800 < socsec1 <= 21600 %}
-        <ha-alert alert-type="warning">Battery runtime to {{states('sensor.battery_cap')}}% is {{ soc1 }} at current ({{state}} W) battery load. ETA@{{states('sensor.markdown_discharge_time')}}</ha-alert>     
-        {% elif socsec1 <= 10800 %}
-        <ha-alert alert-type="error"> Battery runtime to {{states('sensor.battery_cap')}}% is {{ soc1 }} at current ({{state}} W) battery load. ETA@{{states('sensor.markdown_discharge_time')}}</ha-alert>
-        {% endif %}
-      {% endif %}
+  - type: custom:plotly-graph
     view_layout:
-      grid-area: ls
+      grid-area: energy
+    hours_to_show: current_day
+    title: System Timer
+    time_offset: 1h
+    refresh_interval: auto
+    fn: |
+      $fn({hass, vars}) => {
+        vars.computeAll = () => {
+          const timeSlots = [
+            {start: 1, end: 2, cap: 1},
+            {start: 2, end: 3, cap: 2},
+            {start: 3, end: 4, cap: 3},
+            {start: 4, end: 5, cap: 4},
+            {start: 5, end: 6, cap: 5},
+            {start: 6, end: 1, cap: 6}
+          ];
+
+          const now = new Date();
+          const xs = [];
+          const ys = [];
+
+          timeSlots.forEach(({start, end, cap}) => {
+            const startTimeString = hass.states[`sensor.ss_prog${start}_time`].state;
+            const endTimeString = hass.states[`sensor.ss_prog${end}_time`].state;
+            const capacity = parseFloat(hass.states[`number.sunsynk_prog${cap}_capacity`].state);
+
+            const [startHours, startMinutes] = startTimeString.split(':').map(Number);
+            const [endHours, endMinutes] = endTimeString.split(':').map(Number);
+
+            const startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHours, startMinutes);
+            let endTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), endHours, endMinutes);
+
+            if (endTime < startTime) {
+              endTime.setDate(endTime.getDate() + 1);
+            }
+
+            xs.push(startTime, endTime);
+            ys.push(capacity, capacity);
+          });
+
+          return { xs, ys };
+        }
+      }
+    entities:
+      - entity: sensor.sunsynk_battery_soc
+        name: |
+          $fn ({ ys,meta }) =>
+            "SOC" + "🔋" + "(" +ys[ys.length - 1]+"%)"
+        line:
+          color: red
+          shape: spline
+          width: 1
+        fillcolor: rgba(255,0,0, 0.3)
+        show_value: true
+        texttemplate: '%{y}'
+      - entity: sensor.sunsynk_solar_power
+        name: |
+          $fn ({ ys,meta }) =>
+            "Solar" + "🔆" + "(" +ys[ys.length - 1]+"W)"
+        line:
+          color: rgb(255, 155, 48)
+          shape: spline
+          width: 1
+        fill: tozeroy
+        fillcolor: rgba(255, 155, 48, 0.3)
+        yaxis: y2
+        show_value: false
+        showlegend: true
+      - entity: sensor.sunsynk_grid_ct_power
+        name: |
+          $fn ({ ys,meta }) =>
+            "Grid" + "💡" + "(" +ys[ys.length - 1]+"W)"
+        fill: tozeroy
+        line:
+          color: rgb(84, 144, 194)
+      - entity: sensor.sunsynk_combined_capacity
+        name: |
+          $fn ({ ys, meta }) =>
+            "Prog Capacity"
+        line:
+          color: rgb(30, 144, 255)
+          width: 2
+        fillcolor: rgba(30, 144, 255, 0.6)
+        show_value: true
+        unit_of_measurement: '%'
+        filters:
+          - fn: ({ vars }) => vars.computeAll()
+    layout:
+      showlegend: true
+      yaxis:
+        nticks: 20
+        range:
+          - 0
+          - 105
+        fixedrange: true
+      yaxis2:
+        range:
+          - 0
+          - 6600
+        fixedrange: true
+      xaxis:
+        nticks: 9
+        tickangle: 0
+    config:
+      scrollZoom: false
   - type: custom:flex-horseshoe-card
     view_layout:
       grid-area: g2
@@ -1449,10 +1468,89 @@ cards:
       displayModeBar: false
       scrollZoom: false
     time_offset: 1M
-  - type: energy-distribution
+  - type: markdown
+    content: >-
+      {% set stage_sensor = "sensor.load_shedding_stage_eskom" %} {% set
+      area_sensor =
+      "sensor.load_shedding_area_jhbcitypower3_5_noordhangext49505154586778" %}
+      {% set area_schedule = state_attr(area_sensor, "forecast") %} {% if
+      area_schedule %}
+        {% set start_time = area_schedule[0].start_time %}
+        {% set end_time = area_schedule[0].end_time %}
+        {% if is_state(area_sensor, "off") %}
+          {% set starts_in = timedelta(minutes=state_attr(area_sensor, "starts_in")).total_seconds() | int // 60 %}
+          {% set mins = starts_in % 60 %}
+          {% set hrs = starts_in // 60 % 24 %}
+          {% set days = starts_in // 1440 %}
+          {% set alert = "Load Shedding starts in {d}d {h}h {m}m ({next})".format(d=days, m=mins, h=hrs, next=as_timestamp(start_time) | timestamp_custom("%H:%M", True)) %}
+          {% if starts_in > 1440 %}
+            <ha-alert alert-type="success">{{ states(stage_sensor) }}</ha-alert>
+          {% elif 60 < starts_in <= 1440 %}
+            <ha-alert alert-type="warning">{{ alert }}</ha-alert>
+          {% else %}
+            <ha-alert alert-type="error">{{ alert }}</ha-alert>
+          {% endif %}
+        {% else %}
+          {% set ends_in = timedelta(minutes=state_attr(area_sensor, "ends_in")).total_seconds() | int // 60 %}
+            {% set mins = ends_in % 60 %}
+            {% set hrs = ends_in // 60 % 24 %}
+            {% set days = ends_in // 1440 %}
+            {% set alert = "Load Shedding ends in {d}d {h}h {m}m ({next})".format(d=days, m=mins, h=hrs, next=as_timestamp(end_time) | timestamp_custom("%H:%M", True)) %}
+            <ha-alert alert-type="error">{{ alert }}</ha-alert>
+        {% endif %}
+      {% else %}
+        {% set stage = state_attr(stage_sensor, "next_stage") %}
+        {% set start_time = state_attr(stage_sensor, "next_start_time") %}
+        {% set end_time = state_attr(stage_sensor, "next_end_time") %}
+        {% set starts_in = timedelta(minutes=state_attr(stage_sensor, "starts_in")).total_seconds() | int // 60 %}
+        {% set mins = starts_in % 60 %}
+        {% set hrs = starts_in // 60 % 24 %}
+        {% set days = starts_in // 1440 %}
+        {% if (start_time == 0 or end_time == 0) %}
+        {% set alert = "No Load Shedding" %}
+        {% else %}
+        {% set alert = "Stage {stage} starts in {d}d {h}h {m}m ({next})".format(stage=stage, d=days, m=mins, h=hrs, next=as_timestamp(start_time) | timestamp_custom("%H:%M", True)) %}
+        {% endif %}
+        <ha-alert alert-type="success">{{ alert }}</ha-alert>
+      {% endif %}{% set area_forecast = state_attr(area_sensor, "forecast" )%}
+      {% if area_forecast %} <table width="100%"  border=0>
+        <tbody>
+        {% for forecast in area_forecast[:3] %}
+        <tr>
+          <td align="left">
+          {{ as_timestamp(forecast.start_time) | timestamp_custom("%-d %B", True) }}
+          </td>
+          <td align="left">
+          {{ as_timestamp(forecast.start_time) | timestamp_custom("%H:%M", True) }} - {{ as_timestamp(forecast.end_time) | timestamp_custom("%H:%M", True) }}
+          </td>
+          <td align="right">{{ forecast.stage }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table> {% endif %}
+
+
+      {% set soc1 = states('sensor.soc_battery_time_left_friendly') %}
+
+      {% set load1 = states('sensor.sunsynk_load_power') %}
+
+      {% set socsec1 = states('sensor.soc_battery_time_left') | int %}
+
+      {% set state = states('sensor.sunsynk_battery_power') | int %}
+
+      {% if state <= 0 -%}
+        <ha-alert alert-type="success">{{ soc1 }} to {{states('sensor.markdown_battery_charge_time_left')}}%</ha-alert>
+      {% else %}
+        {% if socsec1 > 21601 %}
+        <ha-alert alert-type="success"> Battery runtime to {{states('sensor.battery_cap')}}% is {{ soc1 }} at current ({{state}} W) battery load. ETA@{{states('sensor.markdown_discharge_time')}}</ha-alert>
+        {% elif 10800 < socsec1 <= 21600 %}
+        <ha-alert alert-type="warning">Battery runtime to {{states('sensor.battery_cap')}}% is {{ soc1 }} at current ({{state}} W) battery load. ETA@{{states('sensor.markdown_discharge_time')}}</ha-alert>     
+        {% elif socsec1 <= 10800 %}
+        <ha-alert alert-type="error"> Battery runtime to {{states('sensor.battery_cap')}}% is {{ soc1 }} at current ({{state}} W) battery load. ETA@{{states('sensor.markdown_discharge_time')}}</ha-alert>
+        {% endif %}
+      {% endif %}
     view_layout:
-      grid-area: energy
-    link_dashboard: true
+      grid-area: ls
 layout:
   grid-template-columns: 10% 10% 10% 10% 10% 10% 10% 10% 10% 10%
   grid-template-rows: auto 2fr auto auto auto auto auto
