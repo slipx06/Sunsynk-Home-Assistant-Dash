@@ -454,89 +454,55 @@ cards:
       grid-area: total
     entities:
       - entity: sensor.sunsynk_total_pv_energy
-        statistic: state
         name: |
           $fn ({ ys,meta }) =>
             "Solar" + "🔆" + "(" +ys[ys.length - 1]+"kWh)"
-        period: day
-        type: bar
-        width: $fn() => 1000*60*60*3
         offset: $fn() => 1000*60*60*4.5
-        texttemplate: '%{y}'
-        filters:
-          - force_numeric
         marker:
           color: rgb(255, 155, 48)
       - entity: sensor.sunsynk_total_load_energy
-        statistic: state
         name: |
           $fn ({ ys,meta }) =>
             "Load" + "⚡" + "(" +ys[ys.length - 1]+"kWh)"
-        period: day
-        type: bar
-        width: $fn() => 1000*60*60*3
         offset: $fn() => 1000*60*60*7.5
-        filters:
-          - force_numeric
-        texttemplate: '%{y}'
         marker:
           color: rgb(95, 182, 173)
       - entity: sensor.sunsynk_total_grid_import
-        statistic: state
         name: |
           $fn ({ ys,meta }) =>
             "Grid Import" + "💡" + "(" +ys[ys.length - 1]+"kWh)"
-        period: day
-        type: bar
-        width: $fn() => 1000*60*60*3
         offset: $fn() => 1000*60*60*10.5
-        texttemplate: '%{y}'
-        filters:
-          - force_numeric
         marker:
           color: rgb(84, 144, 194)
       - entity: sensor.sunsynk_total_battery_discharge
-        statistic: state
         name: |
           $fn ({ ys,meta }) =>
             "Bat Discharge" + "🖱️" + "(" +ys[ys.length - 1]+"kWh)"
-        period: day
-        type: bar
-        width: $fn() => 1000*60*60*3
         offset: $fn() => 1000*60*60*13.5
-        texttemplate: '%{y}'
-        filters:
-          - force_numeric
         marker:
           color: rgb(151, 90, 182)
       - entity: sensor.sunsynk_total_battery_charge
-        statistic: state
         name: |
           $fn ({ ys,meta }) =>
             "Bat Charge" + "🔋" + "(" +ys[ys.length - 1]+"kWh)"
-        period: day
-        type: bar
-        width: $fn() => 1000*60*60*3
         offset: $fn() => 1000*60*60*16.5
-        texttemplate: '%{y}'
-        filters:
-          - force_numeric
         marker:
           color: yellow
     hours_to_show: current_day
     defaults:
       entity:
-        line:
-          width: 2
+        statistic: state
+        period: day
+        type: bar
+        width: $fn() => 1000*60*60*3
+        texttemplate: '%{y}'
       yaxes:
         fixedrange: true
     title: null
     layout:
-      barmode: group
       xaxis:
         nticks: 1
       height: 410
-    time_offset: '-1m'
     config:
       displayModeBar: false
       scrollZoom: false
