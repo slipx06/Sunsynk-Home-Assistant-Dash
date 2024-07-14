@@ -1395,7 +1395,6 @@ cards:
           $fn ({ ys,meta }) =>
             "Solar" + "🔆" + "(" +ys[ys.length - 1]+"kWh)"
         type: bar
-        texttemplate: '%{y}'
         filters:
           - filter: i>0
         marker:
@@ -1405,7 +1404,6 @@ cards:
           $fn ({ ys,meta }) =>
             "Grid Import" + "💡" + "(" +ys[ys.length - 1]+"kWh)"
         type: bar
-        texttemplate: '%{y}'
         filters:
           - filter: i>0
         marker:
@@ -1416,7 +1414,6 @@ cards:
           $fn ({ ys,meta }) =>
             "Load" + "⚡" + "(" +ys[ys.length - 1]+"kWh)"
         type: line
-        texttemplate: '%{y}'
         line:
           color: rgb(95, 182, 173)
           width: 2
@@ -1427,6 +1424,7 @@ cards:
       entity:
         statistic: state
         period: day
+        texttemplate: '%{y}'
       yaxes:
         fixedrange: true
     fn: |
