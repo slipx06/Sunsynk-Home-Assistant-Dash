@@ -215,28 +215,24 @@ cards:
         marker:
           color: rgb(255, 155, 48)
       - entity: sensor.sunsynk_day_load_energy_local
-        statistic: state
         name: |
           $fn ({ ys,meta }) =>
             "Load" + "⚡" + "(" +ys[ys.length - 1]+"kWh)"
         marker:
           color: rgb(95, 182, 173)
       - entity: sensor.sunsynk_day_grid_import_energy_local
-        statistic: state
         name: |
           $fn ({ ys,meta }) =>
             "Grid Import" + "💡" + "(" +ys[ys.length - 1]+"kWh)"
         marker:
           color: rgb(84, 144, 194)
       - entity: sensor.sunsynk_day_battery_discharge_energy_local
-        statistic: state
         name: |
           $fn ({ ys,meta }) =>
             "Battery Discharge" + "🖱️" + "(" +ys[ys.length - 1]+"kWh)"
         marker:
           color: rgb(151, 90, 182)
       - entity: sensor.sunsynk_day_battery_charge_energy_local
-        statistic: state
         name: |
           $fn ({ ys,meta }) =>
             "Battery Charge" + "🔋" + "(" +ys[ys.length - 1]+"kWh)"
@@ -1321,11 +1317,9 @@ cards:
       grid-area: sg
     entities:
       - entity: sensor.sunsynk_day_pv_energy_local
-        statistic: state
         name: |
           $fn ({ ys,meta }) =>
             "Solar" + "🔆" + "(" +ys[ys.length - 1]+"kWh)"
-        period: day
         type: bar
         texttemplate: '%{y}'
         filters:
@@ -1333,11 +1327,9 @@ cards:
         marker:
           color: rgb(255, 155, 48)
       - entity: sensor.sunsynk_day_grid_import_energy_local
-        statistic: state
         name: |
           $fn ({ ys,meta }) =>
             "Grid Import" + "💡" + "(" +ys[ys.length - 1]+"kWh)"
-        period: day
         type: bar
         texttemplate: '%{y}'
         filters:
@@ -1345,12 +1337,10 @@ cards:
         marker:
           color: rgb(84, 144, 194)
       - entity: sensor.sunsynk_day_load_energy_local
-        statistic: state
         show_value: true
         name: |
           $fn ({ ys,meta }) =>
             "Load" + "⚡" + "(" +ys[ys.length - 1]+"kWh)"
-        period: day
         type: line
         texttemplate: '%{y}'
         line:
@@ -1361,6 +1351,7 @@ cards:
     refresh_interval: 600
     defaults:
       entity:
+        statistic: state
         period: day
       yaxes:
         fixedrange: true
