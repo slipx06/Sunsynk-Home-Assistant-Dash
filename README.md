@@ -13,7 +13,7 @@ Cards:
 Integrations:
 
  - Load Shedding (https://github.com/wernerhp/ha.integration.load_shedding)
- - Solcast (https://github.com/oziee/ha-solcast-solar)
+ - HA Open-Meteo Solar Forecast Integration ([https://github.com/oziee/ha-solcast-solar](https://github.com/rany2/ha-open-meteo-solar-forecast))
 
 ## Screenshots
 
