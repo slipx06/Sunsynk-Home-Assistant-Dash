@@ -221,7 +221,7 @@ cards:
             "Load" + "⚡" + "(" +ys[ys.length - 1]+"kWh)"
         marker:
           color: rgb(95, 182, 173)
-      - entity: sensor.sunsynk_day_grid_import
+      - entity: sensor.sunsynk_day_grid_import_energy_local
         statistic: state
         name: |
           $fn ({ ys,meta }) =>
@@ -1332,7 +1332,7 @@ cards:
           - filter: i>0
         marker:
           color: rgb(255, 155, 48)
-      - entity: sensor.sunsynk_day_grid_import
+      - entity: sensor.sunsynk_day_grid_import_energy_local
         statistic: state
         name: |
           $fn ({ ys,meta }) =>
