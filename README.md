@@ -19,9 +19,10 @@ Integrations:
 ## Screenshots
 
 ![image](https://github.com/slipx06/Sunsynk-Home-Assistant-Dash/assets/7227275/b8ca11e9-bfeb-4304-81f2-5eb8f9586152)
-![image](https://github.com/slipx06/Sunsynk-Home-Assistant-Dash/assets/7227275/7bb47ce1-5a02-42b6-9f19-66b30713a1c8)
-![image](https://github.com/slipx06/Sunsynk-Home-Assistant-Dash/assets/7227275/10f55ea5-4876-4839-af09-5de1ca3a7967)
-![image](https://github.com/slipx06/Sunsynk-Home-Assistant-Dash/assets/7227275/2bf9c6b5-3105-400a-bfd0-89f3f8dbc722)
+![image](https://github.com/user-attachments/assets/a684a3e9-18c0-4e45-8eae-5aed999e6ebc)
+![image](https://github.com/user-attachments/assets/851b7712-ba32-4001-8deb-0cdd66bae718)
+![image](https://github.com/user-attachments/assets/0a072c03-7d62-485c-8ee4-fe987d8afdde)
+
 
 ## Installation
 Data can be collected from the inverter using the RS485 port. There are a number of different ways to do this but I'm using an ESP32 chip running ESPHome (See [ESPHome-1P-Sunsynk-Deye.yaml](https://github.com/slipx06/Sunsynk-Home-Assistant-Dash/blob/main/ESPHome-1P-Sunsynk-Deye.yaml))
