@@ -285,35 +285,27 @@ cards:
     layout:
       updatemenus:
         - buttons:
-            - $fn({vars}) => vars.scroll( '<', -.5)
-            - $fn({vars}) => vars.scroll( '>', .5)
-          direction: right
+            - $fn({vars}) => vars.zoom( '30d', 24*30)
+            - $fn({vars}) => vars.zoom( '14d', 24*14)
+            - $fn({vars}) => vars.zoom( '7d', 24*7)
+            - $fn({vars}) => vars.scroll( ' <', -.5)
+            - $fn({vars}) => vars.scroll( ' >', .5)
+          direction: null
           active: -1
           pad:
             r: 10
             t: 10
           type: buttons
           x: 1
-          xanchor: right
-          'y': 1.25
-          yanchor: top
-        - buttons:
-            - $fn({vars}) => vars.zoom( '90d', 24*90)
-            - $fn({vars}) => vars.zoom( '30d', 24*30)
-            - $fn({vars}) => vars.zoom( '7d', 24*7)
-          direction: right
-          active: -1
-          pad:
-            r: 10
-            t: 10
-          type: buttons
-          x: 0
-          xanchor: left
-          'y': 1.25
-          yanchor: top
+          xanchor: auto
+          'y': 1
+          yanchor: auto
       legend:
         bgcolor: rgba(0,0,0,0)
-        itemsizing: constant
+        yanchor: bottom
+        xanchor: left
+        x: 0
+        'y': 1
         font:
           size: 11
       height: 410
