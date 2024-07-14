@@ -9,7 +9,6 @@ Cards:
  - Sunsynk Power Flow Card (https://github.com/slipx06/Sunsynk-Home-Assistant-Power-Flow-Card)
  - Layout Card (https://github.com/thomasloven/lovelace-layout-card)
  - Plotly Graph Card (https://github.com/dbuezas/lovelace-plotly-graph-card)
- - ApexCharts Card (https://github.com/RomRider/apexcharts-card)
 
 Integrations:
 
