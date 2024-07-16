@@ -1171,8 +1171,8 @@ cards:
           const ys = [];
 
           timeSlots.forEach(({start, end, cap}) => {
-            const startTimeString = hass.states[`sensor.ss_prog${start}_time`].state;
-            const endTimeString = hass.states[`sensor.ss_prog${end}_time`].state;
+            const startTimeString = hass.states[`sensor.sunsynk_time_slot_${start}`].state;
+            const endTimeString = hass.states[`sensor.sunsynk_time_slot_${end}`].state;
             const capacity = parseFloat(hass.states[`number.sunsynk_prog${cap}_capacity`].state);
 
             const [startHours, startMinutes] = startTimeString.split(':').map(Number);
