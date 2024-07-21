@@ -331,7 +331,7 @@ cards:
         yaxis: y3
         show_value: false
         showlegend: false
-      - entity: sensor.energy_production_today_sum
+      - entity: sensor.energy_production_today
         line:
           color: rgb(125, 125, 125)
           shape: spline
@@ -346,7 +346,7 @@ cards:
               }
         yaxis: y1
         showlegend: true
-      - entity: sensor.energy_production_tomorrow_sum
+      - entity: sensor.energy_production_tomorrow
         line:
           color: rgb(90,90,90)
           shape: spline
@@ -360,7 +360,7 @@ cards:
                 return { xs, ys };
               }
         yaxis: y1
-      - entity: sensor.energy_production_d2_sum
+      - entity: sensor.energy_production_d2
         line:
           color: rgb(50,50,50)
           shape: spline
