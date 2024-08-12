@@ -555,7 +555,7 @@ cards:
     hours_to_show: 1
     refresh_interval: auto
     layout:
-      height: 400
+      height: 390
       margin:
         t: 60
       showlegend: false
