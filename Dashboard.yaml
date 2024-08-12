@@ -1474,7 +1474,7 @@ cards:
           'y': 1.25
           yanchor: top
         - buttons:
-            - $fn({vars}) => vars.zoom( '90d', 24*365)
+            - $fn({vars}) => vars.zoom( '90d', 24*90)
             - $fn({vars}) => vars.zoom( '30d', 24*30)
             - $fn({vars}) => vars.zoom( '7d', 24*7)
           direction: right
