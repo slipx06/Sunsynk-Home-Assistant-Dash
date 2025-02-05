@@ -1,5 +1,5 @@
 # Sunsynk / Deye / Inverter Home Assistant Dashboard
-Home Assistant Dashboard to display Inverter data and Energy Usage
+Home Assistant Dashboard to display Inverter data and Energy Usage.
 
 Requires the following: 
 
@@ -33,6 +33,10 @@ Create a new view on your current Dashboard and set the view type to Panel (1 ca
 
 You can then edit the Dashboard (using the code editor) and paste the contents of the Dashboard.
 You'll need to adjust all the sensor names to match yours and install the necessary custom components. 
+
+## Demo
+
+![layout_card](https://github.com/user-attachments/assets/f44a7c36-72dc-47ae-bf40-84419f4b3dfc)
 
 ## Additional Info
 Added remaining battery time. You will need to add the following template sensor
