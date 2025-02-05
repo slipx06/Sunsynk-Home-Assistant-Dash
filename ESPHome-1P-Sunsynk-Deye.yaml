@@ -214,6 +214,7 @@ sensor:
     unit_of_measurement: "W"
     accuracy_decimals: 0
     device_class: power
+    state_class: measurement
     value_type: S_WORD
 
   - platform: modbus_controller            # Battery Power Charge only needed if you want to calculate Daily Energy Totals using ESPHome
@@ -225,6 +226,7 @@ sensor:
     unit_of_measurement: "W"
     accuracy_decimals: 0
     device_class: power
+    state_class: measurement
     value_type: S_WORD
     internal: true
     lambda: |-
@@ -239,6 +241,7 @@ sensor:
     unit_of_measurement: "W"
     accuracy_decimals: 0
     device_class: power
+    state_class: measurement
     value_type: S_WORD
     internal: true
     lambda: |-
@@ -410,6 +413,7 @@ sensor:
     unit_of_measurement: "W"
     accuracy_decimals: 0
     device_class: power
+    state_class: measurement
     value_type: S_WORD
 
   - platform: modbus_controller            # 154 Inverter Voltage
@@ -494,10 +498,10 @@ sensor:
     state_class: measurement
     value_type: S_WORD
 
-  - platform: modbus_controller            # 167 Grid LD Power
+  - platform: modbus_controller            # 167 Grid L1 Power
     modbus_controller_id: inverter
-    name: "${friendly_name} Grid LD Power 167"
-    id: inverter_esphome_grid_power_167
+    name: "${friendly_name} Grid L1 Power"
+    id: inverter_esphome_grid_power_l1_167
     register_type: holding
     address: 167
     unit_of_measurement: "W"
@@ -508,8 +512,8 @@ sensor:
 
   - platform: modbus_controller            # 168 Grid L2 Power
     modbus_controller_id: inverter
-    name: "${friendly_name} Grid L2 Power 168"
-    id: inverter_esphome_grid_power_168
+    name: "${friendly_name} Grid L2 Power"
+    id: inverter_esphome_grid_power_l2_168
     register_type: holding
     address: 168
     unit_of_measurement: "W"
@@ -523,7 +527,7 @@ sensor:
     name: "${friendly_name} Grid Voltage"
     id: inverter_esphome_grid_voltage
     register_type: holding
-    address: 150
+    address: 152
     unit_of_measurement: "V"
     accuracy_decimals: 1
     device_class: voltage
@@ -793,7 +797,7 @@ sensor:
 
 ############################################### OUTPUTS ###############################################
 
-  - platform: modbus_controller            # 166 Aux Power
+  - platform: modbus_controller            # 166 Aux/Gen Power
     modbus_controller_id: inverter
     name: "${friendly_name} AUX Power"
     id: inverter_esphome_aux_power
