@@ -816,7 +816,7 @@ sensor:
     device_class: power
     state_class: measurement
     lambda: |-
-      return (id(inverter_esphome_inverter_power).state + id(inverter_esphome_grid_power_167).state - id(inverter_esphome_aux_power).state);
+      return (id(inverter_esphome_inverter_power).state + id(inverter_esphome_grid_power_l1_167).state - id(inverter_esphome_aux_power).state);
     update_interval: 5s
 
   - platform: template                     # Essential Power1 based on register 175 + 169 - 166
@@ -836,7 +836,7 @@ sensor:
     device_class: power
     state_class: measurement
     lambda: |-
-      return (id(inverter_esphome_grid_ct_power).state - id(inverter_esphome_grid_power_167).state);
+      return (id(inverter_esphome_grid_ct_power).state - id(inverter_esphome_grid_power_l1_167).state);
     update_interval: 5s
 
   - platform: template                     # Nonessential Power1 172 - 169
