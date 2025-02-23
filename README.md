@@ -1,4 +1,4 @@
-# Sunsynk / Deye / Inverter Home Assistant Dashboard
+# Sunsynk / Deye / Solark / Inverter Home Assistant Dashboard
 Home Assistant Dashboard to display Inverter data and Energy Usage.
 
 Requires the following: 
@@ -22,6 +22,29 @@ Integrations:
 ![image](https://github.com/user-attachments/assets/851b7712-ba32-4001-8deb-0cdd66bae718)
 ![image](https://github.com/user-attachments/assets/0a072c03-7d62-485c-8ee4-fe987d8afdde)
 
+## Hardware and Wiring Guide
+
+The only materials needed are an ESP board, an RS485 converter, and an ethernet cable. Because many of these inverters have onboard 12v power sources, I particularly like the m5 Stack combo
+
+Atom S3 Lite - [mfg site](https://shop.m5stack.com/products/atoms3-lite-esp32s3-dev-kit?srsltid=AfmBOorEAoHtHBL7ny-ol8aRGx2VlAXBf-xHIL8a4obhSonOer_3Is6N) [aliexpress](https://www.aliexpress.us/item/3256804991637877.html?spm=a2g0o.order_list.order_list_main.59.24f71802PmGMIF&gatewayAdapt=glo2usa)
+
+Atom tail485 - [mfg site](https://shop.m5stack.com/products/atom-tail485) [aliexpress](https://www.aliexpress.us/item/3256803111216893.html?spm=a2g0o.order_list.order_list_main.58.24f71802PmGMIF&gatewayAdapt=glo2usa).
+
+From [this page](https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/api-guides/current-consumption-measurement-modules.html) the max power consumption is <100mW, so if you already are using this for a RSD you may or may not be able to add an additional load.
+
+There is an extra RJ45 port on the inverter dedicated for monitoring. For the specific pin out please refer to your own inverter's instruction manual. For my Solark 15K, this is the pinout 
+
+![image](https://github.com/user-attachments/assets/539d831b-27da-40ab-a908-aa70a9f9d1f1)
+
+The only 2 wires needed from this port are the RS485 A+ and RS485 B-. Since the inverter has 2 of each of these connections in the RJ45 port, there is no ambiguity about which way the connector is facing in the diagram. These will go into the A and B ports on the tail485. To do this you will need to cut the opposite end of the ethernet cord and identify the wires by the color. 
+
+For the other 2 wires, you can splice them out of the ethernet cable previously used or you can use new wires. I pulled some out of a 23 AWG ethernet cable and plugged them into the 12V ports on my inverter
+
+![image](https://github.com/user-attachments/assets/579cb6e6-b261-4e1f-99ed-fc28e4fc7737)
+
+From the above picture, port 15 goes to the 12V port on the tail485, while port 16 goes to the Gnd. Putting it all together, the final wiring configuration should look like this.
+
+![InverterWiringDiagram](https://github.com/user-attachments/assets/44aa39ba-df9d-460b-af20-b9518f267d64)
 
 ## Installation
 Data can be collected from the inverter using the RS485 port. There are a number of different ways to do this but I'm using an ESP32 chip running ESPHome (See [ESPHome-1P-Sunsynk-Deye.yaml](https://github.com/slipx06/Sunsynk-Home-Assistant-Dash/blob/main/ESPHome-1P-Sunsynk-Deye.yaml))
