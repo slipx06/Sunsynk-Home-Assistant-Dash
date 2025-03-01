@@ -522,7 +522,7 @@ sensor:
     state_class: measurement
     value_type: S_WORD
 
-  - platform: modbus_controller            # 150 Grid Voltage
+  - platform: modbus_controller            # 152 Grid Voltage
     modbus_controller_id: inverter
     name: "${friendly_name} Grid Voltage"
     id: inverter_esphome_grid_voltage
