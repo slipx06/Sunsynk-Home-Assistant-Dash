@@ -17,10 +17,11 @@ Integrations:
 
 ## Screenshots
 
-![image](https://github.com/slipx06/Sunsynk-Home-Assistant-Dash/assets/7227275/b8ca11e9-bfeb-4304-81f2-5eb8f9586152)
-![image](https://github.com/user-attachments/assets/a684a3e9-18c0-4e45-8eae-5aed999e6ebc)
-![image](https://github.com/user-attachments/assets/851b7712-ba32-4001-8deb-0cdd66bae718)
-![image](https://github.com/user-attachments/assets/0a072c03-7d62-485c-8ee4-fe987d8afdde)
+
+![image](https://github.com/user-attachments/assets/49c5b645-4472-440e-aeb9-4a99f3158974)
+![image](https://github.com/user-attachments/assets/a3ed68f1-3a4d-4dd8-9c04-0dd1a604eb11)
+![image](https://github.com/user-attachments/assets/fc85912b-46c4-4f8c-a17d-a5119e9cf619)
+![image](https://github.com/user-attachments/assets/bc98f175-a63c-4287-b395-f2df76c6df9a)
 
 
 ## Installation
