@@ -5,7 +5,7 @@ Requires the following:
 
 Cards:
 
- - Flexible Horseshoe Card (https://github.com/AmoebeLabs/flex-horseshoe-card)
+ - Flexible Horseshoe Card (https://github.com/AmoebeLabs/flex-horseshoe-card). If this does not load see https://github.com/AmoebeLabs/flex-horseshoe-card/issues/88#issuecomment-2145334978
  - Sunsynk Power Flow Card (https://github.com/slipx06/Sunsynk-Home-Assistant-Power-Flow-Card)
  - Layout Card (https://github.com/thomasloven/lovelace-layout-card)
  - Plotly Graph Card (https://github.com/dbuezas/lovelace-plotly-graph-card)
