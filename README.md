@@ -22,32 +22,9 @@ Integrations:
 ![image](https://github.com/user-attachments/assets/851b7712-ba32-4001-8deb-0cdd66bae718)
 ![image](https://github.com/user-attachments/assets/0a072c03-7d62-485c-8ee4-fe987d8afdde)
 
-## Hardware and Wiring Guide
-
-The only materials needed are an ESP board, an RS485 converter, and an ethernet cable. Because many of these inverters have onboard 12v power sources, I particularly like the m5 Stack combo
-
-Atom S3 Lite - [mfg site](https://shop.m5stack.com/products/atoms3-lite-esp32s3-dev-kit?srsltid=AfmBOorEAoHtHBL7ny-ol8aRGx2VlAXBf-xHIL8a4obhSonOer_3Is6N) [aliexpress](https://www.aliexpress.us/item/3256804991637877.html?spm=a2g0o.order_list.order_list_main.59.24f71802PmGMIF&gatewayAdapt=glo2usa)
-
-Atom tail485 - [mfg site](https://shop.m5stack.com/products/atom-tail485) [aliexpress](https://www.aliexpress.us/item/3256803111216893.html?spm=a2g0o.order_list.order_list_main.58.24f71802PmGMIF&gatewayAdapt=glo2usa).
-
-From [this page](https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/api-guides/current-consumption-measurement-modules.html) the max power consumption is <100mW, so if you already are using this for a RSD you may or may not be able to add an additional load.
-
-There is an extra RJ45 port on the inverter dedicated for monitoring. For the specific pin out please refer to your own inverter's instruction manual. For my Solark 15K, this is the pinout 
-
-![image](https://github.com/user-attachments/assets/539d831b-27da-40ab-a908-aa70a9f9d1f1)
-
-The only 2 wires needed from this port are the RS485 A+ and RS485 B-. Since the inverter has 2 of each of these connections in the RJ45 port, there is no ambiguity about which way the connector is facing in the diagram. These will go into the A and B ports on the tail485. To do this you will need to cut the opposite end of the ethernet cord and identify the wires by the color. 
-
-For the other 2 wires, you can splice them out of the ethernet cable previously used or you can use new wires. I pulled some out of a 23 AWG ethernet cable and plugged them into the 12V ports on my inverter
-
-![image](https://github.com/user-attachments/assets/579cb6e6-b261-4e1f-99ed-fc28e4fc7737)
-
-From the above picture, port 15 goes to the 12V port on the tail485, while port 16 goes to the Gnd. Putting it all together, the final wiring configuration should look like this.
-
-![InverterWiringDiagram](https://github.com/user-attachments/assets/44aa39ba-df9d-460b-af20-b9518f267d64)
 
 ## Installation
-Data can be collected from the inverter using the RS485 port. There are a number of different ways to do this but I'm using an ESP32 chip running ESPHome (See [ESPHome-1P-Sunsynk-Deye.yaml](https://github.com/slipx06/Sunsynk-Home-Assistant-Dash/blob/main/ESPHome-1P-Sunsynk-Deye.yaml))
+Data can be collected from the inverter using the RS485 port. There are a number of different ways to do this but I'm using an ESP32 chip running ESPHome. See **Hardware and Wiring Guide** below and [ESPHome-1P-Sunsynk-Deye.yaml](https://github.com/slipx06/Sunsynk-Home-Assistant-Dash/blob/main/ESPHome-1P-Sunsynk-Deye.yaml)
 
 Create a new view on your current Dashboard and set the view type to Panel (1 card) as shown below:
 
@@ -60,6 +37,48 @@ You'll need to adjust all the sensor names to match yours and install the necess
 ## Demo
 
 ![layout_card](https://github.com/user-attachments/assets/f44a7c36-72dc-47ae-bf40-84419f4b3dfc)
+
+## Hardware and Wiring Guide
+
+> Disclaimer: Proceed with caution. Working with electrical equipment carries inherent risks. If you are unsure about any step, consult a qualified professional. The author is not responsible for any damage to equipment or injury. ALWAYS consult your specific inverter's manual and VERIFY ALL voltages and polarities with a multimeter before making connections.
+
+### Required Components & Tools:
+
+ - ESP-based board (e.g., [AtomS3 Lite M5 Stack](https://shop.m5stack.com/products/atoms3-lite-esp32s3-dev-kit))
+ - RS485 to TTL Converter (e.g., [M5Stack Tail485](https://shop.m5stack.com/products/atom-tail485), which accepts 12V)
+ - Standard Ethernet Patch Cable (Cat5e or Cat6)
+ - Tools: Wire strippers, wire cutters, small screwdriver (for terminal blocks), multimeter (essential for voltage/polarity checks).
+
+### Powering Your ESP Board & RS485 Converter:
+
+ - The M5Stack AtomS3 Lite with Tail485 converter example accepts 12V input.
+ - Many inverters provide an onboard 12V DC power source.
+ - Consult your inverter's manual to locate a suitable 12V DC output and its Ground (GND) terminal. BEFORE CONNECTING ANYTHING: Use a multimeter to verify the output is indeed 12V DC (or the voltage your converter expects). Confirm the correct polarity of the 12V (+) and GND (-) terminals. Incorrect voltage or polarity can permanently damage your components.
+
+### Preparing the Ethernet Cable for RS485 Data:
+
+ - Connect one end of the Ethernet cable to your inverter's RS485 port (this might be labeled RS485, BMS, Meter, etc. – check your manual).
+ - Consult your inverter's manual to identify which pins on its port correspond to RS485 A+, RS485 B- as well as the pins for +12V (or other voltage) and GND. Note these down.
+ - Carefully cut off the connector from the other end of the Ethernet cable.
+ - Strip back about 1-2 inches (2-5 cm) of the outer jacket to expose the 4 twisted pairs of wires.
+ - Using a standard Ethernet cable pinout diagram (e.g., T568B, easily found online) and the pin information from your inverter's manual, identify the colored wires that correspond to your inverter's RS485 A+, RS485 B- signals.
+
+### Connecting to the RS485 Converter (e.g., Tail485):
+ - Connect the wire you identified as RS485 A+ (from the Ethernet cable) to the 'A' (or 'A+') terminal on your RS485 converter.
+ - Connect the wire you identified as RS485 B- (from the Ethernet cable) to the 'B' (or 'B-') terminal on your RS485 converter.
+ - Connect dedicated wires from the inverter's verified 12V and GND terminals to the VIN and GND of the RS485 converter.
+
+### Example Wiring: Solark 15K Inverter
+
+Pinout
+
+![image](https://github.com/user-attachments/assets/539d831b-27da-40ab-a908-aa70a9f9d1f1)
+
+![image](https://github.com/user-attachments/assets/579cb6e6-b261-4e1f-99ed-fc28e4fc7737)
+
+From the above picture, port 15 goes to the 12V port on the tail485, while port 16 goes to the Gnd.
+
+![InverterWiringDiagram](https://github.com/user-attachments/assets/44aa39ba-df9d-460b-af20-b9518f267d64)
 
 ## Additional Info
 Added remaining battery time. You will need to add the following template sensor
