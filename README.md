@@ -1,4 +1,4 @@
-# Sunsynk / Deye / Solark / Inverter Home Assistant Dashboard
+# Inverter Home Assistant Dashboard
 Home Assistant Dashboard to display Inverter data and Energy Usage.
 
 Requires the following: 
