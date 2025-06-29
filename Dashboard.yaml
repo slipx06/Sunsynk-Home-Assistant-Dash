@@ -287,6 +287,7 @@ cards:
         })
       }
     layout:
+      barcornerradius: 3
       updatemenus:
         - buttons:
             - $fn({vars}) => vars.zoom( '30d', 24*30)
@@ -532,6 +533,7 @@ cards:
         fixedrange: true
     title: null
     layout:
+      barcornerradius: 5
       xaxis:
         nticks: 1
       height: 410
@@ -707,6 +709,8 @@ cards:
             })
           }
         layout:
+          barcornerradius: 5
+          bargap: 0.1
           updatemenus:
             - buttons:
                 - $fn({vars}) => vars.zoom( '90d', 24*90)
@@ -794,6 +798,8 @@ cards:
             })
           }
         layout:
+          barcornerradius: 5
+          bargap: 0.1
           updatemenus:
             - buttons:
                 - $fn({vars}) => vars.zoom( '90d', 24*90)
@@ -1466,6 +1472,7 @@ cards:
         })
       }
     layout:
+      barcornerradius: 3
       updatemenus:
         - buttons:
             - $fn({vars}) => vars.scroll( '<', -.5)
@@ -1520,6 +1527,7 @@ cards:
         texttemplate: "%{y}"
         filters:
           - delta
+          - filter: i=1
         marker:
           color: rgb(255, 155, 48)
       - entity: sensor.sunsynk_day_load_energy
@@ -1531,6 +1539,7 @@ cards:
         type: bar
         filters:
           - delta
+          - filter: i=1
         width: $fn() => 1000*60*60*130
         offset: $fn() => -1000*60*60*195
         texttemplate: "%{y}"
@@ -1547,6 +1556,7 @@ cards:
         width: $fn() => 1000*60*60*130
         filters:
           - delta
+          - filter: i=1
         marker:
           color: rgb(84, 144, 194)
       - entity: sensor.sunsynk_day_battery_discharge
@@ -1561,6 +1571,7 @@ cards:
         texttemplate: "%{y}"
         filters:
           - delta
+          - filter: i=1
         marker:
           color: rgb(151, 90, 182)
       - entity: sensor.sunsynk_day_battery_charge
@@ -1575,6 +1586,7 @@ cards:
         texttemplate: "%{y}"
         filters:
           - delta
+          - filter: i=1
         marker:
           color: yellow
     hours_to_show: 6M
@@ -1584,6 +1596,7 @@ cards:
       yaxes:
         fixedrange: true
     layout:
+      barcornerradius: 3
       legend:
         bgcolor: rgba(0,0,0,0)
         itemsizing: constant
@@ -1786,6 +1799,7 @@ cards:
           yanchor: top
       barmode: relative
       bargap: 0.2
+      barcornerradius: 3
       height: 520
       legend:
         bgcolor: rgba(0,0,0,0)
