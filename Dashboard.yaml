@@ -215,31 +215,31 @@ cards:
       - entity: sensor.sunsynk_day_pv_energy_local
         name: |
           $fn ({ ys,meta }) =>
-            "Solar" + "🔆" + "(" +ys[ys.length - 1]+"kWh)"
+            "Solar" + "🔆" + "(" +ys[ys.length - 1].toFixed(1)+"kWh)"
         marker:
           color: rgb(255, 155, 48)
       - entity: sensor.sunsynk_day_load_energy_local
         name: |
           $fn ({ ys,meta }) =>
-            "Load" + "⚡" + "(" +ys[ys.length - 1]+"kWh)"
+            "Load" + "⚡" + "(" +ys[ys.length - 1].toFixed(1)+"kWh)"
         marker:
           color: rgb(95, 182, 173)
       - entity: sensor.sunsynk_day_grid_import_energy_local
         name: |
           $fn ({ ys,meta }) =>
-            "Grid Import" + "💡" + "(" +ys[ys.length - 1]+"kWh)"
+            "Grid Import" + "💡" + "(" +ys[ys.length - 1].toFixed(1)+"kWh)"
         marker:
           color: rgb(84, 144, 194)
       - entity: sensor.sunsynk_day_battery_discharge_energy_local
         name: |
           $fn ({ ys,meta }) =>
-            "Battery Discharge" + "🖱️" + "(" +ys[ys.length - 1]+"kWh)"
+            "Battery Discharge" + "🖱️" + "(" +ys[ys.length - 1].toFixed(1)+"kWh)"
         marker:
           color: rgb(151, 90, 182)
       - entity: sensor.sunsynk_day_battery_charge_energy_local
         name: |
           $fn ({ ys,meta }) =>
-            "Battery Charge" + "🔋" + "(" +ys[ys.length - 1]+"kWh)"
+            "Battery Charge" + "🔋" + "(" +ys[ys.length - 1].toFixed(1)+"kWh)"
         marker:
           color: yellow
     hours_to_show: 5d
@@ -250,7 +250,7 @@ cards:
         statistic: state
         period: day
         type: bar
-        texttemplate: "%{y}"
+        texttemplate: "%{y:.1f}"
         filters:
           - filter: i>0
       yaxes:
@@ -423,7 +423,7 @@ cards:
         - text: |-
             $fn ({hass}) =>
               "<span style='font-size: 24px;'><span style='color: orange'>"
-              + Number(hass.states['sensor.energy_production_today'].state).toFixed(1) + "</span></span>kWh<br>"
+              + Number(hass.states['sensor.energy_production_today_sum'].state).toFixed(1) + "</span></span>kWh<br>"
               +  "</span><span style=''>Forecast Today</span><br>"
           xref: x domain
           yref: y domain
@@ -447,7 +447,7 @@ cards:
         - text: |-
             $fn ({hass}) =>
               "<span style='font-size: 24px;'><span style='color: '>"
-              + Number(hass.states['sensor.energy_production_tomorrow'].state).toFixed(1) + "</span></span>kWh<br>"
+              + Number(hass.states['sensor.energy_production_tomorrow_sum'].state).toFixed(1) + "</span></span>kWh<br>"
               +  "</span><span style=''>Forecast Tomorrow</span><br>"
           xref: x domain
           yref: y domain
@@ -459,7 +459,7 @@ cards:
         - text: |-
             $fn ({hass}) =>
               "<span style='font-size: 24px;'><span style='color: white'>"
-              + Number(hass.states['sensor.energy_production_d2'].state).toFixed(1) + "</span></span>kWh<br>"
+              + Number(hass.states['sensor.energy_production_d2_sum'].state).toFixed(1) + "</span></span>kWh<br>"
               +  "</span><span style=''>Forecast Day 2</span><br>"
           xref: x domain
           yref: y domain
@@ -489,35 +489,35 @@ cards:
       - entity: sensor.sunsynk_total_pv_energy
         name: |
           $fn ({ ys,meta }) =>
-            "Solar" + "🔆" + "(" +ys[ys.length - 1]+"kWh)"
+            "Solar" + "🔆" + "(" +ys[ys.length - 1].toFixed(1)+"kWh)"
         offset: $fn() => 1000*60*60*4.5
         marker:
           color: rgb(255, 155, 48)
       - entity: sensor.sunsynk_total_load_energy
         name: |
           $fn ({ ys,meta }) =>
-            "Load" + "⚡" + "(" +ys[ys.length - 1]+"kWh)"
+            "Load" + "⚡" + "(" +ys[ys.length - 1].toFixed(1)+"kWh)"
         offset: $fn() => 1000*60*60*7.5
         marker:
           color: rgb(95, 182, 173)
       - entity: sensor.sunsynk_total_grid_import
         name: |
           $fn ({ ys,meta }) =>
-            "Grid Import" + "💡" + "(" +ys[ys.length - 1]+"kWh)"
+            "Grid Import" + "💡" + "(" +ys[ys.length - 1].toFixed(1)+"kWh)"
         offset: $fn() => 1000*60*60*10.5
         marker:
           color: rgb(84, 144, 194)
       - entity: sensor.sunsynk_total_battery_discharge
         name: |
           $fn ({ ys,meta }) =>
-            "Bat Discharge" + "🖱️" + "(" +ys[ys.length - 1]+"kWh)"
+            "Bat Discharge" + "🖱️" + "(" +ys[ys.length - 1].toFixed(1)+"kWh)"
         offset: $fn() => 1000*60*60*13.5
         marker:
           color: rgb(151, 90, 182)
       - entity: sensor.sunsynk_total_battery_charge
         name: |
           $fn ({ ys,meta }) =>
-            "Bat Charge" + "🔋" + "(" +ys[ys.length - 1]+"kWh)"
+            "Bat Charge" + "🔋" + "(" +ys[ys.length - 1].toFixed(1)+"kWh)"
         offset: $fn() => 1000*60*60*16.5
         marker:
           color: yellow
@@ -550,8 +550,8 @@ cards:
         hole: 0.6
         values: >-
           $ex [
-          hass.states["sensor.sunsynk_day_battery_charge_energy_local"].state,
-          hass.states["sensor.sunsynk_day_load_energy_local"].state
+          parseFloat(hass.states["sensor.sunsynk_day_battery_charge_energy_local"].state).toFixed(1),
+          parseFloat(hass.states["sensor.sunsynk_day_load_energy_local"].state).toFixed(1)
            ]
         marker:
           colors:
@@ -600,9 +600,10 @@ cards:
         hole: 0.6
         values: >-
           $ex [
-          hass.states["sensor.sunsynk_day_battery_discharge_energy_local"].state,
-          hass.states["sensor.sunsynk_day_grid_import_energy_local"].state,
-          hass.states["sensor.sunsynk_day_pv_energy_local"].state ]
+          parseFloat(hass.states["sensor.sunsynk_day_battery_discharge_energy_local"].state).toFixed(1),
+          parseFloat(hass.states["sensor.sunsynk_day_grid_import_energy_local"].state).toFixed(1),
+          parseFloat(hass.states["sensor.sunsynk_day_pv_energy_local"].state).toFixed(1)
+          ]
         labels:
           - Battery Charge
           - Grid Offpeak
@@ -1403,9 +1404,9 @@ cards:
       - entity: sensor.sunsynk_day_pv_energy_local
         name: |
           $fn ({ ys,meta }) =>
-            "Solar" + "🔆" + "(" +ys[ys.length - 1]+"kWh)"
+            "Solar" + "🔆" + "(" +ys[ys.length - 1].toFixed(1)+"kWh)"
         type: bar
-        texttemplate: "%{y}"
+        texttemplate: "%{y:.1f}"
         filters:
           - filter: i>0
         marker:
@@ -1413,9 +1414,9 @@ cards:
       - entity: sensor.sunsynk_day_grid_import_energy_local
         name: |
           $fn ({ ys,meta }) =>
-            "Grid Import" + "💡" + "(" +ys[ys.length - 1]+"kWh)"
+            "Grid Import" + "💡" + "(" +ys[ys.length - 1].toFixed(1)+"kWh)"
         type: bar
-        texttemplate: "%{y}"
+        texttemplate: "%{y:.1f}"
         filters:
           - filter: i>0
         marker:
@@ -1424,10 +1425,10 @@ cards:
         show_value: true
         name: |
           $fn ({ ys,meta }) =>
-            "Load" + "⚡" + "(" +ys[ys.length - 1]+"kWh)"
+            "Load" + "⚡" + "(" +ys[ys.length - 1].toFixed(1)+"kWh)"
         period: day
         type: line
-        texttemplate: "%{y}"
+        texttemplate: "%{y:.1f}"
         line:
           color: rgb(95, 182, 173)
           width: 2
